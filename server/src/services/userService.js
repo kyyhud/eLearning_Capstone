@@ -7,7 +7,7 @@ const registerUser = async (email, password, typeOfUser) => {
     throw new Error("Email already exists");
   }
   const hashedPassword = await passwordHashing.hashPassword(password);
-  const newUser = await userRepository.createUser({ email, passwordHash: hashedPassword, typeOfUser });
+  const newUser = await userRepository.createUser({ email, passwordHash: hashedPassword, typeOfUser: "student" });
   return newUser;
 };
 
@@ -30,6 +30,7 @@ const loginUser = async (email, password, typeOfUser) => {
 };
 
 module.exports = {
+  createAdminUser,
   registerUser,
   loginUser,
 };
