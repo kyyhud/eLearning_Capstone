@@ -12,16 +12,13 @@ const registerUser = async (email, password, typeOfUser) => {
 };
 
 const loginUser = async (email, password, typeOfUser) => {
-  let existingUser = await userRepository.findUserByEmail(email);
+  const existingUser = await userRepository.findUserByEmail(email);
   if (!existingUser) {
-    throw new Error("Invalid email");
+    throw new Error("Invalid credentials");
   }
-  const isPasswordValid = await passwordHashing.comparePassword(password, existingUser.passwordHash);
-  if (!isPasswordValid) {
-    throw new Error("Invalid password");
-  }
-  if (existingUser.typeOfUser !== typeOfUser) {
-    throw new Error("Invalid user type");
+  const isPasswordValid = await passwordHashing.comparePassword(password,existingUser.passwordHash);
+  if (!isPasswordValid || existingUser.typeOfUser !== typeOfUser) {
+    throw new Error("Invalid credentials");
   }
   return existingUser.typeOfUser;
 };

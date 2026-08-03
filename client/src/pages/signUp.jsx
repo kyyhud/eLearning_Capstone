@@ -22,7 +22,7 @@ let msg = '';
         <button type='submit'>Sign Up</button>
       </form>
       <hr />
-      <p>Already have an account? <a href='/'>Login</a></p>
+      <p>Already have an account? <a href='/login'>Login</a></p>
     </>
   )
 }
