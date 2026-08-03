@@ -5,7 +5,7 @@ const findUserById = async (userId) => {
 };
 
 const findUserByEmail = async (email) => {
-  return await User.findOne({ email });
+  return await User.findOne({ email }).select("+passwordHash");
 };
 
 const createUser = async (userData) => {
