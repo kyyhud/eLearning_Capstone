@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import Login from './pages/login.jsx'
-import SignUp from './pages/signUp.jsx'
-import AdminDashboard from './pages/adminDashboard.jsx'
-import UserDashboard from './pages/userDashboard.jsx'
+import Login from './pages/Login.jsx'
+import SignUp from './pages/SignUp.jsx'
+import AdminDashboard from './pages/AdminDashboard.jsx'
+import UserDashboard from './pages/UserDashboard.jsx'
 
 import './App.css'
 
@@ -15,7 +15,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<SignUp />} />
+      <Route path="/signUp" element={<SignUp />} />
       <Route path="/admin-dashboard" element={<AdminDashboard />} />
       <Route path="/user-dashboard" element={<UserDashboard />} />
     </Routes>

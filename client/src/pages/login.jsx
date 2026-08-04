@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { loginUser } from "../services/loginService.js";
+import { loginUser } from "../services/userService.js";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
@@ -12,25 +12,24 @@ function Login() {
   const signIn = async (e) => {
     e.preventDefault();
     let login = { email, password, typeOfUser };
-    console.log(login);
     try {
       let result = await loginUser(login);
-      console.log(result);
+      sessionStorage.setItem("userEmail", email);
       if (result.success) {
         if (typeOfUser === "admin") {
-          navigate('/admin-dashboard');
+          navigate("/admin-dashboard");
         } else if (typeOfUser === "faculty") {
           navigate("/user-dashboard");
         } else if (typeOfUser === "student") {
           navigate("/user-dashboard");
         }
+        setEmail("");
+        setPassword("");
+        setTypeOfUser("");
       }
     } catch (error) {
       setMsg(error.response?.data?.error || "Invalid credentials. Please try again.");
     }
-    setEmail("");
-    setPassword("");
-    setTypeOfUser("");
   };
 
   return (
