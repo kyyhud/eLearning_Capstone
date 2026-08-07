@@ -5,6 +5,8 @@ import SignUp from "./pages/auth/SignUp.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 import FacultyDashboard from "./pages/faculty/FacultyDashboard.jsx";
 import StudentDashboard from "./pages/student/StudentDashboard.jsx";
+import BrowseCoursesByStudent from "./pages/student/BrowseCourses.jsx";
+import SearchCoursesByStudent from "./pages/student/SearchCourses.jsx";
 
 import "./App.css";
 
@@ -19,6 +21,8 @@ function App() {
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/faculty-dashboard" element={<FacultyDashboard />} />
         <Route path="/student-dashboard" element={<StudentDashboard />} />
+        <Route path="/student/browse-courses" element={<BrowseCoursesByStudent />} />
+        <Route path="/student/search-courses" element={<SearchCoursesByStudent />} />
       </Routes>
     </>
   );

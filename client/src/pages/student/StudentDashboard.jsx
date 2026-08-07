@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 function StudentDashboard() {
 
@@ -14,6 +14,12 @@ function StudentDashboard() {
     <>
       <h3>Student Dashboard</h3>
       <h4>Welcome, {userEmail}</h4>
+      <hr />
+      <a href="/student/browse-courses">Browse Courses</a>| <a href="/student/search-courses">Search Courses</a>
+      <hr />
+      <div>
+      <Outlet />
+      </div>
       <button value="Logout" onClick={logout}>Logout</button>
     </>
   );
