@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-function UserDashboard() {
+function FacultyDashboard() {
 
   let userEmail = sessionStorage.getItem("userEmail");
 
@@ -12,11 +12,11 @@ function UserDashboard() {
 
   return (
     <>
-      <h3>User Dashboard</h3>
+      <h3>Faculty Dashboard</h3>
       <h4>Welcome, {userEmail}</h4>
       <button value="Logout" onClick={logout}>Logout</button>
     </>
   );
 }
 
-export default UserDashboard;
+export default FacultyDashboard;

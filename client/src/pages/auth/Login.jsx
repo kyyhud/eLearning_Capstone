@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { loginUser } from "../services/userService.js";
+import { loginUser } from "../../services/userService.js";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
@@ -19,9 +19,9 @@ function Login() {
         if (typeOfUser === "admin") {
           navigate("/admin-dashboard");
         } else if (typeOfUser === "faculty") {
-          navigate("/user-dashboard");
+          navigate("/faculty-dashboard");
         } else if (typeOfUser === "student") {
-          navigate("/user-dashboard");
+          navigate("/student-dashboard");
         }
         setEmail("");
         setPassword("");

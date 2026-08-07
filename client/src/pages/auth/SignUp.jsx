@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../services/userService.js";
+import { registerUser } from "../../services/userService.js";
 
 function SignUp() {
   let [email, setEmail] = useState("");
