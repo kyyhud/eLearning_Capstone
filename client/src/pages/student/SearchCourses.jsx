@@ -1,20 +1,20 @@
-import { Outlet } from 'react-router-dom';
-import { useState } from 'react';
-import { viewCourseByTitle } from '../../services/courseService.js';
+import { Outlet } from "react-router-dom";
+import { useState } from "react";
+import { viewCourseByTitle } from "../../services/courseService.js";
 
 function SearchCourseByTitle() {
   const [course, setCourse] = useState([]);
-  const [message, setMessage] = useState('');
-  const [title, setTitle] = useState('');
+  const [message, setMessage] = useState("");
+  const [title, setTitle] = useState("");
   const searchCourses = async () => {
-  try {
-    const response = await viewCourseByTitle(title);
+    try {
+      const response = await viewCourseByTitle(title);
       setCourse(response.data);
-      setMessage('');
-  } catch (error) {
+      setMessage("");
+    } catch (error) {
       setCourse(null);
       setMessage(error.message);
-  }
+    }
   };
 
   return (
@@ -22,7 +22,7 @@ function SearchCourseByTitle() {
       <h3>Search Courses</h3>
       <input type="text" placeholder="Enter course title" value={title} onChange={(e) => setTitle(e.target.value)} />
       <input type="button" value="Search" onClick={searchCourses} />
-      {message && <p style={{ color: 'red' }}>{message}</p>}
+      {message && <p style={{ color: "red" }}>{message}</p>}
       {course && (
         <div>
           <h4>Course Details</h4>
@@ -34,10 +34,10 @@ function SearchCourseByTitle() {
         </div>
       )}
       <div>
-      <Outlet />
+        <Outlet />
       </div>
     </>
   );
-};
+}
 
 export default SearchCourseByTitle;

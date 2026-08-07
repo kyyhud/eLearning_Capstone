@@ -1,22 +1,22 @@
-import { Outlet } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { viewAllCourses } from '../../services/courseService.js';
+import { Outlet } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { viewAllCourses } from "../../services/courseService.js";
 
 function BrowseCoursesByStudent() {
-let [courses, setCourses] = useState([]);
+  let [courses, setCourses] = useState([]);
 
   useEffect(() => {
     fetchAllCourses();
   }, []);
 
-    const fetchAllCourses = async () => {
-      try {
-        const response = await viewAllCourses();
-        setCourses(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  const fetchAllCourses = async () => {
+    try {
+      const response = await viewAllCourses();
+      setCourses(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -24,7 +24,7 @@ let [courses, setCourses] = useState([]);
       <table border="1">
         <thead>
           <tr>
-          <th>Course ID</th>
+            <th>Course ID</th>
             <th>Title</th>
             <th>Description</th>
             <th>Faculty</th>
@@ -48,7 +48,6 @@ let [courses, setCourses] = useState([]);
       </div>
     </>
   );
-};
+}
 
 export default BrowseCoursesByStudent;
-
