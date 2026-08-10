@@ -3,28 +3,28 @@ import { useState } from "react";
 import { viewCourseByTitle } from "../../services/courseService.js";
 
 function SearchCourseByTitle() {
-  const [course, setCourse] = useState([]);
+  const [courses, setCourses] = useState([]);
   const [message, setMessage] = useState("");
   const [title, setTitle] = useState("");
   const searchCourses = async () => {
     try {
       const response = await viewCourseByTitle(title);
-      setCourse(response.data);
+      setCourses(response);
       setMessage("");
     } catch (error) {
-      setCourse(null);
+      setCourses([]);
       setMessage(error.message);
     }
   };
 
   return (
     <>
-      <h3>Search Courses</h3>
+      <h3>Search Course by Title</h3>
       <input type="text" placeholder="Enter course title" value={title} onChange={(e) => setTitle(e.target.value)} />
       <input type="button" value="Search" onClick={searchCourses} />
       {message && <p style={{ color: "red" }}>{message}</p>}
-      {course && (
-        <div>
+      {courses.map((course) => (
+        <div key={course._id}>
           <h4>Course Details</h4>
           <p>Course ID: {course._id}</p>
           <p>Title: {course.title}</p>
@@ -32,10 +32,9 @@ function SearchCourseByTitle() {
           <p>Faculty: {course.faculty}</p>
           <p>Duration: {course.duration}</p>
         </div>
-      )}
-      <div>
-        <Outlet />
-      </div>
+      ))}
+      <br />
+      <a href="/student-dashboard">Back to Dashboard</a>
     </>
   );
 }

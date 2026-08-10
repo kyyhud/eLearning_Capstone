@@ -43,9 +43,8 @@ function BrowseCoursesByStudent() {
           ))}
         </tbody>
       </table>
-      <div>
-        <Outlet />
-      </div>
+      <br />
+      <a href="/student-dashboard">Back to Dashboard</a>
     </>
   );
 }

@@ -5,7 +5,7 @@ const findAllCourses = async () => {
 };
 
 const findCourseByTitle = async (title) => {
-  return await Course.findOne({ title });
+  return await Course.find({ title: { $regex: title, $options: "i" } });
 };
 
 const createCourse = async (courseData) => {

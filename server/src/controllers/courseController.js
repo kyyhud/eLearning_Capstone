@@ -22,8 +22,8 @@ const getAllCourses = async (req, res) => {
 const getCourseByTitle = async (req, res) => {
   try {
     const { title } = req.params;
-    const course = await courseService.getCourseByTitle(title);
-    res.status(200).json({ success: true, data: course });
+    const courses = await courseService.getCourseByTitle(title);
+    res.status(200).json({ success: true, data: courses });
   } catch (error) {
     res.status(404).json({ success: false, error: error.message });
   }

@@ -13,11 +13,11 @@ const getAllCourses = async () => {
 };
 
 const getCourseByTitle = async (title) => {
-  const course = await courseRepository.findCourseByTitle(title);
-  if (!course) {
+  const courses = await courseRepository.findCourseByTitle(title);
+  if (courses.length === 0) {
     throw new Error("Course not found");
   }
-  return course;
+  return courses;
 };
 
 module.exports = {

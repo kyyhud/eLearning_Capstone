@@ -16,7 +16,7 @@ export const createCourse = async (courseData) => {
 export const viewCourseByTitle = async (title) => {
   try {
     let result = await axios.get(`${URL}/title/${title}`);
-    return result.data;
+    return result.data.data;
   } catch (error) {
     if (error.response) {
       throw new Error(error.response.data.error);
