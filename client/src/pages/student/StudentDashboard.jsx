@@ -15,7 +15,7 @@ function StudentDashboard() {
       <h3>Student Dashboard</h3>
       <h4>Welcome, {userEmail}</h4>
       <hr />
-      <a href="/student/browse-courses">Browse Courses</a>| <a href="/student/search-courses">Search Course by Title</a>
+      <a href="/student/browse-courses">Browse Courses</a>
       <br />
       <div>
       <Outlet />

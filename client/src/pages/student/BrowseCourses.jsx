@@ -1,9 +1,11 @@
 import { Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { viewAllCourses } from "../../services/courseService.js";
+import { viewAllCourses, viewCourseByTitle } from "../../services/courseService.js";
 
 function BrowseCoursesByStudent() {
-  let [courses, setCourses] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [title, setTitle] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     fetchAllCourses();
@@ -13,14 +15,42 @@ function BrowseCoursesByStudent() {
     try {
       const response = await viewAllCourses();
       setCourses(response.data);
+      setMessage("");
     } catch (error) {
       console.error(error);
+      setMessage(error.message);
     }
+  };
+
+const searchCourses = async () => {
+    try {
+      const response = await viewCourseByTitle(title);
+      setCourses(response);
+      setMessage("");
+    } catch (error) {
+      setCourses([]);
+      setMessage(error.message);
+    }
+  };
+
+  const clearSearch = () => {
+    setTitle("");
+    fetchAllCourses();
   };
 
   return (
     <>
       <h3>Browse Courses</h3>
+      <input
+        type="text"
+        placeholder="Enter course title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <input type="button" value="Search" onClick={searchCourses} />
+      <input type="button" value="Clear" onClick={clearSearch} />
+      {message && <p style={{ color: "red" }}>{message}</p>}
+      <br />
       <table border="1">
         <thead>
           <tr>
