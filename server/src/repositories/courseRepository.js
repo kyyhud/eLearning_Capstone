@@ -12,8 +12,13 @@ const createCourse = async (courseData) => {
   return await Course.create(courseData);
 };
 
+const findCoursesByFacultyEmail = async (facultyEmail) => {
+  return await Course.find({ faculty: facultyEmail });
+}
+
 module.exports = {
   findAllCourses,
   findCourseByTitle,
   createCourse,
+  findCoursesByFacultyEmail,
 };

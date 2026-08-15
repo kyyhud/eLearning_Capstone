@@ -13,6 +13,17 @@ export const createCourse = async (courseData) => {
   }
 };
 
+export const accessFacultyCourses = async (facultyEmail) => {
+  try {
+    let result = await axios.get(`${URL}/faculty/${facultyEmail}`);
+    return result.data;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+};
+
 export const viewCourseByTitle = async (title) => {
   try {
     let result = await axios.get(`${URL}/title/${title}`);

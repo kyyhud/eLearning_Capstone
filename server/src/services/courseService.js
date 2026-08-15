@@ -8,6 +8,14 @@ const saveCourse = async (title, description, faculty, duration) => {
   return await courseRepository.createCourse({ title, description, faculty, duration });
 };
 
+const getCoursesByFacultyEmail = async (facultyEmail) => {
+  const courses = await courseRepository.findCoursesByFacultyEmail(facultyEmail);
+  if (courses.length === 0) {
+    throw new Error("No courses found for this faculty email.");
+  }
+  return courses;
+};
+
 const getAllCourses = async () => {
   return await courseRepository.findAllCourses();
 };
@@ -24,4 +32,5 @@ module.exports = {
   saveCourse,
   getAllCourses,
   getCourseByTitle,
+  getCoursesByFacultyEmail,
 };

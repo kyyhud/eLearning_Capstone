@@ -10,6 +10,16 @@ const createCourse = async (req, res) => {
   }
 };
 
+const getCoursesByFacultyEmail = async (req, res) => {
+  try {
+    const { facultyEmail } = req.params;
+    const courses = await courseService.getCoursesByFacultyEmail(facultyEmail);
+    res.status(200).json({ success: true, data: courses });
+  } catch (error) {
+    res.status(404).json({ success: false, error: error.message });
+  }
+};
+
 const getAllCourses = async (req, res) => {
   try {
     const courses = await courseService.getAllCourses();
@@ -33,4 +43,5 @@ module.exports = {
   createCourse,
   getAllCourses,
   getCourseByTitle,
+  getCoursesByFacultyEmail,
 };

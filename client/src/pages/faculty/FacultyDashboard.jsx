@@ -14,6 +14,9 @@ function FacultyDashboard() {
     <>
       <h3>Faculty Dashboard</h3>
       <h4>Welcome, {userEmail}</h4>
+      <hr />
+      <a href={"/faculty/courses"}>View Courses</a>
+      <hr />
       <button value="Logout" onClick={logout}>Logout</button>
     </>
   );
