@@ -1,17 +1,17 @@
-import { Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { accessFacultyCourses } from "../../services/courseService.js";
 
 function FacultyCourses() {
   const [courses, setCourses] = useState([]);
   const [message, setMessage] = useState("");
-  
+
   let userEmail = sessionStorage.getItem("userEmail");
 
   const accessFacultyCoursesHandler = async () => {
     try {
       const response = await accessFacultyCourses(userEmail);
-      setCourses(response.data);
+      setCourses(response);
       setMessage("");
     } catch (error) {
       setCourses([]);
@@ -22,7 +22,6 @@ function FacultyCourses() {
   useEffect(() => {
     accessFacultyCoursesHandler();
   }, []);
-
 
   return (
     <>
@@ -52,7 +51,7 @@ function FacultyCourses() {
         </tbody>
       </table>
       <br />
-      <a href="/faculty-dashboard">Back to Dashboard</a>
+      <Link to="/faculty-dashboard">Back to Dashboard</Link>
     </>
   );
 }

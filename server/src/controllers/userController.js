@@ -20,7 +20,28 @@ const loginUser = async (req, res) => {
   }
 };
 
+const getAllFacultyUsers = async (req, res) => {
+  try {
+    const facultyUsers = await userService.getAllFacultyUsers();
+    res.status(200).json({ success: true, data: facultyUsers, message: "Faculty users retrieved successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+const registerFaculty = async (req, res) => {
+  try {
+    const facultyData = req.body;
+    const newFaculty = await userService.registerFaculty(facultyData);
+    res.status(201).json({ success: true, data: newFaculty, message: "Faculty registered successfully" });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
+  getAllFacultyUsers,
+  registerFaculty,
 };

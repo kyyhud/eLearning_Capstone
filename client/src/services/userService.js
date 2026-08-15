@@ -11,3 +11,20 @@ export const loginUser = async (credentials) => {
   let result = await axios.post(`${URL}/login`, credentials);
   return result.data;
 };
+
+export const registerFaculty = async (facultyData) => {
+  try {
+    let result = await axios.post(`${URL}/faculty`, facultyData);
+    return result.data;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(error.response.data.error);
+    }
+    throw error;
+  }
+};
+
+export const viewAllFaculty = async () => {
+  let result = await axios.get(`${URL}/faculty`);
+  return result.data.data;
+};

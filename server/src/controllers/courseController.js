@@ -14,7 +14,7 @@ const getCoursesByFacultyEmail = async (req, res) => {
   try {
     const { facultyEmail } = req.params;
     const courses = await courseService.getCoursesByFacultyEmail(facultyEmail);
-    res.status(200).json({ success: true, data: courses });
+    res.status(200).json({ message: "Courses retrieved successfully", data: courses });
   } catch (error) {
     res.status(404).json({ success: false, error: error.message });
   }
@@ -23,7 +23,7 @@ const getCoursesByFacultyEmail = async (req, res) => {
 const getAllCourses = async (req, res) => {
   try {
     const courses = await courseService.getAllCourses();
-    res.status(200).json({ success: true, data: courses });
+    res.status(200).json({ message: "Courses retrieved successfully", data: courses });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -33,7 +33,7 @@ const getCourseByTitle = async (req, res) => {
   try {
     const { title } = req.params;
     const courses = await courseService.getCourseByTitle(title);
-    res.status(200).json({ success: true, data: courses });
+    res.status(200).json({ message: "Course retrieved successfully", data: courses });
   } catch (error) {
     res.status(404).json({ success: false, error: error.message });
   }

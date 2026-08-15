@@ -16,7 +16,7 @@ export const createCourse = async (courseData) => {
 export const accessFacultyCourses = async (facultyEmail) => {
   try {
     let result = await axios.get(`${URL}/faculty/${facultyEmail}`);
-    return result.data;
+    return result.data.data;
   } catch (error) {
     if (error.response) {
       throw new Error(error.response.data.error);
@@ -38,7 +38,7 @@ export const viewCourseByTitle = async (title) => {
 export const viewAllCourses = async () => {
   try {
     let result = await axios.get(`${URL}/all`);
-    return result.data;
+    return result.data.data;
   } catch (error) {
     if (error.response) {
       throw new Error(error.response.data.error);

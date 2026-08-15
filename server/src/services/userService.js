@@ -26,7 +26,39 @@ const loginUser = async (email, password, typeOfUser) => {
   return existingUser.typeOfUser;
 };
 
+const getAllFacultyUsers = async () => {
+  const facultyUsers = await userRepository.findAllFacultyUsers();
+  return facultyUsers;
+};
+
+const registerFaculty = async (facultyData) => {
+  const { firstName, lastName, email, password, phone, bio, facultyProfile } = facultyData;
+  let existingUser = await userRepository.findUserByEmail(email);
+  if (existingUser) {
+    throw new Error("Email already exists");
+  }
+  const hashedPassword = await passwordHashing.hashPassword(password);
+  const newFaculty = await userRepository.createFacultyUser({
+    firstName,
+    lastName,
+    email,
+    passwordHash: hashedPassword,
+    typeOfUser: "faculty",
+    phone,
+    bio,
+    isActive: true,
+    facultyProfile: {
+      department: facultyProfile.department,
+      title: facultyProfile.title,
+      specialization: facultyProfile.specialization,
+    },
+  });
+  return newFaculty;
+};
+
 module.exports = {
   registerUser,
   loginUser,
+  getAllFacultyUsers,
+  registerFaculty,
 };

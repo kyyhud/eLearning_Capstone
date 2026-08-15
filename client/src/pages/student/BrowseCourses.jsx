@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { viewAllCourses, viewCourseByTitle } from "../../services/courseService.js";
 
@@ -14,7 +14,7 @@ function BrowseCoursesByStudent() {
   const fetchAllCourses = async () => {
     try {
       const response = await viewAllCourses();
-      setCourses(response.data);
+      setCourses(response);
       setMessage("");
     } catch (error) {
       console.error(error);
@@ -22,7 +22,7 @@ function BrowseCoursesByStudent() {
     }
   };
 
-const searchCourses = async () => {
+  const searchCourses = async () => {
     try {
       const response = await viewCourseByTitle(title);
       setCourses(response);
@@ -41,12 +41,7 @@ const searchCourses = async () => {
   return (
     <>
       <h3>Browse Courses</h3>
-      <input
-        type="text"
-        placeholder="Enter course title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+      <input type="text" placeholder="Enter course title" value={title} onChange={(e) => setTitle(e.target.value)} />
       <input type="button" value="Search" onClick={searchCourses} />
       <input type="button" value="Clear" onClick={clearSearch} />
       {message && <p style={{ color: "red" }}>{message}</p>}
@@ -74,7 +69,7 @@ const searchCourses = async () => {
         </tbody>
       </table>
       <br />
-      <a href="/student-dashboard">Back to Dashboard</a>
+      <Link to="/student-dashboard">Back to Dashboard</Link>
     </>
   );
 }
