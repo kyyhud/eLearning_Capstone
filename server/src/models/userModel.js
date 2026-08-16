@@ -30,32 +30,35 @@ const userSchema = new mongoose.Schema(
       required: true,
       default: "student",
     },
-    phone: {
-      type: String,
-      trim: true,
-      default: "",
-    },
-    bio: {
-      type: String,
-      trim: true,
-      default: "",
-    },
     isActive: {
       type: Boolean,
       default: true,
     },
     facultyProfile: {
+      phone: {
+        type: String,
+        trim: true,
+        default: "",
+      },
       department: {
         type: String,
         trim: true,
+        default: "",
       },
       title: {
         type: String,
         trim: true,
+        default: "",
       },
       specialization: {
         type: String,
         trim: true,
+        default: "",
+      },
+      bio: {
+        type: String,
+        trim: true,
+        default: "",
       },
     },
   },

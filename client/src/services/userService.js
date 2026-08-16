@@ -28,3 +28,27 @@ export const viewAllFaculty = async () => {
   let result = await axios.get(`${URL}/faculty`);
   return result.data.data;
 };
+
+export const getFacultyById = async (id) => {
+  try {
+    let result = await axios.get(`${URL}/faculty/${id}`);
+    return result.data.data;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(error.response.data.error);
+    }
+    throw error;
+  }
+};
+
+export const updateFaculty = async (id, updatedData) => {
+  try {
+    let result = await axios.put(`${URL}/faculty/${id}`, updatedData);
+    return result.data;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(error.response.data.error);
+    }
+    throw error;
+  }
+};

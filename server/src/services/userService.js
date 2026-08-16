@@ -31,8 +31,33 @@ const getAllFacultyUsers = async () => {
   return facultyUsers;
 };
 
+const getFacultyById = async (id) => {
+  const facultyUser = await userRepository.findUserById(id);
+  if (!facultyUser || facultyUser.typeOfUser !== "faculty") {
+    throw new Error("Faculty user not found");
+  }
+  return facultyUser;
+};
+
+const updateFaculty = async (id, updatedData) => {
+  const facultyUser = await userRepository.findUserById(id);
+  if (!facultyUser || facultyUser.typeOfUser !== "faculty") {
+    throw new Error("Faculty user not found");
+  }
+  facultyUser.firstName = updatedData.firstName;
+  facultyUser.lastName = updatedData.lastName;
+  facultyUser.email = updatedData.email;
+  facultyUser.facultyProfile = updatedData.facultyProfile;
+  if (updatedData.password) {
+    const hashedPassword = await passwordHashing.hashPassword(updatedData.password);
+    facultyUser.passwordHash = hashedPassword;
+  }
+  await facultyUser.save();
+  return facultyUser;
+};
+
 const registerFaculty = async (facultyData) => {
-  const { firstName, lastName, email, password, phone, bio, facultyProfile } = facultyData;
+  const { firstName, lastName, email, password, facultyProfile } = facultyData;
   let existingUser = await userRepository.findUserByEmail(email);
   if (existingUser) {
     throw new Error("Email already exists");
@@ -44,13 +69,13 @@ const registerFaculty = async (facultyData) => {
     email,
     passwordHash: hashedPassword,
     typeOfUser: "faculty",
-    phone,
-    bio,
     isActive: true,
     facultyProfile: {
+      phone: facultyProfile.phone,
       department: facultyProfile.department,
       title: facultyProfile.title,
       specialization: facultyProfile.specialization,
+      bio: facultyProfile.bio,
     },
   });
   return newFaculty;
@@ -61,4 +86,6 @@ module.exports = {
   loginUser,
   getAllFacultyUsers,
   registerFaculty,
+  getFacultyById,
+  updateFaculty,
 };

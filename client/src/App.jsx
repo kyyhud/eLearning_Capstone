@@ -5,7 +5,8 @@ import Login from "./pages/auth/Login.jsx";
 import SignUp from "./pages/auth/SignUp.jsx";
 
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
-import FacultyManagement from "./pages/admin/FacultyManagement.jsx";
+import ManageFaculty from "./pages/admin/AddEditFaculty.jsx";
+import ViewFaculty from "./pages/admin/ManageFaculty.jsx";
 
 import FacultyDashboard from "./pages/faculty/FacultyDashboard.jsx";
 import FacultyCourses from "./pages/faculty/FacultyCourses.jsx";
@@ -25,7 +26,9 @@ function App() {
         <Route path="/signUp" element={<SignUp />} />
 
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/faculty" element={<FacultyManagement />} />
+        <Route path="/admin/manage-faculty" element={<ManageFaculty />} />
+        <Route path="/admin/manage-faculty/:id" element={<ManageFaculty />} />
+        <Route path="/admin/view-faculty" element={<ViewFaculty />} />
 
         <Route path="/faculty-dashboard" element={<FacultyDashboard />} />
         <Route path="/faculty/courses" element={<FacultyCourses />} />
