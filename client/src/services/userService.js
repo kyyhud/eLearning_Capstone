@@ -52,3 +52,15 @@ export const updateFaculty = async (id, updatedData) => {
     throw error;
   }
 };
+
+export const deleteFaculty = async (id) => {
+  try {
+    let result = await axios.delete(`${URL}/faculty/${id}`);
+    return result.data;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(error.response.data.error);
+    }
+    throw error;
+  }
+};

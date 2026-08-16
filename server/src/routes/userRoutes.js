@@ -8,5 +8,6 @@ router.get("/faculty", userController.getAllFacultyUsers);
 router.get("/faculty/:id", userController.getFacultyById);
 router.put("/faculty/:id", userController.updateFaculty);
 router.post("/faculty", userController.registerFaculty);
+router.delete("/faculty/:id", userController.deleteFaculty);
 
 module.exports = router;

@@ -20,10 +20,15 @@ const createFacultyUser = async (facultyData) => {
   return await User.create(facultyData);
 };
 
+const deleteFacultyUser = async (id) => {
+  return await User.findByIdAndDelete(id);
+};
+
 module.exports = {
   findUserById,
   findUserByEmail,
   createUser,
   createFacultyUser,
   findAllFacultyUsers,
+  deleteFacultyUser,
 };

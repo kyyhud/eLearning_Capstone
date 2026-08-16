@@ -14,7 +14,7 @@ function AdminDashboard() {
       <h3>Admin Dashboard</h3>
       <h4>Welcome, {userEmail}</h4>
       <hr />
-      <Link to="/admin/view-faculty">Manage Faculty</Link> |<Link to="/admin/manage-faculty">Add Faculty</Link>
+      <Link to="/admin/faculty-list">Manage Faculty</Link> |<Link to="/admin/faculty-form">Add Faculty</Link>
       <hr />
       <button value="Logout" onClick={logout}>
         Logout

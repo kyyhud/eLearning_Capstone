@@ -14,24 +14,23 @@ const emptyForm = {
   specialization: "",
 };
 
-function AddEditFaculty() {
+function FacultyForm() {
   const { id } = useParams();
-  const isEditing = Boolean(id);
+  const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const [message, setMessage] = useState("");
   const [formData, setFormData] = useState(emptyForm);
+  const isExistingFaculty = Boolean(id);
 
   useEffect(() => {
+    setIsEditing(false);
     if (id) {
       loadFaculty();
     } else {
       setFormData(emptyForm);
-      if (location.state && location.state.message) {
-        setMessage(location.state.message);
-      }
     }
-  }, [id, location.state]);
+  }, [id]);
 
   const loadFaculty = async () => {
     try {
@@ -80,11 +79,8 @@ function AddEditFaculty() {
           facultyData.password = formData.password;
         }
         await updateFaculty(id, facultyData);
-        navigate("/admin/manage-faculty", {
-          state: {
-            message: "Faculty member updated successfully.",
-          },
-        });
+        setMessage("Faculty member updated successfully.");
+        setIsEditing(false);
       } else {
         facultyData.password = formData.password;
         await registerFaculty(facultyData);
@@ -101,30 +97,47 @@ function AddEditFaculty() {
     <>
       <h3>Faculty Management</h3>
       {message && <p style={{ color: "red" }}>{message}</p>}
-      <h4>{isEditing ? "Edit Faculty Member" : "Add Faculty Member"}</h4>
+      <h4>{!isExistingFaculty ? "Add Faculty Member" : isEditing ? "Edit Faculty Member" : "Faculty Details"}</h4>
       <form onSubmit={handleSubmit}>
-        <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required />
-        <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} required />
-        <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
+        First Name:{" "}
+        <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} disabled={isExistingFaculty && !isEditing} required />
+        <br />
+        Last Name: <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} disabled={isExistingFaculty && !isEditing} required />
+        <br />
+        Email: <input type="email" name="email" value={formData.email} onChange={handleChange} disabled={isExistingFaculty && !isEditing} required />
+        <br />
+        Password (optional for current faculty):{" "}
         <input
           type="password"
           name="password"
-          placeholder="New Password (optional for current faculty)"
           value={formData.password}
           onChange={handleChange}
+          disabled={isExistingFaculty && !isEditing}
           required={!isEditing}
         />
-        <input type="text" name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} />
-        <input type="text" name="department" placeholder="Department" value={formData.department} onChange={handleChange} />
-        <input type="text" name="title" placeholder="Title" value={formData.title} onChange={handleChange} />
-        <input type="text" name="specialization" placeholder="Specialization" value={formData.specialization} onChange={handleChange} />
-        <textarea name="bio" placeholder="Bio" value={formData.bio} onChange={handleChange} />
-        <button type="submit">{isEditing ? "Update Faculty" : "Add Faculty"}</button>
+        <br />
+        Phone: <input type="text" name="phone" value={formData.phone} onChange={handleChange} disabled={isExistingFaculty && !isEditing} />
+        <br />
+        Department: <input type="text" name="department" value={formData.department} onChange={handleChange} disabled={isExistingFaculty && !isEditing} />
+        <br />
+        Title: <input type="text" name="title" value={formData.title} onChange={handleChange} disabled={isExistingFaculty && !isEditing} />
+        <br />
+        Specialization:{" "}
+        <input type="text" name="specialization" value={formData.specialization} onChange={handleChange} disabled={isExistingFaculty && !isEditing} />
+        <br />
+        Bio: <textarea name="bio" value={formData.bio} onChange={handleChange} disabled={isExistingFaculty && !isEditing} />
+        <br />
+        {isExistingFaculty && !isEditing && (
+          <button type="button" onClick={() => setIsEditing(true)}>
+            Edit Faculty
+          </button>
+        )}
+        {(!isExistingFaculty || isEditing) && <button type="submit">{isExistingFaculty ? "Update Faculty" : "Add Faculty"}</button>}
       </form>
       <br />
-      <Link to="/admin-dashboard">Back to Dashboard</Link>
+      <Link to="/admin/faculty-list">Show Faculty List</Link> |<Link to="/admin-dashboard">Back to Dashboard</Link>
     </>
   );
 }
 
-export default AddEditFaculty;
+export default FacultyForm;

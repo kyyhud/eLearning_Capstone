@@ -81,6 +81,14 @@ const registerFaculty = async (facultyData) => {
   return newFaculty;
 };
 
+const deleteFaculty = async (id) => {
+  const facultyUser = await userRepository.findUserById(id);
+  if (!facultyUser || facultyUser.typeOfUser !== "faculty") {
+    throw new Error("Faculty user not found");
+  }
+  await userRepository.deleteFacultyUser(id);
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -88,4 +96,5 @@ module.exports = {
   registerFaculty,
   getFacultyById,
   updateFaculty,
+  deleteFaculty,
 };
