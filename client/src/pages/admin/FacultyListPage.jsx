@@ -46,6 +46,7 @@ function FacultyList() {
       <table border="1">
         <thead>
           <tr>
+            <th>Active</th>
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
@@ -57,6 +58,7 @@ function FacultyList() {
         <tbody>
           {faculty.map((user) => (
             <tr key={user._id}>
+              <td>{user.isActive ? "Yes" : "No"}</td>
               <td>
                 {user.firstName} {user.lastName}
               </td>

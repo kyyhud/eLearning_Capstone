@@ -12,6 +12,7 @@ const emptyForm = {
   department: "",
   title: "",
   specialization: "",
+  isActive: true,
 };
 
 function FacultyForm() {
@@ -45,6 +46,7 @@ function FacultyForm() {
         title: facultyMember.facultyProfile?.title || "",
         specialization: facultyMember.facultyProfile?.specialization || "",
         bio: facultyMember.facultyProfile?.bio || "",
+        isActive: facultyMember.isActive,
       });
     } catch (error) {
       setMessage(error.message);
@@ -59,6 +61,11 @@ function FacultyForm() {
     }));
   };
 
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    loadFaculty();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -66,6 +73,7 @@ function FacultyForm() {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
+        isActive: formData.isActive,
         facultyProfile: {
           phone: formData.phone,
           department: formData.department,
@@ -127,12 +135,35 @@ function FacultyForm() {
         <br />
         Bio: <textarea name="bio" value={formData.bio} onChange={handleChange} disabled={isExistingFaculty && !isEditing} />
         <br />
+        <label>
+          Status: {formData.isActive ? "Active" : "Inactive"}
+          <input
+            type="checkbox"
+            checked={formData.isActive}
+            onChange={(e) =>
+              setFormData((prevData) => ({
+                ...prevData,
+                isActive: e.target.checked,
+              }))
+            }
+            disabled={isExistingFaculty && !isEditing}
+          />
+        </label>
+        <br />
         {isExistingFaculty && !isEditing && (
           <button type="button" onClick={() => setIsEditing(true)}>
             Edit Faculty
           </button>
         )}
-        {(!isExistingFaculty || isEditing) && <button type="submit">{isExistingFaculty ? "Update Faculty" : "Add Faculty"}</button>}
+        {!isExistingFaculty && <button type="submit">Add Faculty</button>}
+        {isExistingFaculty && isEditing && (
+          <>
+            <button type="submit">Update Faculty</button>|
+            <button type="button" onClick={handleCancelEdit}>
+              Cancel
+            </button>
+          </>
+        )}
       </form>
       <br />
       <Link to="/admin/faculty-list">Show Faculty List</Link> |<Link to="/admin-dashboard">Back to Dashboard</Link>

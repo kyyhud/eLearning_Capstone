@@ -48,6 +48,9 @@ const updateFaculty = async (id, updatedData) => {
   facultyUser.lastName = updatedData.lastName;
   facultyUser.email = updatedData.email;
   facultyUser.facultyProfile = updatedData.facultyProfile;
+  if (updatedData.isActive !== undefined) {
+    facultyUser.isActive = updatedData.isActive;
+  }
   if (updatedData.password) {
     const hashedPassword = await passwordHashing.hashPassword(updatedData.password);
     facultyUser.passwordHash = hashedPassword;
