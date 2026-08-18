@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { registerFaculty } from "../../services/userService.js";
 
 const emptyForm = {
@@ -94,9 +93,6 @@ function AddFacultyPage() {
         <button type="submit">Add Faculty</button>
       </form>
       <br />
-      <Link to="/admin/faculty-list">Show Faculty List</Link>
-      {" | "}
-      <Link to="/admin-dashboard">Back to Dashboard</Link>
     </>
   );
 }

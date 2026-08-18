@@ -2,8 +2,8 @@ const userService = require("../services/userService");
 
 const registerUser = async (req, res) => {
   try {
-    const { email, password, typeOfUser } = req.body;
-    const newUser = await userService.registerUser(email, password, typeOfUser);
+    const { firstName, lastName, email, password, typeOfUser } = req.body;
+    const newUser = await userService.registerUser(firstName, lastName, email, password, typeOfUser);
     res.status(201).json({ success: true, data: newUser, message: "User registered successfully" });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });
@@ -15,14 +15,14 @@ const loginUser = async (req, res) => {
     const { email, password, typeOfUser } = req.body;
     const user = await userService.loginUser(email, password, typeOfUser);
     res.status(200).json({
-  success: true,
-  message: `Logged in as ${typeOfUser}`,
-  user: {
-    _id: user._id,
-    email: user.email,
-    typeOfUser: user.typeOfUser,
-  },
-});
+      success: true,
+      message: `Logged in as ${typeOfUser}`,
+      user: {
+        _id: user._id,
+        email: user.email,
+        typeOfUser: user.typeOfUser,
+      },
+    });
   } catch (error) {
     res.status(401).json({ success: false, error: error.message });
   }

@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { accessFacultyCourses } from "../../services/courseService.js";
 
@@ -50,8 +49,6 @@ function FacultyCourses() {
           ))}
         </tbody>
       </table>
-      <br />
-      <Link to="/faculty-dashboard">Back to Dashboard</Link>
     </>
   );
 }

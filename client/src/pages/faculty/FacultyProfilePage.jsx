@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getFacultyById, updateFaculty } from "../../services/userService.js";
 
-const user = JSON.parse(sessionStorage.getItem("user"));
-const isAdmin = user.typeOfUser === "admin";
 const emptyForm = {
   firstName: "",
   lastName: "",
@@ -21,6 +19,8 @@ function FacultyProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState("");
   const [formData, setFormData] = useState(emptyForm);
+  const user = JSON.parse(sessionStorage.getItem("user"));
+  const isAdmin = user.typeOfUser === "admin";
 
   useEffect(() => {
     setIsEditing(false);
@@ -147,16 +147,6 @@ function FacultyProfilePage() {
           </>
         )}
       </form>
-      <br />
-      {isAdmin ? (
-        <>
-          <Link to="/admin/faculty-list">Show Faculty List</Link>
-          {" | "}
-          <Link to="/admin-dashboard">Back to Dashboard</Link>
-        </>
-      ) : (
-        <Link to="/faculty-dashboard">Back to Dashboard</Link>
-      )}
     </>
   );
 }

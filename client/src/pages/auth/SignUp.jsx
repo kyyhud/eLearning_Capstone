@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { registerUser } from "../../services/userService.js";
 
 function SignUp() {
-  let [email, setEmail] = useState("");
-  let [password, setPassword] = useState("");
-  let [confirmPassword, setConfirmPassword] = useState("");
-  let [typeOfUser, setTypeOfUser] = useState("");
-  let [msg, setMsg] = useState("");
-  let navigate = useNavigate();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [msg, setMsg] = useState("");
 
   const signUp = async (e) => {
     e.preventDefault();
@@ -16,14 +16,15 @@ function SignUp() {
       setMsg("Passwords do not match.");
       return;
     }
-    let newUser = { email, password, typeOfUser };
+    const newUser = { firstName, lastName, email, password };
     try {
-      let result = await registerUser(newUser);
+      const result = await registerUser(newUser);
       if (result.success) {
         setMsg("User registered successfully. Please login.");
+        setFirstName("");
+        setLastName("");
         setEmail("");
         setPassword("");
-        setTypeOfUser("");
         setConfirmPassword("");
       }
     } catch (error) {
@@ -33,27 +34,24 @@ function SignUp() {
 
   return (
     <>
-      <h3>Sign Up Page</h3>
+      <h3>Student Sign Up Page</h3>
       <span style={{ color: "red" }}>{msg}</span>
       <form onSubmit={signUp}>
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input type="text" placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
         <br />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input type="text" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
         <br />
-        <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         <br />
-        <select value={typeOfUser} onChange={(e) => setTypeOfUser(e.target.value)}>
-          <option value="">Select User Type</option>
-          <option value="admin">Admin</option>
-          <option value="faculty">Faculty</option>
-          <option value="student">Student</option>
-        </select>
+        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <br />
+        <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
         <br />
         <button type="submit">Sign Up</button>
       </form>
       <hr />
       <p>
-        Already have an account? <a href="/login">Login</a>
+        Already have an account? <Link to="/login">Login</Link>
       </p>
     </>
   );

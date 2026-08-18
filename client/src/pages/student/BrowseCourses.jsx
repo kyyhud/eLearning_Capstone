@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { viewAllCourses, viewCourseByTitle } from "../../services/courseService.js";
 
@@ -68,8 +67,6 @@ function BrowseCoursesByStudent() {
           ))}
         </tbody>
       </table>
-      <br />
-      <Link to="/student-dashboard">Back to Dashboard</Link>
     </>
   );
 }

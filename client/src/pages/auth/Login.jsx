@@ -1,33 +1,36 @@
 import { useState } from "react";
 import { loginUser } from "../../services/userService.js";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
-  let [email, setEmail] = useState("");
-  let [password, setPassword] = useState("");
-  let [typeOfUser, setTypeOfUser] = useState("");
-  let navigate = useNavigate();
-  let [msg, setMsg] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [typeOfUser, setTypeOfUser] = useState("");
+  const navigate = useNavigate();
+  const [msg, setMsg] = useState("");
 
   const signIn = async (e) => {
     e.preventDefault();
-    let login = { email, password, typeOfUser };
+    const login = { email, password, typeOfUser };
     try {
-      let result = await loginUser(login);
+      const result = await loginUser(login);
       if (result.success) {
         sessionStorage.setItem("user", JSON.stringify(result.user));
-        if (typeOfUser === "admin") {
-          navigate("/admin-dashboard");
-        } else if (typeOfUser === "faculty") {
-          navigate("/faculty-dashboard");
-        } else if (typeOfUser === "student") {
-          navigate("/student-dashboard");
+        const userType = result.user.typeOfUser;
+        if (userType === "admin") {
+          navigate("/admin/dashboard");
+        } else if (userType === "faculty") {
+          navigate("/faculty/dashboard");
+        } else if (userType === "student") {
+          navigate("/student/dashboard");
         }
         setEmail("");
         setPassword("");
         setTypeOfUser("");
+        setMsg("");
       }
     } catch (error) {
+      console.error("Login error:", error);
       setMsg(error.response?.data?.error || "Invalid credentials. Please try again.");
     }
   };
@@ -52,7 +55,7 @@ function Login() {
       </form>
       <hr />
       <p>
-        Don't have an account? <a href="/signup">Sign Up</a>
+        Don't have an account? <Link to="/signup">Sign Up</Link>
       </p>
     </>
   );

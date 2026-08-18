@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { viewAllFaculty, deleteFaculty } from "../../services/userService.js";
 
 function FacultyList() {
@@ -75,7 +75,6 @@ function FacultyList() {
         </tbody>
       </table>
       <br />
-      <Link to="/admin-dashboard">Back to Dashboard</Link>
     </>
   );
 }

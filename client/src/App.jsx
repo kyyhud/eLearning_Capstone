@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./pages/auth/Login.jsx";
 import SignUp from "./pages/auth/SignUp.jsx";
+
+import AuthenticatedLayout from "./components/AuthenticatedLayout.jsx";
 
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 import AddFacultyPage from "./pages/admin/AddFacultyPage.jsx";
@@ -22,20 +23,26 @@ function App() {
     <>
       <h2>eLearning App - Capstone Project</h2>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signUp" element={<SignUp />} />
 
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/faculty-form" element={<AddFacultyPage />} />
-        <Route path="/admin/faculty-list" element={<FacultyView />} />
+        <Route element={<AuthenticatedLayout allowedRoles={["admin"]} />}>
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/faculty" element={<FacultyView />} />
+          <Route path="/admin/faculty/add" element={<AddFacultyPage />} />
+        </Route>
 
-        <Route path="/faculty-dashboard" element={<FacultyDashboard />} />
-        <Route path="/faculty/faculty-profile/:id" element={<FacultyProfilePage />} />
-        <Route path="/faculty/courses" element={<FacultyCourses />} />
+        <Route element={<AuthenticatedLayout allowedRoles={["faculty"]} />}>
+          <Route path="/faculty/dashboard" element={<FacultyDashboard />} />
+          <Route path="/faculty/profile/:id" element={<FacultyProfilePage />} />
+          <Route path="/faculty/courses" element={<FacultyCourses />} />
+        </Route>
 
-        <Route path="/student-dashboard" element={<StudentDashboard />} />
-        <Route path="/student/browse-courses" element={<BrowseCoursesByStudent />} />
+        <Route element={<AuthenticatedLayout allowedRoles={["student"]} />}>
+          <Route path="/student/dashboard" element={<StudentDashboard />} />
+          <Route path="/student/browse-courses" element={<BrowseCoursesByStudent />} />
+        </Route>
       </Routes>
     </>
   );
