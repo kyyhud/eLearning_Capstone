@@ -5,7 +5,7 @@ import Login from "./pages/auth/Login.jsx";
 import SignUp from "./pages/auth/SignUp.jsx";
 
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
-import FacultyForm from "./pages/admin/FacultyFormPage.jsx";
+import AddFacultyPage from "./pages/admin/AddFacultyPage.jsx";
 import FacultyView from "./pages/admin/FacultyListPage.jsx";
 
 import FacultyDashboard from "./pages/faculty/FacultyDashboard.jsx";
@@ -27,8 +27,7 @@ function App() {
         <Route path="/signUp" element={<SignUp />} />
 
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/faculty-form" element={<FacultyForm />} />
-        <Route path="/admin/faculty-form/:id" element={<FacultyForm />} />
+        <Route path="/admin/faculty-form" element={<AddFacultyPage />} />
         <Route path="/admin/faculty-list" element={<FacultyView />} />
 
         <Route path="/faculty-dashboard" element={<FacultyDashboard />} />
