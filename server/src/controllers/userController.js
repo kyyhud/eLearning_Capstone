@@ -13,8 +13,16 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const { email, password, typeOfUser } = req.body;
-    const userType = await userService.loginUser(email, password, typeOfUser);
-    res.status(200).json({ success: true, message: `Logged in as ${userType}` });
+    const user = await userService.loginUser(email, password, typeOfUser);
+    res.status(200).json({
+  success: true,
+  message: `Logged in as ${typeOfUser}`,
+  user: {
+    _id: user._id,
+    email: user.email,
+    typeOfUser: user.typeOfUser,
+  },
+});
   } catch (error) {
     res.status(401).json({ success: false, error: error.message });
   }

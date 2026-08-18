@@ -67,7 +67,7 @@ function FacultyList() {
               <td>{user.facultyProfile?.department || "-"}</td>
               <td>{user.facultyProfile?.title || "-"}</td>
               <td>
-                <button onClick={() => navigate(`/admin/faculty-form/${user._id}`)}>View/Edit</button>|
+                <button onClick={() => navigate(`/faculty/faculty-profile/${user._id}`)}>View/Edit</button>|
                 <button onClick={() => handleDelete(user._id)}>Delete</button>
               </td>
             </tr>

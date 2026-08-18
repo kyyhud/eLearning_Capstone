@@ -9,6 +9,7 @@ import FacultyForm from "./pages/admin/FacultyFormPage.jsx";
 import FacultyView from "./pages/admin/FacultyListPage.jsx";
 
 import FacultyDashboard from "./pages/faculty/FacultyDashboard.jsx";
+import FacultyProfilePage from "./pages/faculty/FacultyProfilePage.jsx";
 import FacultyCourses from "./pages/faculty/FacultyCourses.jsx";
 
 import StudentDashboard from "./pages/student/StudentDashboard.jsx";
@@ -31,6 +32,7 @@ function App() {
         <Route path="/admin/faculty-list" element={<FacultyView />} />
 
         <Route path="/faculty-dashboard" element={<FacultyDashboard />} />
+        <Route path="/faculty/faculty-profile/:id" element={<FacultyProfilePage />} />
         <Route path="/faculty/courses" element={<FacultyCourses />} />
 
         <Route path="/student-dashboard" element={<StudentDashboard />} />

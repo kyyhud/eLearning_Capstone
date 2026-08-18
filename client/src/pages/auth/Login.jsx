@@ -14,8 +14,8 @@ function Login() {
     let login = { email, password, typeOfUser };
     try {
       let result = await loginUser(login);
-      sessionStorage.setItem("userEmail", email);
       if (result.success) {
+        sessionStorage.setItem("user", JSON.stringify(result.user));
         if (typeOfUser === "admin") {
           navigate("/admin-dashboard");
         } else if (typeOfUser === "faculty") {

@@ -17,13 +17,16 @@ const registerUser = async (email, password, typeOfUser) => {
 const loginUser = async (email, password, typeOfUser) => {
   const existingUser = await userRepository.findUserByEmail(email);
   if (!existingUser) {
-    throw new Error("Invalid email"); // email => credentials
+    throw new Error("Invalid email");
   }
-  const isPasswordValid = await passwordHashing.comparePassword(password, existingUser.passwordHash);
+  const isPasswordValid = await passwordHashing.comparePassword(
+    password,
+    existingUser.passwordHash
+  );
   if (!isPasswordValid || existingUser.typeOfUser !== typeOfUser) {
     throw new Error("Invalid credentials");
   }
-  return existingUser.typeOfUser;
+  return existingUser;
 };
 
 const getAllFacultyUsers = async () => {
@@ -44,16 +47,23 @@ const updateFaculty = async (id, updatedData) => {
   if (!facultyUser || facultyUser.typeOfUser !== "faculty") {
     throw new Error("Faculty user not found");
   }
-  facultyUser.firstName = updatedData.firstName;
-  facultyUser.lastName = updatedData.lastName;
-  facultyUser.email = updatedData.email;
-  facultyUser.facultyProfile = updatedData.facultyProfile;
+  if (updatedData.firstName !== undefined) {
+    facultyUser.firstName = updatedData.firstName;
+  }
+  if (updatedData.lastName !== undefined) {
+    facultyUser.lastName = updatedData.lastName;
+  }
+  if (updatedData.email !== undefined) {
+    facultyUser.email = updatedData.email;
+  }
   if (updatedData.isActive !== undefined) {
     facultyUser.isActive = updatedData.isActive;
   }
-  if (updatedData.password) {
-    const hashedPassword = await passwordHashing.hashPassword(updatedData.password);
-    facultyUser.passwordHash = hashedPassword;
+  if (updatedData.facultyProfile) {
+    facultyUser.facultyProfile = {
+      ...facultyUser.facultyProfile,
+      ...updatedData.facultyProfile,
+    };
   }
   await facultyUser.save();
   return facultyUser;
