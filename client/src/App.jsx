@@ -12,6 +12,7 @@ import FacultyView from "./pages/admin/FacultyListPage.jsx";
 import FacultyDashboard from "./pages/faculty/FacultyDashboard.jsx";
 import FacultyProfilePage from "./pages/faculty/FacultyProfilePage.jsx";
 import FacultyCourses from "./pages/faculty/FacultyCourses.jsx";
+import FacultyUserSettings from "./pages/faculty/FacultyUserSetting.jsx";
 
 import StudentDashboard from "./pages/student/StudentDashboard.jsx";
 import BrowseCoursesByStudent from "./pages/student/BrowseCourses.jsx";
@@ -38,6 +39,7 @@ function App() {
           <Route path="/faculty/dashboard" element={<FacultyDashboard />} />
           <Route path="/faculty/profile/:id" element={<FacultyProfilePage />} />
           <Route path="/faculty/courses" element={<FacultyCourses />} />
+          <Route path="/faculty/settings" element={<FacultyUserSettings />} />
         </Route>
 
         <Route element={<AuthenticatedLayout allowedRoles={["student"]} />}>

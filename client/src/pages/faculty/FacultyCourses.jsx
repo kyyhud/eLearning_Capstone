@@ -4,12 +4,11 @@ import { accessFacultyCourses } from "../../services/courseService.js";
 function FacultyCourses() {
   const [courses, setCourses] = useState([]);
   const [message, setMessage] = useState("");
-
-  let userEmail = sessionStorage.getItem("userEmail");
+  const user = JSON.parse(sessionStorage.getItem("user"));
 
   const accessFacultyCoursesHandler = async () => {
     try {
-      const response = await accessFacultyCourses(userEmail);
+      const response = await accessFacultyCourses(user.email);
       setCourses(response);
       setMessage("");
     } catch (error) {
@@ -24,7 +23,7 @@ function FacultyCourses() {
 
   return (
     <>
-      <h3>{`Courses for ${userEmail}`}</h3>
+      <h3>{`Courses for ${user?.email}`}</h3>
       {message && <p style={{ color: "red" }}>{message}</p>}
       <br />
       <table border="1">

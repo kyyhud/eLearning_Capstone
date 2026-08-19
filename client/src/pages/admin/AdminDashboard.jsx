@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 
 function AdminDashboard() {
-  const userEmail = sessionStorage.getItem("userEmail");
+  const user = JSON.parse(sessionStorage.getItem("user"));
 
   return (
     <>
       <h3>Admin Dashboard</h3>
-      <h4>Welcome, {userEmail}</h4>
+      <h4>Welcome, {user?.email}</h4>
     </>
   );
 }

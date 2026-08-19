@@ -1,13 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
+const { authenticateUser, authorizeRoles } = require("../middleware/authMiddleware");
 
 router.post("/register", userController.registerUser);
 router.post("/login", userController.loginUser);
-router.get("/faculty", userController.getAllFacultyUsers);
-router.get("/faculty/:id", userController.getFacultyById);
-router.put("/faculty/:id", userController.updateFaculty);
-router.post("/faculty", userController.registerFaculty);
-router.delete("/faculty/:id", userController.deleteFaculty);
+router.put("/change-password", authenticateUser, userController.changePassword);
+router.get("/faculty", authenticateUser, authorizeRoles("admin"), userController.getAllFacultyUsers);
+router.get("/faculty/:id", authenticateUser, authorizeRoles("admin", "faculty"), userController.getFacultyById);
+router.put("/faculty/:id", authenticateUser, authorizeRoles("admin", "faculty"), userController.updateFaculty);
+router.post("/faculty", authenticateUser, authorizeRoles("admin"), userController.registerFaculty);
+router.delete("/faculty/:id", authenticateUser, authorizeRoles("admin"), userController.deleteFaculty);
 
 module.exports = router;

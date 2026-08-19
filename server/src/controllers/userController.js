@@ -1,4 +1,5 @@
 const userService = require("../services/userService");
+const jwt = require("jsonwebtoken");
 
 const registerUser = async (req, res) => {
   try {
@@ -14,9 +15,11 @@ const loginUser = async (req, res) => {
   try {
     const { email, password, typeOfUser } = req.body;
     const user = await userService.loginUser(email, password, typeOfUser);
+    const token = jwt.sign({ userId: user._id, typeOfUser: user.typeOfUser }, process.env.JWT_SECRET, { expiresIn: "1h" });
     res.status(200).json({
       success: true,
       message: `Logged in as ${typeOfUser}`,
+      token,
       user: {
         _id: user._id,
         email: user.email,
@@ -25,6 +28,22 @@ const loginUser = async (req, res) => {
     });
   } catch (error) {
     res.status(401).json({ success: false, error: error.message });
+  }
+};
+
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const result = await userService.changePassword(req.user.userId, currentPassword, newPassword);
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      error: error.message,
+    });
   }
 };
 
@@ -81,6 +100,7 @@ const deleteFaculty = async (req, res) => {
 module.exports = {
   registerUser,
   loginUser,
+  changePassword,
   getAllFacultyUsers,
   registerFaculty,
   getFacultyById,

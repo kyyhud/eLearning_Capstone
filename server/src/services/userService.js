@@ -41,6 +41,22 @@ const getFacultyById = async (id) => {
   return facultyUser;
 };
 
+const changePassword = async (userId, currentPassword, newPassword) => {
+  const user = await userRepository.findUserByIdWithPassword(userId);
+  if (!user) {
+    throw new Error("User not found.");
+  }
+  const isPasswordValid = await passwordHashing.comparePassword(currentPassword, user.passwordHash);
+  if (!isPasswordValid) {
+    throw new Error("Current password is incorrect.");
+  }
+  user.passwordHash = await passwordHashing.hashPassword(newPassword);
+  await user.save();
+  return {
+    message: "Password changed successfully.",
+  };
+};
+
 const updateFaculty = async (id, updatedData) => {
   const facultyUser = await userRepository.findUserById(id);
   if (!facultyUser || facultyUser.typeOfUser !== "faculty") {
@@ -106,6 +122,7 @@ const deleteFaculty = async (id) => {
 module.exports = {
   registerUser,
   loginUser,
+  changePassword,
   getAllFacultyUsers,
   registerFaculty,
   getFacultyById,

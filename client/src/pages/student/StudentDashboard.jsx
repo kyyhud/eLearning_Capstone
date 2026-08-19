@@ -4,7 +4,7 @@ function StudentDashboard() {
   return (
     <>
       <h3>Student Dashboard</h3>
-      <h4>Welcome, {user.email}</h4>
+      <h4>Welcome, {user?.email}</h4>
     </>
   );
 }

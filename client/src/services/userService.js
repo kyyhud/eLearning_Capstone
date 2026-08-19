@@ -13,8 +13,13 @@ export const loginUser = async (credentials) => {
 };
 
 export const registerFaculty = async (facultyData) => {
+  const token = sessionStorage.getItem("token");
   try {
-    let result = await axios.post(`${URL}/faculty`, facultyData);
+    let result = await axios.post(`${URL}/faculty`, facultyData, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+      },
+    });
     return result.data;
   } catch (error) {
     if (error.response) {
@@ -24,14 +29,42 @@ export const registerFaculty = async (facultyData) => {
   }
 };
 
+export const changePassword = async (passwordData) => {
+  const token = sessionStorage.getItem("token");
+  const response = await fetch(`${URL}/change-password`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+    body: JSON.stringify(passwordData),
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error || "Failed to change password");
+  }
+  return data;
+};
+
+
 export const viewAllFaculty = async () => {
-  let result = await axios.get(`${URL}/faculty`);
+  const token = sessionStorage.getItem("token");
+  let result = await axios.get(`${URL}/faculty`, {
+    headers: {
+      "Authorization": `Bearer ${token}`,
+    },
+  });
   return result.data.data;
 };
 
 export const getFacultyById = async (id) => {
+  const token = sessionStorage.getItem("token");
   try {
-    let result = await axios.get(`${URL}/faculty/${id}`);
+    let result = await axios.get(`${URL}/faculty/${id}`, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+      },
+    });
     return result.data.data;
   } catch (error) {
     if (error.response) {
@@ -42,8 +75,13 @@ export const getFacultyById = async (id) => {
 };
 
 export const updateFaculty = async (id, updatedData) => {
+  const token = sessionStorage.getItem("token");
   try {
-    let result = await axios.put(`${URL}/faculty/${id}`, updatedData);
+    let result = await axios.put(`${URL}/faculty/${id}`, updatedData, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+      },
+    });
     return result.data;
   } catch (error) {
     if (error.response) {
@@ -54,8 +92,13 @@ export const updateFaculty = async (id, updatedData) => {
 };
 
 export const deleteFaculty = async (id) => {
+  const token = sessionStorage.getItem("token");
   try {
-    let result = await axios.delete(`${URL}/faculty/${id}`);
+    let result = await axios.delete(`${URL}/faculty/${id}`, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+      },
+    });
     return result.data;
   } catch (error) {
     if (error.response) {
