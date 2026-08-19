@@ -46,6 +46,7 @@ function FacultyList() {
       <table border="1">
         <thead>
           <tr>
+            <th>Faculty ID</th>
             <th>Active</th>
             <th>Name</th>
             <th>Email</th>
@@ -58,17 +59,17 @@ function FacultyList() {
         <tbody>
           {faculty.map((user) => (
             <tr key={user._id}>
+              <td>{user.facultyProfile?.facultyId || "-"}</td>
               <td>{user.isActive ? "Yes" : "No"}</td>
               <td>
                 {user.firstName} {user.lastName}
               </td>
               <td>{user.email}</td>
-              <td>{user.facultyProfile?.phone || "-"}</td>
+              <td>{user.phone || "-"}</td>
               <td>{user.facultyProfile?.department || "-"}</td>
               <td>{user.facultyProfile?.title || "-"}</td>
               <td>
-                <button onClick={() => navigate(`/faculty/faculty-profile/${user._id}`)}>View/Edit</button>|
-                <button onClick={() => handleDelete(user._id)}>Delete</button>
+                <button onClick={() => navigate(`/admin/faculty/${user._id}`)}>View/Edit</button>|<button onClick={() => handleDelete(user._id)}>Delete</button>
               </td>
             </tr>
           ))}

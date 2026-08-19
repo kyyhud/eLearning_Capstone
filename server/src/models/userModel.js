@@ -19,6 +19,11 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
+    phone: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     passwordHash: {
       type: String,
       required: true,
@@ -35,10 +40,10 @@ const userSchema = new mongoose.Schema(
       default: true,
     },
     facultyProfile: {
-      phone: {
-        type: String,
-        trim: true,
-        default: "",
+      facultyId: {
+        type: Number,
+        unique: true,
+        sparse: true,
       },
       department: {
         type: String,

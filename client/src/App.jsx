@@ -31,6 +31,7 @@ function App() {
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/faculty" element={<FacultyView />} />
           <Route path="/admin/faculty/add" element={<AddFacultyPage />} />
+          <Route path="/admin/faculty/:id" element={<FacultyProfilePage />} />
         </Route>
 
         <Route element={<AuthenticatedLayout allowedRoles={["faculty"]} />}>

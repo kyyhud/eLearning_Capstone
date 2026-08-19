@@ -1,3 +1,5 @@
+const { getNextId } = require("./idService.js");
+
 const userRepository = require("../repositories/userRepository");
 let passwordHashing = require("../middleware/passwordHashing");
 
@@ -67,21 +69,23 @@ const updateFaculty = async (id, updatedData) => {
 };
 
 const registerFaculty = async (facultyData) => {
-  const { firstName, lastName, email, password, facultyProfile } = facultyData;
+  const { firstName, lastName, email, password, phone, facultyProfile } = facultyData;
   let existingUser = await userRepository.findUserByEmail(email);
   if (existingUser) {
     throw new Error("Email already exists");
   }
   const hashedPassword = await passwordHashing.hashPassword(password);
+  const facultyId = await getNextId("facultyId", 1001);
   const newFaculty = await userRepository.createFacultyUser({
     firstName,
     lastName,
     email,
+    phone,
     passwordHash: hashedPassword,
     typeOfUser: "faculty",
     isActive: true,
     facultyProfile: {
-      phone: facultyProfile.phone,
+      facultyId,
       department: facultyProfile.department,
       title: facultyProfile.title,
       specialization: facultyProfile.specialization,

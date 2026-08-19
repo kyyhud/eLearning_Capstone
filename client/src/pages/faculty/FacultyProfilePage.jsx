@@ -7,6 +7,7 @@ const emptyForm = {
   lastName: "",
   email: "",
   phone: "",
+  facultyId: "",
   bio: "",
   department: "",
   title: "",
@@ -34,7 +35,8 @@ function FacultyProfilePage() {
         firstName: facultyMember.firstName,
         lastName: facultyMember.lastName,
         email: facultyMember.email,
-        phone: facultyMember.facultyProfile?.phone || "",
+        phone: facultyMember.phone || "",
+        facultyId: facultyMember.facultyProfile?.facultyId || "",
         department: facultyMember.facultyProfile?.department || "",
         title: facultyMember.facultyProfile?.title || "",
         specialization: facultyMember.facultyProfile?.specialization || "",
@@ -68,8 +70,8 @@ function FacultyProfilePage() {
       lastName: formData.lastName,
       email: formData.email,
       isActive: formData.isActive,
+      phone: formData.phone,
       facultyProfile: {
-        phone: formData.phone,
         department: formData.department,
         title: formData.title,
         specialization: formData.specialization,
@@ -97,6 +99,8 @@ function FacultyProfilePage() {
       {message && <p style={{ color: "red" }}>{message}</p>}
       <h4>{isEditing ? "Edit Profile" : "Profile Details"}</h4>
       <form onSubmit={handleSubmit}>
+        Faculty ID: <input type="text" name="facultyId" value={formData.facultyId} onChange={handleChange} disabled={!isEditing || !isAdmin} />
+        <br />
         First Name: <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
         <br />
         Last Name: <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} disabled={!isEditing || !isAdmin} required />

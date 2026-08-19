@@ -35,8 +35,8 @@ function AddFacultyPage() {
         email: formData.email,
         password: formData.password,
         isActive: formData.isActive,
+        phone: formData.phone,
         facultyProfile: {
-          phone: formData.phone,
           department: formData.department,
           title: formData.title,
           specialization: formData.specialization,
