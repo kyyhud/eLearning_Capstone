@@ -87,11 +87,11 @@ const registerFaculty = async (req, res) => {
   }
 };
 
-const deleteFaculty = async (req, res) => {
+const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
-    await userService.deleteFaculty(id);
-    res.status(200).json({ success: true, message: "Faculty user deleted successfully" });
+    await userService.deleteUser(id);
+    res.status(200).json({ success: true, message: "User deleted successfully" });
   } catch (error) {
     res.status(404).json({ success: false, error: error.message });
   }
@@ -141,7 +141,7 @@ module.exports = {
   registerFaculty,
   getFacultyById,
   updateFaculty,
-  deleteFaculty,
+  deleteUser,
   getAllStudents,
   getStudentById,
   updateStudent,

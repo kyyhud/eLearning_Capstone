@@ -119,12 +119,12 @@ const registerFaculty = async (facultyData) => {
   return newFaculty;
 };
 
-const deleteFaculty = async (id) => {
-  const facultyUser = await userRepository.findUserById(id);
-  if (!facultyUser || facultyUser.typeOfUser !== "faculty") {
-    throw new Error("Faculty user not found");
+const deleteUser = async (id) => {
+  const user = await userRepository.findUserById(id);
+  if (!user) {
+    throw new Error("User not found");
   }
-  await userRepository.deleteFacultyUser(id);
+  await userRepository.deleteUser(id);
 };
 
 const getAllStudents = async () => {
@@ -178,7 +178,7 @@ module.exports = {
   registerFaculty,
   getFacultyById,
   updateFaculty,
-  deleteFaculty,
+  deleteUser,
   getAllStudents,
   getStudentById,
   updateStudent,

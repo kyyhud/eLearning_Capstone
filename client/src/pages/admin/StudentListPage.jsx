@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { getAllStudents } from "../../services/userService.js";
+import { getAllStudents, deleteUser } from "../../services/userService.js";
 
 function StudentList() {
   const navigate = useNavigate();
@@ -20,6 +20,18 @@ function StudentList() {
     try {
       const response = await getAllStudents();
       setStudents(response);
+    } catch (error) {
+      console.error(error);
+      setMessage(error.message);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const confirmDelete = window.confirm("Are you sure you want to delete this student?");
+      if (!confirmDelete) return;
+      await deleteUser(id);
+      fetchAllStudents();
     } catch (error) {
       console.error(error);
       setMessage(error.message);
@@ -55,7 +67,8 @@ function StudentList() {
               <td>{user.phone}</td>
               <td>{user.studentProfile?.fieldOfStudy || "-"}</td>
               <td>
-                <button onClick={() => navigate(`/admin/students/${user._id}`)}>Edit</button>
+                <button onClick={() => navigate(`/admin/students/${user._id}`)}>View/Edit</button>|
+                <button onClick={() => handleDelete(user._id)}>Delete</button>
               </td>
             </tr>
           ))}

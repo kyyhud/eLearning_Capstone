@@ -90,10 +90,10 @@ export const updateFaculty = async (id, updatedData) => {
   }
 };
 
-export const deleteFaculty = async (id) => {
+export const deleteUser = async (id) => {
   const token = sessionStorage.getItem("token");
   try {
-    let result = await axios.delete(`${URL}/faculty/${id}`, {
+    let result = await axios.delete(`${URL}/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

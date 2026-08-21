@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { viewAllFaculty, deleteFaculty } from "../../services/userService.js";
+import { viewAllFaculty, deleteUser } from "../../services/userService.js";
 
 function FacultyList() {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ function FacultyList() {
     try {
       const confirmDelete = window.confirm("Are you sure you want to delete this faculty member?");
       if (!confirmDelete) return;
-      await deleteFaculty(id);
+      await deleteUser(id);
       fetchAllFaculty();
     } catch (error) {
       console.error(error);

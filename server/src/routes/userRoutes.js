@@ -11,7 +11,8 @@ router.get("/faculty", authenticateUser, authorizeRoles("admin"), userController
 router.get("/faculty/:id", authenticateUser, authorizeRoles("admin", "faculty"), userController.getFacultyById);
 router.put("/faculty/:id", authenticateUser, authorizeRoles("admin", "faculty"), userController.updateFaculty);
 router.post("/faculty", authenticateUser, authorizeRoles("admin"), userController.registerFaculty);
-router.delete("/faculty/:id", authenticateUser, authorizeRoles("admin"), userController.deleteFaculty);
+
+router.delete("/:id", authenticateUser, authorizeRoles("admin"), userController.deleteUser);
 
 router.get("/students", authenticateUser, authorizeRoles("admin"), userController.getAllStudents);
 router.get("/students/:id", authenticateUser, authorizeRoles("admin", "student"), userController.getStudentById);

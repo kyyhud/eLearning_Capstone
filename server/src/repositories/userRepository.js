@@ -24,7 +24,7 @@ const createFacultyUser = async (facultyData) => {
   return await User.create(facultyData);
 };
 
-const deleteFacultyUser = async (id) => {
+const deleteUser = async (id) => {
   return await User.findByIdAndDelete(id);
 };
 
@@ -43,7 +43,7 @@ module.exports = {
   createStudent,
   createFacultyUser,
   findAllFacultyUsers,
-  deleteFacultyUser,
+  deleteUser,
   findAllStudents,
   findStudentById,
 };
