@@ -127,6 +127,44 @@ const getAllStudents = async () => {
   return students;
 };
 
+const getStudentById = async (id) => {
+  const student = await userRepository.findUserById(id);
+  if (!student || student.typeOfUser !== "student") {
+    throw new Error("Student not found");
+  }
+  return student;
+};
+
+const updateStudent = async (id, updatedData) => {
+  const student = await userRepository.findUserById(id);
+  if (!student || student.typeOfUser !== "student") {
+    throw new Error("Student not found");
+  }
+  if (updatedData.firstName !== undefined) {
+    student.firstName = updatedData.firstName;
+  }
+  if (updatedData.lastName !== undefined) {
+    student.lastName = updatedData.lastName;
+  }
+  if (updatedData.email !== undefined) {
+    student.email = updatedData.email;
+  }
+  if (updatedData.phone !== undefined) {
+    student.phone = updatedData.phone;
+  }
+  if (updatedData.isActive !== undefined) {
+    student.isActive = updatedData.isActive;
+  }
+  if (updatedData.studentProfile) {
+    student.studentProfile = {
+      ...student.studentProfile,
+      ...updatedData.studentProfile,
+    };
+  }
+  await student.save();
+  return student;
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -137,4 +175,6 @@ module.exports = {
   updateFaculty,
   deleteFaculty,
   getAllStudents,
+  getStudentById,
+  updateStudent,
 };

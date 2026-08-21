@@ -16,24 +16,25 @@ function Navbar() {
     <nav>
       {typeOfUser === "admin" && (
         <>
-          <Link to="/admin/dashboard">Dashboard</Link> { " | " }
-          <Link to="/admin/faculty">Faculty</Link> { " | " }
-          <Link to="/admin/faculty/add">Add Faculty</Link> { " | " }
-          <Link to="/admin/students">Students</Link> { " | " }
+          <Link to="/admin/dashboard">Dashboard</Link> {" | "}
+          <Link to="/admin/faculty">Faculty</Link> {" | "}
+          <Link to="/admin/faculty/add">Add Faculty</Link> {" | "}
+          <Link to="/admin/students">Students</Link> {" | "}
         </>
       )}
       {typeOfUser === "faculty" && (
         <>
-          <Link to="/faculty/dashboard">Dashboard</Link> { " | " }
-          <Link to="/faculty/courses">My Courses</Link> { " | " }
-          <Link to={`/faculty/profile/${user._id}`}>Profile</Link> { " | " }
-          <Link to="/faculty/settings">Settings</Link> { " | " }
+          <Link to="/faculty/dashboard">Dashboard</Link> {" | "}
+          <Link to="/faculty/courses">My Courses</Link> {" | "}
+          <Link to={`/faculty/profile/${user._id}`}>Profile</Link> {" | "}
+          <Link to="/faculty/settings">Settings</Link> {" | "}
         </>
       )}
       {typeOfUser === "student" && (
         <>
-          <Link to="/student/dashboard">Dashboard</Link> { " | " }
-          <Link to="/student/browse-courses">Browse Courses</Link> { " | " }
+          <Link to="/student/dashboard">Dashboard</Link> {" | "}
+          <Link to="/student/browse-courses">Browse Courses</Link> {" | "}
+          <Link to={`/student/profile/${user._id}`}>Profile</Link> {" | "}
         </>
       )}
       <Link to="/" onClick={handleLogout}>

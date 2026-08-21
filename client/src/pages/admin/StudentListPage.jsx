@@ -10,11 +10,11 @@ function StudentList() {
 
   useEffect(() => {
     fetchAllStudents();
-    if (location.state?.message){
+    if (location.state?.message) {
       setMessage(location.state.message);
       navigate(location.pathname, { replace: true }); // Clear the message from the location state
     }
-}, [location, navigate]);
+  }, [location, navigate]);
 
   const fetchAllStudents = async () => {
     try {
@@ -32,33 +32,35 @@ function StudentList() {
       {message && <p style={{ color: "red" }}>{message}</p>}
       <h4>Student List</h4>
       <table border="1">
-      <thead>
-        <tr>
-          <th>Student ID</th>
-          <th>Active</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Field of Study</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {students.map((user) => (
-          <tr key={user._id}>
-            <td>{user.id}</td>
-            <td>{user.active ? "Yes" : "No"}</td>
-            <td>{user.firstName} {user.lastName}</td>
-            <td>{user.email}</td>
-            <td>{user.phone}</td>
-            <td>{user.studentProfile?.fieldOfStudy || "-"}</td>
-            <td>
-              <button onClick={() => navigate(`/admin/students/${user._id}`)}>Edit</button>
-            </td>
+        <thead>
+          <tr>
+            <th>Student ID</th>
+            <th>Active</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Field of Study</th>
+            <th>Actions</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {students.map((user) => (
+            <tr key={user._id}>
+              <td>{user.id}</td>
+              <td>{user.active ? "Yes" : "No"}</td>
+              <td>
+                {user.firstName} {user.lastName}
+              </td>
+              <td>{user.email}</td>
+              <td>{user.phone}</td>
+              <td>{user.studentProfile?.fieldOfStudy || "-"}</td>
+              <td>
+                <button onClick={() => navigate(`/admin/students/${user._id}`)}>Edit</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

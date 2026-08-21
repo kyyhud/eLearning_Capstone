@@ -106,6 +106,33 @@ const getAllStudents = async (req, res) => {
   }
 };
 
+const getStudentById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (req.user.typeOfUser === "student" && req.user.userId !== id) {
+      return res.status(403).json({ success: false, error: "Access denied" });
+    }
+    const student = await userService.getStudentById(id);
+    res.status(200).json({ success: true, data: student, message: "Student retrieved successfully" });
+  } catch (error) {
+    res.status(404).json({ success: false, error: error.message });
+  }
+};
+
+const updateStudent = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (req.user.typeOfUser === "student" && req.user.userId !== id) {
+      return res.status(403).json({ success: false, error: "Access denied" });
+    }
+    const updatedData = req.body;
+    const updatedStudent = await userService.updateStudent(id, updatedData);
+    res.status(200).json({ success: true, data: updatedStudent, message: "Student updated successfully" });
+  } catch (error) {
+    res.status(404).json({ success: false, error: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -116,4 +143,6 @@ module.exports = {
   updateFaculty,
   deleteFaculty,
   getAllStudents,
+  getStudentById,
+  updateStudent,
 };

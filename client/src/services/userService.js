@@ -17,7 +17,7 @@ export const registerFaculty = async (facultyData) => {
   try {
     let result = await axios.post(`${URL}/faculty`, facultyData, {
       headers: {
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     return result.data;
@@ -35,7 +35,7 @@ export const changePassword = async (passwordData) => {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(passwordData),
   });
@@ -46,12 +46,11 @@ export const changePassword = async (passwordData) => {
   return data;
 };
 
-
 export const viewAllFaculty = async () => {
   const token = sessionStorage.getItem("token");
   let result = await axios.get(`${URL}/faculty`, {
     headers: {
-      "Authorization": `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
   });
   return result.data.data;
@@ -62,7 +61,7 @@ export const getFacultyById = async (id) => {
   try {
     let result = await axios.get(`${URL}/faculty/${id}`, {
       headers: {
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     return result.data.data;
@@ -79,7 +78,7 @@ export const updateFaculty = async (id, updatedData) => {
   try {
     let result = await axios.put(`${URL}/faculty/${id}`, updatedData, {
       headers: {
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     return result.data;
@@ -96,7 +95,7 @@ export const deleteFaculty = async (id) => {
   try {
     let result = await axios.delete(`${URL}/faculty/${id}`, {
       headers: {
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     return result.data;
@@ -112,8 +111,42 @@ export const getAllStudents = async () => {
   const token = sessionStorage.getItem("token");
   let result = await axios.get(`${URL}/students`, {
     headers: {
-      "Authorization": `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
   });
   return result.data.data;
+};
+
+export const getStudentById = async (id) => {
+  const token = sessionStorage.getItem("token");
+  try {
+    let result = await axios.get(`${URL}/students/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return result.data.data;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(error.response.data.error);
+    }
+    throw error;
+  }
+};
+
+export const updateStudent = async (id, updatedData) => {
+  const token = sessionStorage.getItem("token");
+  try {
+    let result = await axios.put(`${URL}/students/${id}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return result.data;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(error.response.data.error);
+    }
+    throw error;
+  }
 };

@@ -41,7 +41,6 @@ function FacultyProfilePage() {
         title: facultyMember.facultyProfile?.title || "",
         specialization: facultyMember.facultyProfile?.specialization || "",
         bio: facultyMember.facultyProfile?.bio || "",
-        isActive: facultyMember.isActive,
       });
     } catch (error) {
       setMessage(error.message);
@@ -65,25 +64,25 @@ function FacultyProfilePage() {
     e.preventDefault();
     try {
       const facultyData = isAdmin
-  ? {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      isActive: formData.isActive,
-      phone: formData.phone,
-      facultyProfile: {
-        department: formData.department,
-        title: formData.title,
-        specialization: formData.specialization,
-        bio: formData.bio,
-      },
-    }
-  : {
-      facultyProfile: {
-        phone: formData.phone,
-        bio: formData.bio,
-      },
-    };
+        ? {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            isActive: formData.isActive,
+            phone: formData.phone,
+            facultyProfile: {
+              department: formData.department,
+              title: formData.title,
+              specialization: formData.specialization,
+              bio: formData.bio,
+            },
+          }
+        : {
+            facultyProfile: {
+              phone: formData.phone,
+              bio: formData.bio,
+            },
+          };
       await updateFaculty(id, facultyData);
       setMessage("Faculty member updated successfully.");
       setIsEditing(false);
@@ -99,7 +98,7 @@ function FacultyProfilePage() {
       {message && <p style={{ color: "red" }}>{message}</p>}
       <h4>{isEditing ? "Edit Profile" : "Profile Details"}</h4>
       <form onSubmit={handleSubmit}>
-        Faculty ID: <input type="text" name="facultyId" value={formData.facultyId} onChange={handleChange} disabled={!isEditing || !isAdmin} />
+        Faculty ID: <input type="text" name="facultyId" value={formData.facultyId} onChange={handleChange} disabled />
         <br />
         First Name: <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
         <br />

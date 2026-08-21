@@ -17,6 +17,7 @@ import FacultyUserSettings from "./pages/faculty/FacultyUserSetting.jsx";
 
 import StudentDashboard from "./pages/student/StudentDashboard.jsx";
 import BrowseCoursesByStudent from "./pages/student/BrowseCourses.jsx";
+import StudentProfilePage from "./pages/student/StudentProfilePage.jsx";
 
 import "./App.css";
 
@@ -35,6 +36,7 @@ function App() {
           <Route path="/admin/faculty/add" element={<AddFacultyPage />} />
           <Route path="/admin/faculty/:id" element={<FacultyProfilePage />} />
           <Route path="/admin/students" element={<StudentListPage />} />
+          <Route path="/admin/students/:id" element={<StudentProfilePage />} />
         </Route>
 
         <Route element={<AuthenticatedLayout allowedRoles={["faculty"]} />}>
@@ -46,6 +48,7 @@ function App() {
 
         <Route element={<AuthenticatedLayout allowedRoles={["student"]} />}>
           <Route path="/student/dashboard" element={<StudentDashboard />} />
+          <Route path="/student/profile/:id" element={<StudentProfilePage />} />
           <Route path="/student/browse-courses" element={<BrowseCoursesByStudent />} />
         </Route>
       </Routes>

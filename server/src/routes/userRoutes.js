@@ -14,5 +14,7 @@ router.post("/faculty", authenticateUser, authorizeRoles("admin"), userControlle
 router.delete("/faculty/:id", authenticateUser, authorizeRoles("admin"), userController.deleteFaculty);
 
 router.get("/students", authenticateUser, authorizeRoles("admin"), userController.getAllStudents);
+router.get("/students/:id", authenticateUser, authorizeRoles("admin", "student"), userController.getStudentById);
+router.put("/students/:id", authenticateUser, authorizeRoles("admin", "student"), userController.updateStudent);
 
 module.exports = router;

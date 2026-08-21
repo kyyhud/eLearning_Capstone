@@ -32,6 +32,10 @@ const findAllStudents = async () => {
   return await User.find({ typeOfUser: "student" }).select("-passwordHash");
 };
 
+const findStudentById = async (id) => {
+  return await User.findById(id);
+};
+
 module.exports = {
   findUserById,
   findUserByEmail,
@@ -41,4 +45,5 @@ module.exports = {
   findAllFacultyUsers,
   deleteFacultyUser,
   findAllStudents,
+  findStudentById,
 };
