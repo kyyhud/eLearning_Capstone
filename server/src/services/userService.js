@@ -28,19 +28,6 @@ const loginUser = async (email, password, typeOfUser) => {
   return existingUser;
 };
 
-const getAllFacultyUsers = async () => {
-  const facultyUsers = await userRepository.findAllFacultyUsers();
-  return facultyUsers;
-};
-
-const getFacultyById = async (id) => {
-  const facultyUser = await userRepository.findUserById(id);
-  if (!facultyUser || facultyUser.typeOfUser !== "faculty") {
-    throw new Error("Faculty user not found");
-  }
-  return facultyUser;
-};
-
 const changePassword = async (userId, currentPassword, newPassword) => {
   const user = await userRepository.findUserByIdWithPassword(userId);
   if (!user) {
@@ -57,6 +44,19 @@ const changePassword = async (userId, currentPassword, newPassword) => {
   };
 };
 
+const getAllFacultyUsers = async () => {
+  const facultyUsers = await userRepository.findAllFacultyUsers();
+  return facultyUsers;
+};
+
+const getFacultyById = async (id) => {
+  const facultyUser = await userRepository.findUserById(id);
+  if (!facultyUser || facultyUser.typeOfUser !== "faculty") {
+    throw new Error("Faculty user not found");
+  }
+  return facultyUser;
+};
+
 const updateFaculty = async (id, updatedData) => {
   const facultyUser = await userRepository.findUserById(id);
   if (!facultyUser || facultyUser.typeOfUser !== "faculty") {
@@ -70,6 +70,9 @@ const updateFaculty = async (id, updatedData) => {
   }
   if (updatedData.email !== undefined) {
     facultyUser.email = updatedData.email;
+  }
+  if (updatedData.phone !== undefined) {
+    facultyUser.phone = updatedData.phone;
   }
   if (updatedData.isActive !== undefined) {
     facultyUser.isActive = updatedData.isActive;
@@ -119,6 +122,11 @@ const deleteFaculty = async (id) => {
   await userRepository.deleteFacultyUser(id);
 };
 
+const getAllStudents = async () => {
+  const students = await userRepository.findAllStudents();
+  return students;
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -128,4 +136,5 @@ module.exports = {
   getFacultyById,
   updateFaculty,
   deleteFaculty,
+  getAllStudents,
 };

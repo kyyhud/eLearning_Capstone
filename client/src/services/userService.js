@@ -107,3 +107,13 @@ export const deleteFaculty = async (id) => {
     throw error;
   }
 };
+
+export const getAllStudents = async () => {
+  const token = sessionStorage.getItem("token");
+  let result = await axios.get(`${URL}/students`, {
+    headers: {
+      "Authorization": `Bearer ${token}`,
+    },
+  });
+  return result.data.data;
+};

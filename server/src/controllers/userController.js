@@ -15,7 +15,7 @@ const loginUser = async (req, res) => {
   try {
     const { email, password, typeOfUser } = req.body;
     const user = await userService.loginUser(email, password, typeOfUser);
-    const token = jwt.sign({ userId: user._id, typeOfUser: user.typeOfUser }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ userId: user._id, typeOfUser: user.typeOfUser }, process.env.JWT_SECRET, { expiresIn: "12h" });
     res.status(200).json({
       success: true,
       message: `Logged in as ${typeOfUser}`,
@@ -97,6 +97,15 @@ const deleteFaculty = async (req, res) => {
   }
 };
 
+const getAllStudents = async (req, res) => {
+  try {
+    const students = await userService.getAllStudents();
+    res.status(200).json({ success: true, data: students, message: "Students retrieved successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -106,4 +115,5 @@ module.exports = {
   getFacultyById,
   updateFaculty,
   deleteFaculty,
+  getAllStudents,
 };

@@ -53,7 +53,7 @@ function FacultyList() {
             <th>Phone</th>
             <th>Department</th>
             <th>Title</th>
-            <th>Update</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
