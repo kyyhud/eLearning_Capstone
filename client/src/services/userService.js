@@ -2,8 +2,8 @@ import axios from "axios";
 
 let URL = "http://localhost:3000/api/users";
 
-export const registerUser = async (userData) => {
-  let result = await axios.post(`${URL}/register`, userData);
+export const studentSignUp = async (userData) => {
+  let result = await axios.post(`${URL}/signup`, userData);
   return result.data;
 };
 

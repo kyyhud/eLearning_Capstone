@@ -1,10 +1,10 @@
 const userService = require("../services/userService");
 const jwt = require("jsonwebtoken");
 
-const registerUser = async (req, res) => {
+const studentSignUp = async (req, res) => {
   try {
-    const { firstName, lastName, email, password, typeOfUser } = req.body;
-    const newUser = await userService.registerUser(firstName, lastName, email, password, typeOfUser);
+    const { firstName, lastName, email, password } = req.body;
+    const newUser = await userService.studentSignUp(firstName, lastName, email, password, "student");
     res.status(201).json({ success: true, data: newUser, message: "User registered successfully" });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });
@@ -134,7 +134,7 @@ const updateStudent = async (req, res) => {
 };
 
 module.exports = {
-  registerUser,
+  studentSignUp,
   loginUser,
   changePassword,
   getAllFacultyUsers,

@@ -16,7 +16,7 @@ const findAllFacultyUsers = async () => {
   return await User.find({ typeOfUser: "faculty" }).select("-passwordHash");
 };
 
-const createUser = async (userData) => {
+const createStudent = async (userData) => {
   return await User.create(userData);
 };
 
@@ -40,7 +40,7 @@ module.exports = {
   findUserById,
   findUserByEmail,
   findUserByIdWithPassword,
-  createUser,
+  createStudent,
   createFacultyUser,
   findAllFacultyUsers,
   deleteFacultyUser,

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { registerUser } from "../../services/userService.js";
+import { studentSignUp } from "../../services/userService.js";
 
-function SignUp() {
+function StudentSignUpPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,9 +18,9 @@ function SignUp() {
     }
     const newUser = { firstName, lastName, email, password };
     try {
-      const result = await registerUser(newUser);
+      const result = await studentSignUp(newUser);
       if (result.success) {
-        setMsg("User registered successfully. Please login.");
+        setMsg("Student account created successfully. Please login.");
         setFirstName("");
         setLastName("");
         setEmail("");
@@ -57,4 +57,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default StudentSignUpPage;

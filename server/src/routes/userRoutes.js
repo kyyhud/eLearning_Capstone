@@ -3,7 +3,7 @@ const router = express.Router();
 const userController = require("../controllers/userController");
 const { authenticateUser, authorizeRoles } = require("../middleware/authMiddleware");
 
-router.post("/register", userController.registerUser);
+router.post("/signup", userController.studentSignUp);
 router.post("/login", userController.loginUser);
 router.put("/change-password", authenticateUser, userController.changePassword);
 

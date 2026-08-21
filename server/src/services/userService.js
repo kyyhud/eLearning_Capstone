@@ -3,16 +3,21 @@ const { getNextId } = require("./idService.js");
 const userRepository = require("../repositories/userRepository");
 let passwordHashing = require("../middleware/passwordHashing");
 
-const registerUser = async (firstName, lastName, email, password, typeOfUser) => {
+const studentSignUp = async (firstName, lastName, email, password, typeOfUser) => {
   const existingUser = await userRepository.findUserByEmail(email);
   if (existingUser) {
     throw new Error("Email already exists");
   }
-  if (typeOfUser === "admin" || typeOfUser === "faculty") {
-    throw new Error("Cannot register as admin or faculty.");
-  }
+  const studentId = await getNextId("studentId", 10001);
   const hashedPassword = await passwordHashing.hashPassword(password);
-  const newUser = await userRepository.createUser({ firstName, lastName, email, passwordHash: hashedPassword, typeOfUser: "student" });
+  const newUser = await userRepository.createStudent({
+    firstName,
+    lastName,
+    email,
+    passwordHash: hashedPassword,
+    typeOfUser: "student",
+    studentProfile: { studentId },
+  });
   return newUser;
 };
 
@@ -166,7 +171,7 @@ const updateStudent = async (id, updatedData) => {
 };
 
 module.exports = {
-  registerUser,
+  studentSignUp,
   loginUser,
   changePassword,
   getAllFacultyUsers,
