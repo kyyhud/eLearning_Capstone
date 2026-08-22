@@ -1,22 +1,106 @@
 const mongoose = require("mongoose");
 
-const courseSchema = new mongoose.Schema({
+const contentSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
+    trim: true,
   },
   description: {
     type: String,
+    trim: true,
+    default: "",
+  },
+  type: {
+    type: String,
+    enum: ["document", "video", "presentation", "recording", "link", "quiz"],
     required: true,
   },
-  faculty: {
+  resourceUrl: {
     type: String,
-    required: true,
+    default: "",
   },
-  duration: {
+  fileName: {
     type: String,
-    required: true,
+    default: "",
+  },
+  isRequired: {
+    type: Boolean,
+    default: true,
   },
 });
+
+const sectionSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  description: {
+    type: String,
+    default: "",
+    trim: true,
+  },
+  order: {
+    type: Number,
+    required: true,
+  },
+  weekNumber: {
+    type: Number,
+  },
+  content: {
+    type: [contentSchema],
+    default: [],
+  },
+});
+
+const courseSchema = new mongoose.Schema(
+  {
+    courseId: {
+      type: Number,
+      unique: true,
+      required: true,
+      unique: true,
+      min: 1,
+    },
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    description: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    category: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    faculty: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    durationWeeks: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
+    status: {
+      type: String,
+      enum: ["draft", "published", "archived"],
+      default: "draft",
+    },
+    sections: {
+      type: [sectionSchema],
+      default: [],
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
 
 module.exports = mongoose.model("Course", courseSchema);

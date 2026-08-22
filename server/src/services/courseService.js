@@ -1,36 +1,40 @@
 const courseRepository = require("../repositories/courseRepository");
 
-const saveCourse = async (title, description, faculty, duration) => {
-  const existingCourse = await courseRepository.findCourseByTitle(title);
+const createCourse = async (courseData) => {
+  const courseId = Number(courseData.courseId);
+  if (!Number.isInteger(courseId) || courseId < 1) {
+    throw new Error("Course ID must be a positive whole number");
+  }
+  const existingCourse = await courseRepository.findCourseByCourseId(courseId);
   if (existingCourse) {
-    throw new Error("Course with this title already exists");
+    throw new Error(`Course ID ${courseId} is already in use`);
   }
-  return await courseRepository.createCourse({ title, description, faculty, duration });
+  const newCourseData = {
+    ...courseData,
+    courseId,
+  };
+  return await courseRepository.createCourse(newCourseData);
 };
 
-const getCoursesByFacultyEmail = async (facultyEmail) => {
-  const courses = await courseRepository.findCoursesByFacultyEmail(facultyEmail);
-  if (courses.length === 0) {
-    throw new Error("No courses found for this faculty email.");
-  }
-  return courses;
+const getCourses = async (filters) => {
+  return await courseRepository.findCourses(filters);
 };
 
-const getAllCourses = async () => {
-  return await courseRepository.findAllCourses();
-};
-
-const getCourseByTitle = async (title) => {
-  const courses = await courseRepository.findCourseByTitle(title);
-  if (courses.length === 0) {
+const getCourseByCourseId = async (courseId) => {
+  const course = await courseRepository.findCourseByCourseId(Number(courseId));
+  if (!course) {
     throw new Error("Course not found");
   }
-  return courses;
+  return course;
+};
+
+const getCoursesByFacultyId = async (facultyId) => {
+  return await courseRepository.findCoursesByFacultyId(facultyId);
 };
 
 module.exports = {
-  saveCourse,
-  getAllCourses,
-  getCourseByTitle,
-  getCoursesByFacultyEmail,
+  createCourse,
+  getCourses,
+  getCourseByCourseId,
+  getCoursesByFacultyId,
 };
