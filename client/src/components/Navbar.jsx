@@ -35,6 +35,7 @@ function Navbar() {
           <Link to="/student/dashboard">Dashboard</Link> {" | "}
           <Link to="/student/browse-courses">Browse Courses</Link> {" | "}
           <Link to={`/student/profile/${user._id}`}>Profile</Link> {" | "}
+          <Link to="/student/settings">Settings</Link> {" | "}
         </>
       )}
       <Link to="/" onClick={handleLogout}>

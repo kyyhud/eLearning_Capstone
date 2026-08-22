@@ -18,6 +18,7 @@ import FacultyUserSettings from "./pages/faculty/FacultyUserSetting.jsx";
 import StudentDashboard from "./pages/student/StudentDashboard.jsx";
 import BrowseCoursesByStudent from "./pages/student/BrowseCourses.jsx";
 import StudentProfilePage from "./pages/student/StudentProfilePage.jsx";
+import StudentUserSettings from "./pages/student/StudentUserSettings.jsx";
 
 import "./App.css";
 
@@ -50,6 +51,7 @@ function App() {
           <Route path="/student/dashboard" element={<StudentDashboard />} />
           <Route path="/student/profile/:id" element={<StudentProfilePage />} />
           <Route path="/student/browse-courses" element={<BrowseCoursesByStudent />} />
+          <Route path="/student/settings" element={<StudentUserSettings />} />
         </Route>
       </Routes>
     </>

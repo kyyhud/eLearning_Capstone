@@ -36,6 +36,7 @@ function FacultyProfilePage() {
         lastName: facultyMember.lastName,
         email: facultyMember.email,
         phone: facultyMember.phone || "",
+        isActive: facultyMember.isActive ?? true,
         facultyId: facultyMember.facultyProfile?.facultyId || "",
         department: facultyMember.facultyProfile?.department || "",
         title: facultyMember.facultyProfile?.title || "",
@@ -78,8 +79,8 @@ function FacultyProfilePage() {
             },
           }
         : {
+            phone: formData.phone,
             facultyProfile: {
-              phone: formData.phone,
               bio: formData.bio,
             },
           };
@@ -98,23 +99,39 @@ function FacultyProfilePage() {
       {message && <p style={{ color: "red" }}>{message}</p>}
       <h4>{isEditing ? "Edit Profile" : "Profile Details"}</h4>
       <form onSubmit={handleSubmit}>
-        Faculty ID: <input type="text" name="facultyId" value={formData.facultyId} onChange={handleChange} disabled />
+        <label htmlFor="facultyId">Faculty ID:</label>
+        <input type="text" id="facultyId" name="facultyId" value={formData.facultyId} onChange={handleChange} disabled />
         <br />
-        First Name: <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
+        <label htmlFor="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
         <br />
-        Last Name: <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
+        <label htmlFor="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
         <br />
-        Email: <input type="email" name="email" value={formData.email} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
+        <label htmlFor="email">Email:</label>
+        <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
         <br />
-        Phone: <input type="text" name="phone" value={formData.phone} onChange={handleChange} disabled={!isEditing} />
+        <label htmlFor="phone">Phone:</label>
+        <input type="text" id="phone" name="phone" value={formData.phone} onChange={handleChange} disabled={!isEditing} />
         <br />
-        Department: <input type="text" name="department" value={formData.department} onChange={handleChange} disabled={!isEditing || !isAdmin} />
+        <label htmlFor="department">Department:</label>
+        <input type="text" id="department" name="department" value={formData.department} onChange={handleChange} disabled={!isEditing || !isAdmin} />
         <br />
-        Title: <input type="text" name="title" value={formData.title} onChange={handleChange} disabled={!isEditing || !isAdmin} />
+        <label htmlFor="title">Title:</label>
+        <input type="text" id="title" name="title" value={formData.title} onChange={handleChange} disabled={!isEditing || !isAdmin} />
         <br />
-        Specialization: <input type="text" name="specialization" value={formData.specialization} onChange={handleChange} disabled={!isEditing || !isAdmin} />
+        <label htmlFor="specialization">Specialization:</label>
+        <input
+          type="text"
+          id="specialization"
+          name="specialization"
+          value={formData.specialization}
+          onChange={handleChange}
+          disabled={!isEditing || !isAdmin}
+        />
         <br />
-        Bio: <textarea name="bio" value={formData.bio} onChange={handleChange} disabled={!isEditing} />
+        <label htmlFor="bio">Bio:</label>
+        <textarea id="bio" name="bio" value={formData.bio} onChange={handleChange} disabled={!isEditing} />
         <br />
         {isAdmin && (
           <>

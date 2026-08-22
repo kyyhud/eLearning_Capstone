@@ -7,7 +7,6 @@ const emptyForm = {
   lastName: "",
   email: "",
   phone: "",
-  studentId: "",
   bio: "",
   fieldOfStudy: "",
   careerGoal: "",
@@ -37,7 +36,6 @@ function StudentProfilePage() {
         lastName: student.lastName,
         email: student.email,
         phone: student.phone || "",
-        studentId: student.studentProfile?.studentId || "",
         bio: student.studentProfile?.bio || "",
         fieldOfStudy: student.studentProfile?.fieldOfStudy || "",
         careerGoal: student.studentProfile?.careerGoal || "",
@@ -148,24 +146,29 @@ function StudentProfilePage() {
       {message && <p style={{ color: "red" }}>{message}</p>}
       <h4>{isEditing ? "Edit Profile" : "Profile Details"}</h4>
       <form onSubmit={handleSubmit}>
-        Student ID: <input type="text" name="studentId" value={formData.studentId} onChange={handleChange} disabled />
+        <label htmlFor="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
         <br />
-        First Name: <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
+        <label htmlFor="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
         <br />
-        Last Name: <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
+        <label htmlFor="email">Email:</label>
+        <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
         <br />
-        Email: <input type="email" name="email" value={formData.email} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
+        <label htmlFor="phone">Phone:</label>
+        <input type="text" id="phone" name="phone" value={formData.phone} onChange={handleChange} disabled={!isEditing} />
         <br />
-        Phone: <input type="text" name="phone" value={formData.phone} onChange={handleChange} disabled={!isEditing} />
+        <label htmlFor="fieldOfStudy">Field of Study:</label>
+        <input type="text" id="fieldOfStudy" name="fieldOfStudy" value={formData.fieldOfStudy} onChange={handleChange} disabled={!isEditing} />
         <br />
-        Field of Study: <input type="text" name="fieldOfStudy" value={formData.fieldOfStudy} onChange={handleChange} disabled={!isEditing} />
+        <label htmlFor="careerGoal">Career Goal:</label>
+        <input type="text" id="careerGoal" name="careerGoal" value={formData.careerGoal} onChange={handleChange} disabled={!isEditing} />
         <br />
-        Career Goal: <input type="text" name="careerGoal" value={formData.careerGoal} onChange={handleChange} disabled={!isEditing} />
-        <br />
-        Skills (comma separated): <input type="text" name="skills" value={formData.skills} onChange={handleChange} disabled={!isEditing} />
+        <label htmlFor="skills">Skills (comma separated):</label>
+        <input type="text" id="skills" name="skills" value={formData.skills} onChange={handleChange} disabled={!isEditing} />
         <br />
         <div>
-          <u>Certifications</u>:{formData.certifications.length === 0 && <span> None</span>}
+          <label>Certifications: {formData.certifications.length === 0 && <span> None</span>} </label>
           {formData.certifications.map((certification, index) => (
             <div key={certification._id || index}>
               <input
@@ -204,8 +207,8 @@ function StudentProfilePage() {
             </button>
           )}
         </div>
-        <br />
-        Bio: <textarea name="bio" value={formData.bio} onChange={handleChange} disabled={!isEditing} />
+        <label htmlFor="bio">Bio:</label>
+        <textarea id="bio" name="bio" value={formData.bio} onChange={handleChange} disabled={!isEditing} />
         <br />
         {isAdmin && (
           <>
