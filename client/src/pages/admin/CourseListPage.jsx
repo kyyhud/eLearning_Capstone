@@ -1,16 +1,18 @@
 import { useState, useEffect } from "react";
-import { viewCourses, deleteCourseByCourseId } from "../../services/courseService.js";
+import { useNavigate } from "react-router-dom";
+import { viewCourses, deleteCourseById } from "../../services/courseService.js";
 
 function CourseListPage() {
+  const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [message, setMessage] = useState("");
 
-  const handleDelete = async (courseId) => {
+  const handleDelete = async (id) => {
     try {
       const confirmDelete = window.confirm("Are you sure you want to delete this course?");
       if (!confirmDelete) return;
-      await deleteCourseByCourseId(courseId);
-      setCourses(courses.filter((course) => course._id !== courseId));
+      await deleteCourseById(id);
+      setCourses(courses.filter((course) => course._id !== id));
       setMessage("Course deleted successfully");
     } catch (error) {
       setMessage(`Error deleting course: ${error.message}`);
@@ -55,6 +57,7 @@ function CourseListPage() {
               <td>{course.durationWeeks}</td>
               <td>{course.status}</td>
               <td>
+                <button onClick={() => navigate(`/courses/${course._id}`)}>View/Edit</button>
                 <button onClick={() => handleDelete(course._id)}>Delete</button>
               </td>
             </tr>

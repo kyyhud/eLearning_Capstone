@@ -38,9 +38,9 @@ export const viewCourses = async (filters = {}) => {
   }
 };
 
-export const viewCourseByCourseId = async (courseId) => {
+export const getCourseById = async (id) => {
   try {
-    const result = await axios.get(`${URL}/${courseId}`, getAuthHeaders());
+    const result = await axios.get(`${URL}/${id}`, getAuthHeaders());
     return result.data.data;
   } catch (error) {
     if (error.response) {
@@ -62,9 +62,21 @@ export const accessFacultyCourses = async () => {
   }
 };
 
-export const deleteCourseByCourseId = async (courseId) => {
+export const updateCourse = async (id, updatedData) => {
   try {
-    const result = await axios.delete(`${URL}/${courseId}`, getAuthHeaders());
+    const result = await axios.put(`${URL}/${id}/edit`, updatedData, getAuthHeaders());
+    return result.data.data;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(error.response.data.error);
+    }
+    throw error;
+  }
+};
+
+export const deleteCourseById = async (id) => {
+  try {
+    const result = await axios.delete(`${URL}/${id}`, getAuthHeaders());
     return result.data.data;
   } catch (error) {
     if (error.response) {

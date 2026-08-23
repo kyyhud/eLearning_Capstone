@@ -31,9 +31,9 @@ const getCourses = async (req, res) => {
   }
 };
 
-const getCourseByCourseId = async (req, res) => {
+const getCourseById = async (req, res) => {
   try {
-    const course = await courseService.getCourseByCourseId(req.params.courseId);
+    const course = await courseService.getCourseById(req.params.id);
     res.status(200).json({ success: true, data: course });
   } catch (error) {
     res.status(404).json({ success: false, error: error.message });
@@ -49,9 +49,18 @@ const getMyCourses = async (req, res) => {
   }
 };
 
-const deleteCourseByCourseId = async (req, res) => {
+const updateCourse = async (req, res) => {
   try {
-    const deletedCourse = await courseService.deleteCourseByCourseId(req.params.courseId);
+    const updatedCourse = await courseService.updateCourse(req.params.id, req.body);
+    res.status(200).json({ success: true, data: updatedCourse, message: "Course updated successfully" });
+  } catch (error) {
+    res.status(404).json({ success: false, error: error.message });
+  }
+};
+
+const deleteCourseById = async (req, res) => {
+  try {
+    const deletedCourse = await courseService.deleteCourseById(req.params.id);
     res.status(200).json({ success: true, data: deletedCourse, message: "Course deleted successfully" });
   } catch (error) {
     res.status(404).json({ success: false, error: error.message });
@@ -61,7 +70,8 @@ const deleteCourseByCourseId = async (req, res) => {
 module.exports = {
   createCourse,
   getCourses,
-  getCourseByCourseId,
+  getCourseById,
   getMyCourses,
-  deleteCourseByCourseId,
+  updateCourse,
+  deleteCourseById,
 };

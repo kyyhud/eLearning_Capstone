@@ -23,8 +23,8 @@ const getCourses = async (filters) => {
   return await courseRepository.findCourses(filters);
 };
 
-const getCourseByCourseId = async (courseId) => {
-  const course = await courseRepository.findCourseByCourseId(Number(courseId));
+const getCourseById = async (id) => {
+  const course = await courseRepository.findCourseById(id);
   if (!course) {
     throw new Error("Course not found");
   }
@@ -35,18 +35,27 @@ const getCoursesByFacultyId = async (facultyId) => {
   return await courseRepository.findCoursesByFacultyId(facultyId);
 };
 
-const deleteCourseByCourseId = async (courseId) => {
-  const course = await courseRepository.findCourseByCourseId(Number(courseId));
+const updateCourse = async (id, updatedData) => {
+  const course = await courseRepository.findCourseById(id);
   if (!course) {
     throw new Error("Course not found");
   }
-  return await courseRepository.deleteCourseByCourseId(Number(courseId));
+  return await courseRepository.updateCourse(id, updatedData);
+};
+
+const deleteCourseById = async (id) => {
+  const course = await courseRepository.findCourseById(id);
+  if (!course) {
+    throw new Error("Course not found");
+  }
+  return await courseRepository.deleteCourseById(id);
 };
 
 module.exports = {
   createCourse,
   getCourses,
-  getCourseByCourseId,
+  getCourseById,
   getCoursesByFacultyId,
-  deleteCourseByCourseId,
+  updateCourse,
+  deleteCourseById,
 };

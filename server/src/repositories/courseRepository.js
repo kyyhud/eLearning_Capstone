@@ -4,8 +4,8 @@ const createCourse = async (courseData) => {
   return await Course.create(courseData);
 };
 
-const findCourseByCourseId = async (courseId) => {
-  return await Course.findOne({ courseId }).populate("faculty", "firstName lastName email facultyProfile.facultyId");
+const findCourseById = async (id) => {
+  return await Course.findById(id).populate("faculty", "firstName lastName email facultyProfile.facultyId");
 };
 
 const findCourses = async ({ search, category }) => {
@@ -36,15 +36,20 @@ const findCoursesByFacultyId = async (facultyId) => {
   }).populate("faculty", "firstName lastName email facultyProfile.facultyId");
 };
 
-const deleteCourseByCourseId = async (courseId) => {
-  return await Course.findOneAndDelete({ courseId });
+const updateCourse = async (id, updatedData) => {
+  return await Course.findByIdAndUpdate(id, updatedData, { new: true });
+};
+
+const deleteCourseById = async (id) => {
+  return await Course.findByIdAndDelete(id);
 };
 
 module.exports = {
   createCourse,
-  findCourseByCourseId,
+  findCourseById,
   findCourses,
   findCoursesByFacultyId,
   findCoursesByFacultyEmail,
-  deleteCourseByCourseId,
+  updateCourse,
+  deleteCourseById,
 };

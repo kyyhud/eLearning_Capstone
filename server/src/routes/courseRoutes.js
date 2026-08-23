@@ -6,7 +6,8 @@ const { authenticateUser, authorizeRoles } = require("../middleware/authMiddlewa
 router.post("/", authenticateUser, authorizeRoles("admin"), courseController.createCourse);
 router.get("/", authenticateUser, authorizeRoles("admin", "faculty", "student"), courseController.getCourses);
 router.get("/my-courses", authenticateUser, authorizeRoles("faculty"), courseController.getMyCourses);
-router.get("/:courseId", authenticateUser, authorizeRoles("admin", "faculty", "student"), courseController.getCourseByCourseId);
-router.delete("/:courseId", authenticateUser, authorizeRoles("admin"), courseController.deleteCourseByCourseId);
+router.get("/:id", authenticateUser, authorizeRoles("admin", "faculty", "student"), courseController.getCourseById);
+router.put("/:id/edit", authenticateUser, authorizeRoles("admin", "faculty"), courseController.updateCourse);
+router.delete("/:id", authenticateUser, authorizeRoles("admin"), courseController.deleteCourseById);
 
 module.exports = router;
