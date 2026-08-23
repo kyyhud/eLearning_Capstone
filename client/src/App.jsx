@@ -10,6 +10,7 @@ import AddFacultyPage from "./pages/admin/AddFacultyPage.jsx";
 import FacultyView from "./pages/admin/FacultyListPage.jsx";
 import StudentListPage from "./pages/admin/StudentListPage.jsx";
 import CourseListPage from "./pages/admin/CourseListPage.jsx";
+import AddCoursePage from "./pages/admin/AddCoursePage.jsx";
 
 import FacultyDashboard from "./pages/faculty/FacultyDashboard.jsx";
 import FacultyProfilePage from "./pages/faculty/FacultyProfilePage.jsx";
@@ -40,6 +41,7 @@ function App() {
           <Route path="/admin/students" element={<StudentListPage />} />
           <Route path="/admin/students/:id" element={<StudentProfilePage />} />
           <Route path="/admin/courses" element={<CourseListPage />} />
+          <Route path="/admin/add-course" element={<AddCoursePage />} />
         </Route>
 
         <Route element={<AuthenticatedLayout allowedRoles={["faculty"]} />}>

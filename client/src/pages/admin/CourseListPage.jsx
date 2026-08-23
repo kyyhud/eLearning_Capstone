@@ -1,10 +1,7 @@
-import {useState, useEffect} from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { viewCourses, deleteCourseByCourseId } from "../../services/courseService.js";
 
 function CourseListPage() {
-  const navigate = useNavigate();
-  const location = useLocation();
   const [courses, setCourses] = useState([]);
   const [message, setMessage] = useState("");
 
@@ -13,7 +10,7 @@ function CourseListPage() {
       const confirmDelete = window.confirm("Are you sure you want to delete this course?");
       if (!confirmDelete) return;
       await deleteCourseByCourseId(courseId);
-      setCourses(courses.filter(course => course._id !== courseId));
+      setCourses(courses.filter((course) => course._id !== courseId));
       setMessage("Course deleted successfully");
     } catch (error) {
       setMessage(`Error deleting course: ${error.message}`);
@@ -31,7 +28,7 @@ function CourseListPage() {
     };
     fetchCourses();
   }, []);
-  
+
   return (
     <div>
       <h1>Course List</h1>
@@ -49,7 +46,7 @@ function CourseListPage() {
           </tr>
         </thead>
         <tbody>
-          {courses.map(course => (
+          {courses.map((course) => (
             <tr key={course._id}>
               <td>{course.courseId}</td>
               <td>{course.title}</td>

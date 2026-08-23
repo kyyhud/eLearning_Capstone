@@ -60,8 +60,6 @@ const courseSchema = new mongoose.Schema(
       type: Number,
       unique: true,
       required: true,
-      unique: true,
-      min: 1,
     },
     title: {
       type: String,
@@ -70,8 +68,8 @@ const courseSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
       trim: true,
+      default: "",
     },
     category: {
       type: String,

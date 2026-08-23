@@ -3,12 +3,13 @@ const courseService = require("../services/courseService");
 const createCourse = async (req, res) => {
   try {
     const courseData = {
-      courseId: req.body.courseId,
+      courseLevel: req.body.courseLevel,
       title: req.body.title,
       description: req.body.description,
       category: req.body.category,
       faculty: req.body.faculty,
       durationWeeks: req.body.durationWeeks,
+      status: req.body.status,
     };
     const newCourse = await courseService.createCourse(courseData);
     res.status(201).json({ success: true, data: newCourse, message: "Course created successfully" });

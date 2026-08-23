@@ -21,6 +21,7 @@ function Navbar() {
           <Link to="/admin/faculty/add">Add Faculty</Link> {" | "}
           <Link to="/admin/students">Students</Link> {" | "}
           <Link to="/admin/courses">Courses</Link> {" | "}
+          <Link to="/admin/add-course">Add Course</Link> {" | "}
         </>
       )}
       {typeOfUser === "faculty" && (

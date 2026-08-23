@@ -22,4 +22,5 @@ const authorizeRoles = (...allowedRoles) => {
     next();
   };
 };
+
 module.exports = { authenticateUser, authorizeRoles };

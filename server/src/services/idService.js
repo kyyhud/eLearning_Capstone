@@ -17,4 +17,24 @@ const getNextId = async (name, initialValue) => {
   return counter.value;
 };
 
-module.exports = { getNextId };
+const getNextCourseId = async (level) => {
+  const courseLevel = Number(level);
+  if (![100, 200, 300, 400].includes(courseLevel)) {
+    throw new Error("Invalid course level");
+  }
+  const counter = await Counter.findOneAndUpdate(
+    { name: `courseId-${courseLevel}` },
+    { $inc: { value: 1 } },
+    {
+      new: true,
+      upsert: true,
+      setDefaultsOnInsert: true,
+    },
+  );
+  if (counter.value > 99) {
+    throw new Error(`No available course IDs remaining in the ${courseLevel} level`);
+  }
+  return courseLevel + counter.value;
+};
+
+module.exports = { getNextId, getNextCourseId };

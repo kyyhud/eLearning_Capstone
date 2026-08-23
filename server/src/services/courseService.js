@@ -1,7 +1,9 @@
 const courseRepository = require("../repositories/courseRepository");
+const { getNextCourseId } = require("./idService");
 
 const createCourse = async (courseData) => {
-  const courseId = Number(courseData.courseId);
+  const { courseLevel, ...courseDetails } = courseData;
+  const courseId = await getNextCourseId(courseLevel);
   if (!Number.isInteger(courseId) || courseId < 1) {
     throw new Error("Course ID must be a positive whole number");
   }
@@ -10,8 +12,9 @@ const createCourse = async (courseData) => {
     throw new Error(`Course ID ${courseId} is already in use`);
   }
   const newCourseData = {
-    ...courseData,
+    ...courseDetails,
     courseId,
+    status: courseData.status || "draft",
   };
   return await courseRepository.createCourse(newCourseData);
 };
