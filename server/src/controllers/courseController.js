@@ -48,9 +48,19 @@ const getMyCourses = async (req, res) => {
   }
 };
 
+const deleteCourseByCourseId = async (req, res) => {
+  try {
+    const deletedCourse = await courseService.deleteCourseByCourseId(req.params.courseId);
+    res.status(200).json({ success: true, data: deletedCourse, message: "Course deleted successfully" });
+  } catch (error) {
+    res.status(404).json({ success: false, error: error.message });
+  }
+};
+
 module.exports = {
   createCourse,
   getCourses,
   getCourseByCourseId,
   getMyCourses,
+  deleteCourseByCourseId,
 };

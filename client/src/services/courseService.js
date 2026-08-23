@@ -61,3 +61,15 @@ export const accessFacultyCourses = async () => {
     throw error;
   }
 };
+
+export const deleteCourseByCourseId = async (courseId) => {
+  try {
+    const result = await axios.delete(`${URL}/${courseId}`, getAuthHeaders());
+    return result.data.data;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(error.response.data.error);
+    }
+    throw error;
+  }
+};

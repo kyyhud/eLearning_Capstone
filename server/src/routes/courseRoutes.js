@@ -7,5 +7,6 @@ router.post("/", authenticateUser, authorizeRoles("admin"), courseController.cre
 router.get("/", authenticateUser, authorizeRoles("admin", "faculty", "student"), courseController.getCourses);
 router.get("/my-courses", authenticateUser, authorizeRoles("faculty"), courseController.getMyCourses);
 router.get("/:courseId", authenticateUser, authorizeRoles("admin", "faculty", "student"), courseController.getCourseByCourseId);
+router.delete("/:courseId", authenticateUser, authorizeRoles("admin"), courseController.deleteCourseByCourseId);
 
 module.exports = router;

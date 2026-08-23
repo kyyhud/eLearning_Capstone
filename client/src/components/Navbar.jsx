@@ -20,6 +20,7 @@ function Navbar() {
           <Link to="/admin/faculty">Faculty</Link> {" | "}
           <Link to="/admin/faculty/add">Add Faculty</Link> {" | "}
           <Link to="/admin/students">Students</Link> {" | "}
+          <Link to="/admin/courses">Courses</Link> {" | "}
         </>
       )}
       {typeOfUser === "faculty" && (

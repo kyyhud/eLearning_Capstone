@@ -36,9 +36,15 @@ const findCoursesByFacultyId = async (facultyId) => {
   }).populate("faculty", "firstName lastName email facultyProfile.facultyId");
 };
 
+const deleteCourseByCourseId = async (courseId) => {
+  return await Course.findOneAndDelete({ courseId });
+};
+
 module.exports = {
   createCourse,
   findCourseByCourseId,
   findCourses,
   findCoursesByFacultyId,
+  findCoursesByFacultyEmail,
+  deleteCourseByCourseId,
 };

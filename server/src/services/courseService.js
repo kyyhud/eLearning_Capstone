@@ -32,9 +32,18 @@ const getCoursesByFacultyId = async (facultyId) => {
   return await courseRepository.findCoursesByFacultyId(facultyId);
 };
 
+const deleteCourseByCourseId = async (courseId) => {
+  const course = await courseRepository.findCourseByCourseId(Number(courseId));
+  if (!course) {
+    throw new Error("Course not found");
+  }
+  return await courseRepository.deleteCourseByCourseId(Number(courseId));
+};
+
 module.exports = {
   createCourse,
   getCourses,
   getCourseByCourseId,
   getCoursesByFacultyId,
+  deleteCourseByCourseId,
 };
