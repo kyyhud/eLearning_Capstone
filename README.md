@@ -208,14 +208,6 @@ Backend authentication middleware:
 
 This provides authentication and role-based authorization for protected application functionality.
 
-## Development Approach
-
-The project is being developed incrementally rather than creating unused application structure in advance.
-
-New controllers, services, repositories, routes, pages, and supporting files are added as their corresponding functionality is implemented.
-
-This keeps the project structure aligned with the actual application and avoids maintaining speculative or unused files.
-
 ## Project Status
 
 **Active development**
