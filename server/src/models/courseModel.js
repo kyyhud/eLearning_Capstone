@@ -45,9 +45,6 @@ const sectionSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  weekNumber: {
-    type: Number,
-  },
   content: {
     type: [contentSchema],
     default: [],

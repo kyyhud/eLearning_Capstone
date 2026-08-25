@@ -51,10 +51,10 @@ const getMyCourses = async (req, res) => {
 
 const updateCourse = async (req, res) => {
   try {
-    const updatedCourse = await courseService.updateCourse(req.params.id, req.body);
+    const updatedCourse = await courseService.updateCourse(req.params.id, req.body, req.user);
     res.status(200).json({ success: true, data: updatedCourse, message: "Course updated successfully" });
   } catch (error) {
-    res.status(404).json({ success: false, error: error.message });
+    res.status(error.statusCode || 500).json({ success: false, error: error.message });
   }
 };
 

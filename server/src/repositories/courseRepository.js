@@ -37,7 +37,7 @@ const findCoursesByFacultyId = async (facultyId) => {
 };
 
 const updateCourse = async (id, updatedData) => {
-  return await Course.findByIdAndUpdate(id, updatedData, { new: true });
+  return await Course.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true });
 };
 
 const deleteCourseById = async (id) => {

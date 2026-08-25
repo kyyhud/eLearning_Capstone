@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getCourseById } from "../../services/courseService.js";
 
-function CourseDetailsPage() {
+function CourseDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,6 +31,7 @@ function CourseDetailsPage() {
   }
 
   const facultyName = course.faculty ? `${course.faculty.firstName} ${course.faculty.lastName}` : "Not assigned";
+  const orderedSections = [...course.sections].sort((a, b) => a.order - b.order);
 
   return (
     <main>
@@ -58,8 +59,31 @@ function CourseDetailsPage() {
       </section>
 
       <section>
-        <h3>Course Content</h3>
-        <p>Course sections and learning materials will appear here.</p>
+        <h3>Course Sections</h3>
+        {orderedSections.length === 0 && <p>No course sections have been added yet.</p>}
+        {orderedSections.map((section, index) => (
+          <div key={section._id || `section-${index}`}>
+            <h4>Section {index + 1}</h4>
+            <p>
+              <strong>Title:</strong> {section.title}
+            </p>
+            <p>
+              <strong>Description:</strong> {section.description}
+            </p>
+            {section.content.length > 0 && (
+              <div>
+                <h5>Content</h5>
+                <ul>
+                  {section.content.map((contentItem, contentIndex) => (
+                    <li key={contentItem._id || `content-${contentIndex}`}>
+                      <strong>{contentItem.title}</strong> ({contentItem.type})
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        ))}
       </section>
 
       <div>
@@ -77,4 +101,4 @@ function CourseDetailsPage() {
   );
 }
 
-export default CourseDetailsPage;
+export default CourseDetails;

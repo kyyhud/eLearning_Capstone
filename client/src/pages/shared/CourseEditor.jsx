@@ -8,9 +8,10 @@ const emptyForm = {
   description: "",
   durationWeeks: "",
   faculty: "",
+  sections: [],
 };
 
-function CourseEditorPage() {
+function CourseEditor() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState(emptyForm);
@@ -39,6 +40,7 @@ function CourseEditorPage() {
         description: course.description || "",
         durationWeeks: course.durationWeeks ?? "",
         faculty: course.faculty?._id || "",
+        sections: course.sections || [],
       });
     } catch (error) {
       setError(error.message);
@@ -65,17 +67,88 @@ function CourseEditorPage() {
     e.preventDefault();
     try {
       setError("");
+      const sections = formData.sections.map((section, index) => ({
+  ...section,
+  order: index + 1,
+}));
       const updateData = isAdmin
-        ? formData
-        : {
-            description: formData.description,
-          };
+  ? {
+      ...formData,
+      sections,
+    }
+  : {
+      description: formData.description,
+      sections,
+    };
       await updateCourse(id, updateData);
       setMessage("Course updated successfully.");
     } catch (error) {
       setError(error.message);
     }
   };
+
+  const handleAddSection = () => {
+  setFormData((prev) => ({
+    ...prev,
+    sections: [
+      ...prev.sections,
+      {
+        title: "",
+        description: "",
+        order: prev.sections.length + 1,
+        content: [],
+      },
+    ],
+  }));
+};
+
+  const handleSectionChange = (index, e) => {
+  const { name, value } = e.target;
+  setFormData((prev) => ({
+    ...prev,
+    sections: prev.sections.map((section, sectionIndex) =>
+      sectionIndex === index
+        ? {
+            ...section,
+            [name]: value,
+          }
+        : section
+    ),
+  }));
+};
+
+const handleRemoveSection = (index) => {
+  setFormData((prev) => ({
+    ...prev,
+    sections: prev.sections
+      .filter((_, sectionIndex) => sectionIndex !== index)
+      .map((section, sectionIndex) => ({
+        ...section,
+        order: sectionIndex + 1,
+      })),
+  }));
+};
+
+const handleMoveSection = (index, direction) => {
+  setFormData((prev) => {
+    const sections = [...prev.sections];
+    const newIndex = index + direction;
+    if (newIndex < 0 || newIndex >= sections.length) {
+      return prev;
+    }
+    [sections[index], sections[newIndex]] = [
+      sections[newIndex],
+      sections[index],
+    ];
+    return {
+      ...prev,
+      sections: sections.map((section, sectionIndex) => ({
+        ...section,
+        order: sectionIndex + 1,
+      })),
+    };
+  });
+};
 
   return (
     <main>
@@ -119,7 +192,62 @@ function CourseEditorPage() {
 
         <section>
           <h3>Course Sections</h3>
-          <p>Course sections and learning materials will be managed here.</p>
+          {formData.sections.length === 0 && (
+  <p>No course sections have been added yet.</p>
+)}
+
+{formData.sections.map((section, index) => (
+  <div key={section._id || `section-${index}`}>
+    <h4>Section {index + 1}</h4>
+    <div>
+      <label htmlFor={`section-title-${index}`}>Title</label>
+      <input
+        type="text"
+        id={`section-title-${index}`}
+        name="title"
+        value={section.title}
+        onChange={(e) => handleSectionChange(index, e)}
+        required
+      />
+    </div>
+    <div>
+      <label htmlFor={`section-description-${index}`}>
+        Description
+      </label>
+      <textarea
+        id={`section-description-${index}`}
+        name="description"
+        value={section.description}
+        onChange={(e) => handleSectionChange(index, e)}
+      />
+    </div>
+    <button
+  type="button"
+  onClick={() => handleMoveSection(index, -1)}
+  disabled={index === 0}
+>
+  Move Up
+</button>
+
+<button
+  type="button"
+  onClick={() => handleMoveSection(index, 1)}
+  disabled={index === formData.sections.length - 1}
+>
+  Move Down
+</button>
+    <button
+      type="button"
+      onClick={() => handleRemoveSection(index)}
+    >
+      Remove Section
+    </button>
+  </div>
+))}
+
+<button type="button" onClick={handleAddSection}>
+  Add Section
+</button>
         </section>
 
         <div>
@@ -134,4 +262,4 @@ function CourseEditorPage() {
   );
 }
 
-export default CourseEditorPage;
+export default CourseEditor;
