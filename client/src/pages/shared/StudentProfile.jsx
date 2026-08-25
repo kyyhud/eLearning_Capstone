@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getStudentById, updateStudent } from "../../services/userService.js";
 
 const emptyForm = {
@@ -22,6 +22,7 @@ function StudentProfilePage() {
   const [formData, setFormData] = useState(emptyForm);
   const user = JSON.parse(sessionStorage.getItem("user"));
   const isAdmin = user.typeOfUser === "admin";
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsEditing(false);
@@ -230,9 +231,15 @@ function StudentProfilePage() {
           </>
         )}
         {!isEditing && (
-          <button type="button" onClick={() => setIsEditing(true)}>
-            Edit
-          </button>
+          <>
+            <button type="button" onClick={() => setIsEditing(true)}>
+              Edit
+            </button>
+            { " | " }
+            <button type="button" onClick={() => navigate(-1)}>
+              Back
+            </button>
+          </>
         )}
         {isEditing && (
           <>

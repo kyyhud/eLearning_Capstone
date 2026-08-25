@@ -6,27 +6,26 @@ import StudentSignUp from "./pages/auth/StudentSignUp.jsx";
 import AuthenticatedLayout from "./components/AuthenticatedLayout.jsx";
 
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
-import AddFacultyPage from "./pages/admin/AddFacultyPage.jsx";
-import FacultyView from "./pages/admin/FacultyListPage.jsx";
-import StudentListPage from "./pages/admin/StudentListPage.jsx";
-import CourseListPage from "./pages/admin/CourseListPage.jsx";
-import AddCoursePage from "./pages/admin/AddCoursePage.jsx";
+import AddFaculty from "./pages/admin/AddFaculty.jsx";
+import FacultyList from "./pages/admin/FacultyList.jsx";
+import StudentList from "./pages/admin/StudentList.jsx";
+import CourseList from "./pages/admin/CourseList.jsx";
+import AddCourse from "./pages/admin/AddCourse.jsx";
 
 import FacultyDashboard from "./pages/faculty/FacultyDashboard.jsx";
-
-import CourseManagementPage from "./pages/faculty/CourseManagement.jsx";
-import FacultyUserSettings from "./pages/faculty/FacultyUserSetting.jsx";
+import FacultyCourseList from "./pages/faculty/FacultyCourseList.jsx";
+import FacultyUserSettings from "./pages/faculty/FacultyUserSettings.jsx";
 
 import StudentDashboard from "./pages/student/StudentDashboard.jsx";
-import BrowseCoursesByStudent from "./pages/student/BrowseCourses.jsx";
+import BrowseCourses from "./pages/student/BrowseCourses.jsx";
 import StudentUserSettings from "./pages/student/StudentUserSettings.jsx";
 
-import CourseDetailsPage from "./pages/shared/CourseDetailsPage.jsx";
+import CourseDetails from "./pages/shared/CourseDetails.jsx";
 
-import CourseEditorPage from "./pages/shared/CourseEditorPage.jsx";
-import FacultyProfilePage from "./pages/shared/FacultyProfilePage.jsx";
+import CourseEditor from "./pages/shared/CourseEditor.jsx";
+import FacultyProfile from "./pages/shared/FacultyProfile.jsx";
 
-import StudentProfilePage from "./pages/shared/StudentProfilePage.jsx";
+import StudentProfile from "./pages/shared/StudentProfile.jsx";
 
 import "./App.css";
 
@@ -41,40 +40,36 @@ function App() {
 
         <Route element={<AuthenticatedLayout allowedRoles={["admin"]} />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/faculty" element={<FacultyView />} />
-          <Route path="/admin/faculty/add" element={<AddFacultyPage />} />
-          <Route path="/admin/faculty/:id" element={<FacultyProfilePage />} />
-          <Route path="/admin/students" element={<StudentListPage />} />
-          <Route path="/admin/students/:id" element={<StudentProfilePage />} />
-          <Route path="/admin/courses" element={<CourseListPage />} />
-          <Route path="/admin/add-course" element={<AddCoursePage />} />
+          <Route path="/admin/faculty" element={<FacultyList />} />
+          <Route path="/admin/faculty/add" element={<AddFaculty />} />
+          <Route path="/admin/students" element={<StudentList />} />
+          <Route path="/admin/courses" element={<CourseList />} />
+          <Route path="/admin/courses/add" element={<AddCourse />} />
         </Route>
 
         <Route element={<AuthenticatedLayout allowedRoles={["faculty"]} />}>
           <Route path="/faculty/dashboard" element={<FacultyDashboard />} />
-          
-          <Route path="/faculty/courses" element={<CourseManagementPage />} />
+          <Route path="/faculty/courses" element={<FacultyCourseList />} />
           <Route path="/faculty/settings" element={<FacultyUserSettings />} />
         </Route>
 
         <Route element={<AuthenticatedLayout allowedRoles={["student"]} />}>
           <Route path="/student/dashboard" element={<StudentDashboard />} />
-          
-          <Route path="/student/browse-courses" element={<BrowseCoursesByStudent />} />
+          <Route path="/student/courses" element={<BrowseCourses />} />
           <Route path="/student/settings" element={<StudentUserSettings />} />
         </Route>
 
         <Route element={<AuthenticatedLayout allowedRoles={["admin", "faculty", "student"]} />}>
-          <Route path="/courses/:id" element={<CourseDetailsPage />} />
+          <Route path="/courses/:id" element={<CourseDetails />} />
         </Route>
 
         <Route element={<AuthenticatedLayout allowedRoles={["admin", "faculty"]} />}>
-          <Route path="/faculty/profile/:id" element={<FacultyProfilePage />} />
-          <Route path="/courses/:id/edit" element={<CourseEditorPage />} />
+          <Route path="/faculty/:id" element={<FacultyProfile />} />
+          <Route path="/courses/:id/edit" element={<CourseEditor />} />
         </Route>
 
         <Route element={<AuthenticatedLayout allowedRoles={["admin", "student"]} />}>
-          <Route path="/student/profile/:id" element={<StudentProfilePage />} />
+          <Route path="/student/:id" element={<StudentProfile />} />
         </Route>
       </Routes>
     </>

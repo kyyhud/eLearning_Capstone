@@ -10,7 +10,6 @@ function CourseDetailsPage() {
   const [course, setCourse] = useState(null);
   const [error, setError] = useState("");
 
-  const returnTo = location.state?.returnTo || -1;
   const user = JSON.parse(sessionStorage.getItem("user"));
   const canEdit = user?.typeOfUser === "admin" || user?.typeOfUser === "faculty";
 
@@ -64,14 +63,15 @@ function CourseDetailsPage() {
       </section>
 
       <div>
-        <button type="button" onClick={() => navigate(returnTo)}>
-          Back
-        </button>
         {canEdit && (
-          <button type="button" onClick={() => navigate(`/courses/${id}/edit`, { replace: true, state: { returnTo } })}>
+          <button type="button" onClick={() => navigate(`/courses/${id}/edit`)}>
             Edit Course
           </button>
         )}
+        { " | " }
+        <button type="button" onClick={() => navigate(-1)}>
+          Back
+        </button>
       </div>
     </main>
   );

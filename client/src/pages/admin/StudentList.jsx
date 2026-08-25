@@ -59,7 +59,7 @@ function StudentList() {
           {students.map((user) => (
             <tr key={user._id}>
               <td>{user.id}</td>
-              <td>{user.active ? "Yes" : "No"}</td>
+              <td>{user.isActive ? "Yes" : "No"}</td>
               <td>
                 {user.firstName} {user.lastName}
               </td>
@@ -67,7 +67,7 @@ function StudentList() {
               <td>{user.phone}</td>
               <td>{user.studentProfile?.fieldOfStudy || "-"}</td>
               <td>
-                <button onClick={() => navigate(`/admin/students/${user._id}`)}>View/Edit</button>|
+                <button onClick={() => navigate(`/student/${user._id}`)}>View/Edit</button>|
                 <button onClick={() => handleDelete(user._id)}>Delete</button>
               </td>
             </tr>

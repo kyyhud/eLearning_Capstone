@@ -21,22 +21,22 @@ function Navbar() {
           <Link to="/admin/faculty/add">Add Faculty</Link> {" | "}
           <Link to="/admin/students">Students</Link> {" | "}
           <Link to="/admin/courses">Courses</Link> {" | "}
-          <Link to="/admin/add-course">Add Course</Link> {" | "}
+          <Link to="/admin/courses/add">Add Course</Link> {" | "}
         </>
       )}
       {typeOfUser === "faculty" && (
         <>
           <Link to="/faculty/dashboard">Dashboard</Link> {" | "}
           <Link to="/faculty/courses">My Courses</Link> {" | "}
-          <Link to={`/faculty/profile/${user._id}`}>Profile</Link> {" | "}
+          <Link to={`/faculty/${user._id}`}>Profile</Link> {" | "}
           <Link to="/faculty/settings">Settings</Link> {" | "}
         </>
       )}
       {typeOfUser === "student" && (
         <>
           <Link to="/student/dashboard">Dashboard</Link> {" | "}
-          <Link to="/student/browse-courses">Browse Courses</Link> {" | "}
-          <Link to={`/student/profile/${user._id}`}>Profile</Link> {" | "}
+          <Link to="/student/courses">Browse Courses</Link> {" | "}
+          <Link to={`/student/${user._id}`}>Profile</Link> {" | "}
           <Link to="/student/settings">Settings</Link> {" | "}
         </>
       )}

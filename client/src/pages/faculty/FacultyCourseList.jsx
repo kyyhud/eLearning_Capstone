@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { accessFacultyCourses } from "../../services/courseService.js";
 
 function CourseManagementPage() {
+  const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [message, setMessage] = useState("");
   const user = JSON.parse(sessionStorage.getItem("user"));
@@ -32,9 +34,9 @@ function CourseManagementPage() {
             <th>Title</th>
             <th>Category</th>
             <th>Description</th>
-            <th>Faculty</th>
             <th>Duration</th>
             <th>Status</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -44,9 +46,11 @@ function CourseManagementPage() {
               <td>{course.title}</td>
               <td>{course.category}</td>
               <td>{course.description}</td>
-              <td>{course.faculty ? `${course.faculty.firstName} ${course.faculty.lastName}` : "Not assigned"}</td>
               <td>{course.durationWeeks} weeks</td>
               <td>{course.status}</td>
+              <td>
+                <button onClick={() => navigate(`/courses/${course._id}`)}>View/Edit</button>
+              </td>
             </tr>
           ))}
         </tbody>
