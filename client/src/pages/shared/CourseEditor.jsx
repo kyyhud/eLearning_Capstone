@@ -68,87 +68,165 @@ function CourseEditor() {
     try {
       setError("");
       const sections = formData.sections.map((section, index) => ({
-  ...section,
-  order: index + 1,
-}));
+        ...section,
+        order: index + 1,
+      }));
       const updateData = isAdmin
-  ? {
-      ...formData,
-      sections,
-    }
-  : {
-      description: formData.description,
-      sections,
-    };
+        ? {
+            ...formData,
+            sections,
+          }
+        : {
+            description: formData.description,
+            sections,
+          };
       await updateCourse(id, updateData);
       setMessage("Course updated successfully.");
     } catch (error) {
       setError(error.message);
     }
   };
-
+  // Section management functions: add, change, remove, move sections
   const handleAddSection = () => {
-  setFormData((prev) => ({
-    ...prev,
-    sections: [
-      ...prev.sections,
-      {
-        title: "",
-        description: "",
-        order: prev.sections.length + 1,
-        content: [],
-      },
-    ],
-  }));
-};
+    setFormData((prev) => ({
+      ...prev,
+      sections: [
+        ...prev.sections,
+        {
+          title: "",
+          description: "",
+          order: prev.sections.length + 1,
+          content: [],
+        },
+      ],
+    }));
+  };
 
   const handleSectionChange = (index, e) => {
-  const { name, value } = e.target;
-  setFormData((prev) => ({
-    ...prev,
-    sections: prev.sections.map((section, sectionIndex) =>
-      sectionIndex === index
-        ? {
-            ...section,
-            [name]: value,
-          }
-        : section
-    ),
-  }));
-};
-
-const handleRemoveSection = (index) => {
-  setFormData((prev) => ({
-    ...prev,
-    sections: prev.sections
-      .filter((_, sectionIndex) => sectionIndex !== index)
-      .map((section, sectionIndex) => ({
-        ...section,
-        order: sectionIndex + 1,
-      })),
-  }));
-};
-
-const handleMoveSection = (index, direction) => {
-  setFormData((prev) => {
-    const sections = [...prev.sections];
-    const newIndex = index + direction;
-    if (newIndex < 0 || newIndex >= sections.length) {
-      return prev;
-    }
-    [sections[index], sections[newIndex]] = [
-      sections[newIndex],
-      sections[index],
-    ];
-    return {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
       ...prev,
-      sections: sections.map((section, sectionIndex) => ({
-        ...section,
-        order: sectionIndex + 1,
-      })),
-    };
-  });
-};
+      sections: prev.sections.map((section, sectionIndex) =>
+        sectionIndex === index
+          ? {
+              ...section,
+              [name]: value,
+            }
+          : section,
+      ),
+    }));
+  };
+
+  const handleRemoveSection = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      sections: prev.sections
+        .filter((_, sectionIndex) => sectionIndex !== index)
+        .map((section, sectionIndex) => ({
+          ...section,
+          order: sectionIndex + 1,
+        })),
+    }));
+  };
+
+  const handleMoveSection = (index, direction) => {
+    setFormData((prev) => {
+      const sections = [...prev.sections];
+      const newIndex = index + direction;
+      if (newIndex < 0 || newIndex >= sections.length) {
+        return prev;
+      }
+      [sections[index], sections[newIndex]] = [sections[newIndex], sections[index]];
+      return {
+        ...prev,
+        sections: sections.map((section, sectionIndex) => ({
+          ...section,
+          order: sectionIndex + 1,
+        })),
+      };
+    });
+  };
+  // Content management functions: add, change, remove content
+  const handleAddContent = (sectionIndex) => {
+    setFormData((prev) => ({
+      ...prev,
+      sections: prev.sections.map((section, currentSectionIndex) =>
+        currentSectionIndex === sectionIndex
+          ? {
+              ...section,
+              content: [
+                ...(section.content || []),
+                {
+                  title: "",
+                  description: "",
+                  type: "",
+                  resourceUrl: "",
+                  fileName: "",
+                  isRequired: true,
+                },
+              ],
+            }
+          : section,
+      ),
+    }));
+  };
+
+  const handleContentChange = (sectionIndex, contentIndex, e) => {
+    const { name, value, type: inputType, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      sections: prev.sections.map((section, currentSectionIndex) =>
+        currentSectionIndex === sectionIndex
+          ? {
+              ...section,
+              content: (section.content || []).map((contentItem, currentContentIndex) =>
+                currentContentIndex === contentIndex
+                  ? {
+                      ...contentItem,
+                      [name]: inputType === "checkbox" ? checked : value,
+                    }
+                  : contentItem,
+              ),
+            }
+          : section,
+      ),
+    }));
+  };
+
+  const handleMoveContent = (sectionIndex, contentIndex, direction) => {
+    setFormData((prev) => {
+      const sections = [...prev.sections];
+      const section = {
+        ...sections[sectionIndex],
+      };
+      const content = [...(section.content || [])];
+      const newIndex = contentIndex + direction;
+      if (newIndex < 0 || newIndex >= content.length) {
+        return prev;
+      }
+      [content[contentIndex], content[newIndex]] = [content[newIndex], content[contentIndex]];
+      section.content = content;
+      sections[sectionIndex] = section;
+      return {
+        ...prev,
+        sections,
+      };
+    });
+  };
+
+  const handleRemoveContent = (sectionIndex, contentIndex) => {
+    setFormData((prev) => ({
+      ...prev,
+      sections: prev.sections.map((section, currentSectionIndex) =>
+        currentSectionIndex === sectionIndex
+          ? {
+              ...section,
+              content: (section.content || []).filter((_, currentContentIndex) => currentContentIndex !== contentIndex),
+            }
+          : section,
+      ),
+    }));
+  };
 
   return (
     <main>
@@ -189,65 +267,125 @@ const handleMoveSection = (index, direction) => {
             </div>
           )}
         </section>
-
+        {/* Course sections management */}
         <section>
           <h3>Course Sections</h3>
-          {formData.sections.length === 0 && (
-  <p>No course sections have been added yet.</p>
-)}
+          {formData.sections.length === 0 && <p>No course sections have been added yet.</p>}
 
-{formData.sections.map((section, index) => (
-  <div key={section._id || `section-${index}`}>
-    <h4>Section {index + 1}</h4>
-    <div>
-      <label htmlFor={`section-title-${index}`}>Title</label>
-      <input
-        type="text"
-        id={`section-title-${index}`}
-        name="title"
-        value={section.title}
-        onChange={(e) => handleSectionChange(index, e)}
-        required
-      />
-    </div>
-    <div>
-      <label htmlFor={`section-description-${index}`}>
-        Description
-      </label>
-      <textarea
-        id={`section-description-${index}`}
-        name="description"
-        value={section.description}
-        onChange={(e) => handleSectionChange(index, e)}
-      />
-    </div>
-    <button
-  type="button"
-  onClick={() => handleMoveSection(index, -1)}
-  disabled={index === 0}
->
-  Move Up
-</button>
+          {formData.sections.map((section, index) => (
+            <div key={section._id || `section-${index}`}>
+              <h4>Section {index + 1}</h4>
+              <div>
+                <label htmlFor={`section-title-${index}`}>Title</label>
+                <input type="text" id={`section-title-${index}`} name="title" value={section.title} onChange={(e) => handleSectionChange(index, e)} required />
+              </div>
+              <div>
+                <label htmlFor={`section-description-${index}`}>Description</label>
+                <textarea id={`section-description-${index}`} name="description" value={section.description} onChange={(e) => handleSectionChange(index, e)} />
+              </div>
+              {/* Content management for each section */}
+              <div>
+                <h5>Section Content</h5>
+                {(section.content || []).length === 0 && <p>No content has been added to this section.</p>}
 
-<button
-  type="button"
-  onClick={() => handleMoveSection(index, 1)}
-  disabled={index === formData.sections.length - 1}
->
-  Move Down
-</button>
-    <button
-      type="button"
-      onClick={() => handleRemoveSection(index)}
-    >
-      Remove Section
-    </button>
-  </div>
-))}
-
-<button type="button" onClick={handleAddSection}>
-  Add Section
-</button>
+                {(section.content || []).map((contentItem, contentIndex) => (
+                  <div key={contentItem._id || `content-${index}-${contentIndex}`}>
+                    <h6>Content {contentIndex + 1}</h6>
+                    <div>
+                      <label htmlFor={`content-title-${index}-${contentIndex}`}>Title</label>
+                      <input
+                        type="text"
+                        id={`content-title-${index}-${contentIndex}`}
+                        name="title"
+                        value={contentItem.title}
+                        onChange={(e) => handleContentChange(index, contentIndex, e)}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor={`content-description-${index}-${contentIndex}`}>Description</label>
+                      <textarea
+                        id={`content-description-${index}-${contentIndex}`}
+                        name="description"
+                        value={contentItem.description}
+                        onChange={(e) => handleContentChange(index, contentIndex, e)}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor={`content-type-${index}-${contentIndex}`}>Content Type</label>
+                      <select
+                        id={`content-type-${index}-${contentIndex}`}
+                        name="type"
+                        value={contentItem.type}
+                        onChange={(e) => handleContentChange(index, contentIndex, e)}
+                        required>
+                        <option value="">Select Content Type</option>
+                        <option value="document">Document</option>
+                        <option value="video">Video</option>
+                        <option value="presentation">Presentation</option>
+                        <option value="recording">Recording</option>
+                        <option value="link">Link</option>
+                        <option value="quiz">Quiz</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label htmlFor={`content-url-${index}-${contentIndex}`}>Resource URL</label>
+                      <input
+                        type="text"
+                        id={`content-url-${index}-${contentIndex}`}
+                        name="resourceUrl"
+                        value={contentItem.resourceUrl}
+                        onChange={(e) => handleContentChange(index, contentIndex, e)}
+                      />
+                    </div>
+                    {contentItem.fileName && (
+                      <p>
+                        <strong>File:</strong> {contentItem.fileName}
+                      </p>
+                    )}
+                    <div>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="isRequired"
+                          checked={contentItem.isRequired}
+                          onChange={(e) => handleContentChange(index, contentIndex, e)}
+                        />
+                        Required Content
+                      </label>
+                    </div>
+                    <button type="button" onClick={() => handleMoveContent(index, contentIndex, -1)} disabled={contentIndex === 0}>
+                      Move Up
+                    </button>{" "}
+                    <button
+                      type="button"
+                      onClick={() => handleMoveContent(index, contentIndex, 1)}
+                      disabled={contentIndex === (section.content || []).length - 1}>
+                      Move Down
+                    </button>{" "}
+                    <button type="button" onClick={() => handleRemoveContent(index, contentIndex)}>
+                      Remove Content
+                    </button>
+                  </div>
+                ))}
+                <button type="button" onClick={() => handleAddContent(index)}>
+                  Add Content
+                </button>
+              </div>
+              <button type="button" onClick={() => handleMoveSection(index, -1)} disabled={index === 0}>
+                Move Up
+              </button>
+              <button type="button" onClick={() => handleMoveSection(index, 1)} disabled={index === formData.sections.length - 1}>
+                Move Down
+              </button>
+              <button type="button" onClick={() => handleRemoveSection(index)}>
+                Remove Section
+              </button>
+            </div>
+          ))}
+          <button type="button" onClick={handleAddSection}>
+            Add Section
+          </button>
         </section>
 
         <div>

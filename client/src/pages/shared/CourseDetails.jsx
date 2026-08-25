@@ -57,7 +57,7 @@ function CourseDetails() {
           <strong>Duration:</strong> {course.durationWeeks} weeks
         </p>
       </section>
-
+      {/* Course sections and content */}
       <section>
         <h3>Course Sections</h3>
         {orderedSections.length === 0 && <p>No course sections have been added yet.</p>}
@@ -72,14 +72,39 @@ function CourseDetails() {
             </p>
             {section.content.length > 0 && (
               <div>
-                <h5>Content</h5>
-                <ul>
-                  {section.content.map((contentItem, contentIndex) => (
-                    <li key={contentItem._id || `content-${contentIndex}`}>
-                      <strong>{contentItem.title}</strong> ({contentItem.type})
-                    </li>
-                  ))}
-                </ul>
+                {(section.content || []).length === 0 ? (
+                  <p>No content has been added to this section.</p>
+                ) : (
+                  <div>
+                    <h5>Content</h5>
+                    {section.content.map((contentItem, contentIndex) => (
+                      <div key={contentItem._id}>
+                        <h6>
+                          {contentIndex + 1}. {contentItem.title}
+                        </h6>
+                        <p>
+                          <strong>Type:</strong> {contentItem.type}
+                        </p>
+                        {contentItem.description && <p>{contentItem.description}</p>}
+                        <p>
+                          <strong>Status:</strong> {contentItem.isRequired ? "Required" : "Optional"}
+                        </p>
+                        {contentItem.resourceUrl && (
+                          <p>
+                            <a href={contentItem.resourceUrl} target="_blank" rel="noreferrer">
+                              Open Resource
+                            </a>
+                          </p>
+                        )}
+                        {contentItem.fileName && (
+                          <p>
+                            <strong>File:</strong> {contentItem.fileName}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -92,7 +117,7 @@ function CourseDetails() {
             Edit Course
           </button>
         )}
-        { " | " }
+        {" | "}
         <button type="button" onClick={() => navigate(-1)}>
           Back
         </button>
