@@ -67,6 +67,18 @@ const deleteCourseById = async (req, res) => {
   }
 };
 
+const uploadCourseContent = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: "No file was uploaded." });
+    }
+    const resourceUrl = `/uploads/course-content/${req.file.filename}`;
+    res.status(201).json({ success: true, data: { fileName: req.file.originalname, resourceUrl, mimeType: req.file.mimetype } });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
 module.exports = {
   createCourse,
   getCourses,
@@ -74,4 +86,5 @@ module.exports = {
   getMyCourses,
   updateCourse,
   deleteCourseById,
+  uploadCourseContent,
 };

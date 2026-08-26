@@ -21,3 +21,6 @@ Thumbs.db
 
 # Test coverage
 coverage/
+
+# Uploaded course content
+uploads/

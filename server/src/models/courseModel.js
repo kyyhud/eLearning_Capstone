@@ -13,7 +13,7 @@ const contentSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ["document", "video", "presentation", "recording", "link", "quiz"],
+    enum: ["document", "video", "presentation", "recording", "link"],
     required: true,
   },
   resourceUrl: {
@@ -21,6 +21,10 @@ const contentSchema = new mongoose.Schema({
     default: "",
   },
   fileName: {
+    type: String,
+    default: "",
+  },
+  mimeType: {
     type: String,
     default: "",
   },

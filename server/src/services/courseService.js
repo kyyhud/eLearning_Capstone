@@ -1,5 +1,7 @@
 const courseRepository = require("../repositories/courseRepository");
 const { getNextCourseId } = require("./idService");
+const fs = require("fs");
+const path = require("path");
 
 const createCourse = async (courseData) => {
   const { courseLevel, ...courseDetails } = courseData;
@@ -51,6 +53,7 @@ const updateCourse = async (id, updatedData, user) => {
     error.statusCode = 404;
     throw error;
   }
+  const oldResourceUrls = getUploadedResourceUrls(course.sections);
   const isAdmin = user.typeOfUser === "admin";
   const isFaculty = user.typeOfUser === "faculty";
   if (!isAdmin && !isFaculty) {
@@ -69,7 +72,11 @@ const updateCourse = async (id, updatedData, user) => {
   const adminFields = ["title", "description", "category", "faculty", "durationWeeks", "status", "sections"];
   const facultyFields = ["description", "sections"];
   const allowedUpdates = getAllowedUpdates(updatedData, isAdmin ? adminFields : facultyFields);
-  return await courseRepository.updateCourse(id, allowedUpdates);
+  const updatedCourse = await courseRepository.updateCourse(id, allowedUpdates);
+  const newResourceUrls = getUploadedResourceUrls(updatedCourse.sections);
+  const removedResourceUrls = oldResourceUrls.filter((resourceUrl) => !newResourceUrls.includes(resourceUrl));
+  removedResourceUrls.forEach(deleteUploadedFile);
+  return updatedCourse;
 };
 
 const deleteCourseById = async (id) => {
@@ -80,6 +87,21 @@ const deleteCourseById = async (id) => {
   return await courseRepository.deleteCourseById(id);
 };
 
+// Helper function to extract uploaded resource URLs from course sections
+const getUploadedResourceUrls = (sections = []) => {
+  return sections.flatMap((section) =>
+    (section.content || []).map((contentItem) => contentItem.resourceUrl).filter((resourceUrl) => resourceUrl?.startsWith("/uploads/course-content/")),
+  );
+};
+// Delete an uploaded file from the server based on its resource URL
+const deleteUploadedFile = (resourceUrl) => {
+  const fileName = path.basename(resourceUrl);
+  const filePath = path.join(__dirname, "../../uploads/course-content", fileName);
+  if (fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath);
+  }
+};
+
 module.exports = {
   createCourse,
   getCourses,
@@ -87,4 +109,6 @@ module.exports = {
   getCoursesByFacultyId,
   updateCourse,
   deleteCourseById,
+  getUploadedResourceUrls,
+  deleteUploadedFile,
 };

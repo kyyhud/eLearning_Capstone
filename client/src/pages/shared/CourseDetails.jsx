@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getCourseById } from "../../services/courseService.js";
 
+const SERVER_URL = "http://localhost:3000";
+
 function CourseDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -32,6 +34,35 @@ function CourseDetails() {
 
   const facultyName = course.faculty ? `${course.faculty.firstName} ${course.faculty.lastName}` : "Not assigned";
   const orderedSections = [...course.sections].sort((a, b) => a.order - b.order);
+
+  // Helper functions to get resource URL and label based on content type
+  const getResourceUrl = (contentItem) => {
+  if (!contentItem.resourceUrl) {
+    return "";
+  }
+  if (contentItem.type === "link") {
+    const url = contentItem.resourceUrl.trim();
+    return /^https?:\/\//i.test(url) ? url : `http://${url}`;
+  }
+  return `${SERVER_URL}${contentItem.resourceUrl}`;
+};
+
+const getResourceLabel = (type) => {
+  switch (type) {
+    case "document":
+      return "Open Document";
+    case "presentation":
+      return "Open Presentation";
+    case "video":
+      return "Watch Video";
+    case "recording":
+      return "Watch Recording";
+    case "link":
+      return "Open Link";
+    default:
+      return "Open Resource";
+  }
+};
 
   return (
     <main>
@@ -91,8 +122,8 @@ function CourseDetails() {
                         </p>
                         {contentItem.resourceUrl && (
                           <p>
-                            <a href={contentItem.resourceUrl} target="_blank" rel="noreferrer">
-                              Open Resource
+                            <a href={getResourceUrl(contentItem)} target="_blank" rel="noreferrer">
+                              {getResourceLabel(contentItem.type)}
                             </a>
                           </p>
                         )}

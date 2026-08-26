@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getCourseById, updateCourse } from "../../services/courseService.js";
+import { getCourseById, updateCourse, uploadCourseContent } from "../../services/courseService.js";
 import { viewAllFaculty } from "../../services/userService.js";
 
 const emptyForm = {
@@ -17,6 +17,7 @@ function CourseEditor() {
   const [formData, setFormData] = useState(emptyForm);
   const [courseId, setCourseId] = useState("");
   const [faculty, setFaculty] = useState([]);
+  const [uploadingContent, setUploadingContent] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
@@ -162,6 +163,7 @@ function CourseEditor() {
                   type: "",
                   resourceUrl: "",
                   fileName: "",
+                  mimeType: "",
                   isRequired: true,
                 },
               ],
@@ -181,10 +183,18 @@ function CourseEditor() {
               ...section,
               content: (section.content || []).map((contentItem, currentContentIndex) =>
                 currentContentIndex === contentIndex
-                  ? {
-                      ...contentItem,
-                      [name]: inputType === "checkbox" ? checked : value,
-                    }
+                  ? name === "type"
+                    ? {
+                        ...contentItem,
+                        type: value,
+                        resourceUrl: "",
+                        fileName: "",
+                        mimeType: "",
+                      }
+                    : {
+                        ...contentItem,
+                        [name]: inputType === "checkbox" ? checked : value,
+                      }
                   : contentItem,
               ),
             }
@@ -226,6 +236,53 @@ function CourseEditor() {
           : section,
       ),
     }));
+  };
+  // File upload handling
+  const getAcceptedFileTypes = (contentType) => {
+    switch (contentType) {
+      case "document":
+        return ".pdf,.doc,.docx,.txt";
+      case "presentation":
+        return ".ppt,.pptx,.pdf";
+      case "video":
+      case "recording":
+        return ".mp4,.webm,.mov";
+      default:
+        return "";
+    }
+  };
+  const handleFileUpload = async (sectionIndex, contentIndex, file, contentType) => {
+    if (!file) return;
+    const uploadKey = `${sectionIndex}-${contentIndex}`;
+    try {
+      setError("");
+      setUploadingContent(uploadKey);
+      const uploadedFile = await uploadCourseContent(file, contentType);
+      setFormData((prev) => ({
+        ...prev,
+        sections: prev.sections.map((section, currentSectionIndex) =>
+          currentSectionIndex === sectionIndex
+            ? {
+                ...section,
+                content: (section.content || []).map((contentItem, currentContentIndex) =>
+                  currentContentIndex === contentIndex
+                    ? {
+                        ...contentItem,
+                        fileName: uploadedFile.fileName,
+                        resourceUrl: uploadedFile.resourceUrl,
+                        mimeType: uploadedFile.mimeType,
+                      }
+                    : contentItem,
+                ),
+              }
+            : section,
+        ),
+      }));
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setUploadingContent("");
+    }
   };
 
   return (
@@ -311,6 +368,7 @@ function CourseEditor() {
                         onChange={(e) => handleContentChange(index, contentIndex, e)}
                       />
                     </div>
+                    {/* Content type selection and file upload handling */}
                     <div>
                       <label htmlFor={`content-type-${index}-${contentIndex}`}>Content Type</label>
                       <select
@@ -325,19 +383,35 @@ function CourseEditor() {
                         <option value="presentation">Presentation</option>
                         <option value="recording">Recording</option>
                         <option value="link">Link</option>
-                        <option value="quiz">Quiz</option>
                       </select>
                     </div>
-                    <div>
-                      <label htmlFor={`content-url-${index}-${contentIndex}`}>Resource URL</label>
-                      <input
-                        type="text"
-                        id={`content-url-${index}-${contentIndex}`}
-                        name="resourceUrl"
-                        value={contentItem.resourceUrl}
-                        onChange={(e) => handleContentChange(index, contentIndex, e)}
-                      />
-                    </div>
+                    {contentItem.type === "link" && (
+                      <div>
+                        <label htmlFor={`content-url-${index}-${contentIndex}`}>Resource URL</label>
+                        <input
+                          type="text"
+                          id={`content-url-${index}-${contentIndex}`}
+                          name="resourceUrl"
+                          value={contentItem.resourceUrl}
+                          onChange={(e) => handleContentChange(index, contentIndex, e)}
+                          placeholder="www.example.com"
+                          required
+                        />
+                      </div>
+                    )}
+                    {["document", "video", "presentation", "recording"].includes(contentItem.type) && (
+                      <div>
+                        <label htmlFor={`content-file-${index}-${contentIndex}`}>Upload File</label>
+                        <input
+                          type="file"
+                          id={`content-file-${index}-${contentIndex}`}
+                          accept={getAcceptedFileTypes(contentItem.type)}
+                          onChange={(e) => handleFileUpload(index, contentIndex, e.target.files[0], contentItem.type)}
+                          disabled={uploadingContent === `${index}-${contentIndex}`}
+                        />
+                        {uploadingContent === `${index}-${contentIndex}` && <p>Uploading...</p>}
+                      </div>
+                    )}
                     {contentItem.fileName && (
                       <p>
                         <strong>File:</strong> {contentItem.fileName}

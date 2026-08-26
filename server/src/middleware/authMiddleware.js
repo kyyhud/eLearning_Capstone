@@ -11,7 +11,10 @@ const authenticateUser = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    return res.status(401).json({ success: false, error: "Invalid or expired token" });
+    return res.status(401).json({
+      success: false,
+      error: "Invalid or expired token",
+    });
   }
 };
 const authorizeRoles = (...allowedRoles) => {
