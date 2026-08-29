@@ -15,7 +15,7 @@ const emptyForm = {
   isActive: true,
 };
 
-function StudentProfilePage() {
+function StudentProfile() {
   const { id } = useParams();
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState("");
@@ -157,7 +157,7 @@ function StudentProfilePage() {
         <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
         <br />
         <label htmlFor="phone">Phone:</label>
-        <input type="text" id="phone" name="phone" value={formData.phone} onChange={handleChange} disabled={!isEditing} />
+        <input type="text" id="phone" name="phone" maxLength={13} value={formData.phone} onChange={handleChange} disabled={!isEditing} />
         <br />
         <label htmlFor="fieldOfStudy">Field of Study:</label>
         <input type="text" id="fieldOfStudy" name="fieldOfStudy" value={formData.fieldOfStudy} onChange={handleChange} disabled={!isEditing} />
@@ -209,7 +209,7 @@ function StudentProfilePage() {
           )}
         </div>
         <label htmlFor="bio">Bio:</label>
-        <textarea id="bio" name="bio" value={formData.bio} onChange={handleChange} disabled={!isEditing} />
+        <textarea id="bio" name="bio" maxLength={500} value={formData.bio} onChange={handleChange} disabled={!isEditing} />
         <br />
         {isAdmin && (
           <>
@@ -235,7 +235,7 @@ function StudentProfilePage() {
             <button type="button" onClick={() => setIsEditing(true)}>
               Edit
             </button>
-            { " | " }
+            {" | "}
             <button type="button" onClick={() => navigate(-1)}>
               Back
             </button>
@@ -255,4 +255,4 @@ function StudentProfilePage() {
   );
 }
 
-export default StudentProfilePage;
+export default StudentProfile;

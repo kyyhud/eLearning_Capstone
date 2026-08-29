@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const nameRegex = /^[A-Za-z'-]+(?: [A-Za-z'-]+)*$/;
+
 const facultyProfileSchema = new mongoose.Schema(
   {
     facultyId: {
@@ -26,6 +28,7 @@ const facultyProfileSchema = new mongoose.Schema(
       type: String,
       trim: true,
       default: "",
+      maxlength: [500, "Bio cannot exceed 500 characters"],
     },
   },
   { _id: false },
@@ -42,6 +45,7 @@ const studentProfileSchema = new mongoose.Schema(
       type: String,
       trim: true,
       default: "",
+      maxlength: [500, "Bio cannot exceed 500 characters"],
     },
     fieldOfStudy: {
       type: String,
@@ -102,11 +106,23 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      validate: {
+        validator: function (value) {
+          return nameRegex.test(value);
+        },
+        message: "First name can only contain letters, spaces, hyphens, and apostrophes.",
+      },
     },
     lastName: {
       type: String,
       required: true,
       trim: true,
+      validate: {
+        validator: function (value) {
+          return nameRegex.test(value);
+        },
+        message: "Last name can only contain letters, spaces, hyphens, and apostrophes.",
+      },
     },
     email: {
       type: String,
@@ -119,6 +135,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
       default: "",
+      validate: {
+        validator: function (value) {
+          if (!value) return true;
+          const digitsOnly = value.replace(/\D/g, "");
+          return digitsOnly.length === 10;
+        },
+        message: "Please enter a valid phone number",
+      },
     },
     passwordHash: {
       type: String,

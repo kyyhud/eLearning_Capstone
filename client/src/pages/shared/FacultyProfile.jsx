@@ -15,7 +15,7 @@ const emptyForm = {
   isActive: true,
 };
 
-function FacultyProfilePage() {
+function FacultyProfile() {
   const { id } = useParams();
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState("");
@@ -112,7 +112,7 @@ function FacultyProfilePage() {
         <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
         <br />
         <label htmlFor="phone">Phone:</label>
-        <input type="text" id="phone" name="phone" value={formData.phone} onChange={handleChange} disabled={!isEditing} />
+        <input type="text" id="phone" name="phone" maxLength={13} value={formData.phone} onChange={handleChange} disabled={!isEditing} />
         <br />
         <label htmlFor="department">Department:</label>
         <input type="text" id="department" name="department" value={formData.department} onChange={handleChange} disabled={!isEditing || !isAdmin} />
@@ -131,7 +131,7 @@ function FacultyProfilePage() {
         />
         <br />
         <label htmlFor="bio">Bio:</label>
-        <textarea id="bio" name="bio" value={formData.bio} onChange={handleChange} disabled={!isEditing} />
+        <textarea id="bio" name="bio" maxLength={500} value={formData.bio} onChange={handleChange} disabled={!isEditing} />
         <br />
         {isAdmin && (
           <>
@@ -171,4 +171,4 @@ function FacultyProfilePage() {
   );
 }
 
-export default FacultyProfilePage;
+export default FacultyProfile;

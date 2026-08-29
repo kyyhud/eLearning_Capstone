@@ -14,7 +14,7 @@ const emptyForm = {
   isActive: true,
 };
 
-function AddFacultyPage() {
+function AddFaculty() {
   const [message, setMessage] = useState("");
   const [formData, setFormData] = useState(emptyForm);
 
@@ -58,23 +58,32 @@ function AddFacultyPage() {
       {message && <p style={{ color: "red" }}>{message}</p>}
       <h4>Add Faculty Member</h4>
       <form onSubmit={handleSubmit}>
-        First Name: <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required />
+        <label htmlFor="firstName">First Name:</label> 
+          <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} required />
         <br />
-        Last Name: <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required />
+        <label htmlFor="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} required />
         <br />
-        Email: <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+        <label htmlFor="email">Email:</label>
+        <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
         <br />
-        Password: <input type="password" name="password" value={formData.password} onChange={handleChange} required />
+        <label htmlFor="password">Password:</label>
+        <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required />
         <br />
-        Phone: <input type="text" name="phone" value={formData.phone} onChange={handleChange} />
+        <label htmlFor="phone">Phone:</label>
+        <input type="text" id="phone" name="phone" maxLength={13} value={formData.phone} onChange={handleChange} />
         <br />
-        Department: <input type="text" name="department" value={formData.department} onChange={handleChange} />
+        <label htmlFor="department">Department:</label>
+        <input type="text" id="department" name="department" value={formData.department} onChange={handleChange} />
         <br />
-        Title: <input type="text" name="title" value={formData.title} onChange={handleChange} />
+        <label htmlFor="title">Title:</label>
+        <input type="text" id="title" name="title" value={formData.title} onChange={handleChange} />
         <br />
-        Specialization: <input type="text" name="specialization" value={formData.specialization} onChange={handleChange} />
+        <label htmlFor="specialization">Specialization:</label>
+        <input type="text" id="specialization" name="specialization" value={formData.specialization} onChange={handleChange} />
         <br />
-        Bio: <textarea name="bio" value={formData.bio} onChange={handleChange} />
+        <label htmlFor="bio">Bio:</label>
+        <textarea id="bio" name="bio" maxLength={500} value={formData.bio} onChange={handleChange} />
         <br />
         <label>
           Status: {formData.isActive ? "Active" : "Inactive"}
@@ -97,4 +106,4 @@ function AddFacultyPage() {
   );
 }
 
-export default AddFacultyPage;
+export default AddFaculty;

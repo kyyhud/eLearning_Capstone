@@ -36,6 +36,8 @@ const seedDemoUsers = async () => {
     const passwordHash = await bcrypt.hash(adminPassword, 10);
 
     const adminUser = await User.create({
+      firstName: "Admin",
+      lastName: "Account",
       email: adminEmail.toLowerCase(),
       passwordHash,
       typeOfUser: "admin",
