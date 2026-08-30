@@ -9,7 +9,7 @@ const createCourse = async (req, res) => {
       category: req.body.category,
       faculty: req.body.faculty,
       durationWeeks: req.body.durationWeeks,
-      status: req.body.status,
+      status: "draft",
     };
     const newCourse = await courseService.createCourse(courseData);
     res.status(201).json({ success: true, data: newCourse, message: "Course created successfully" });

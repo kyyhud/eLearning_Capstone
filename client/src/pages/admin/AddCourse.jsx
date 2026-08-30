@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createCourse } from "../../services/courseService.js";
 import { viewAllFaculty } from "../../services/userService.js";
 
-function AddCoursePage() {
+function AddCourse() {
   const initialFormData = {
     courseLevel: "",
     title: "",
@@ -10,7 +10,6 @@ function AddCoursePage() {
     description: "",
     faculty: "",
     durationWeeks: "",
-    status: "draft",
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -77,9 +76,12 @@ function AddCoursePage() {
           <label htmlFor="faculty">Faculty:</label>
           <select id="faculty" name="faculty" value={formData.faculty} onChange={handleChange} required>
             <option value="">Select Faculty</option>
-            {facultyMembers.map((faculty) => (
+            {[...facultyMembers]
+            .sort((a, b) => a.lastName.localeCompare(b.lastName))
+            .map((faculty) => (
               <option key={faculty._id} value={faculty._id}>
-                {faculty.firstName} {faculty.lastName}
+                {faculty.lastName}
+                {","} {faculty.firstName}
               </option>
             ))}
           </select>
@@ -88,18 +90,10 @@ function AddCoursePage() {
           <label htmlFor="durationWeeks">Duration (weeks):</label>
           <input type="number" id="durationWeeks" name="durationWeeks" value={formData.durationWeeks} onChange={handleChange} required />
         </div>
-        <div>
-          <label htmlFor="status">Status:</label>
-          <select id="status" name="status" value={formData.status} onChange={handleChange}>
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
-            <option value="archived">Archived</option>
-          </select>
-        </div>
         <button type="submit">Add Course</button>
       </form>
     </div>
   );
 }
 
-export default AddCoursePage;
+export default AddCourse;

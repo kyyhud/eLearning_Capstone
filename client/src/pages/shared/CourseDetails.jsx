@@ -141,7 +141,7 @@ const getResourceLabel = (type) => {
           </div>
         ))}
       </section>
-
+      <br />
       <div>
         {canEdit && (
           <button type="button" onClick={() => navigate(`/courses/${id}/edit`)}>

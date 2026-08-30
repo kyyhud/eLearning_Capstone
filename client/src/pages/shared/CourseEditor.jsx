@@ -8,6 +8,7 @@ const emptyForm = {
   description: "",
   durationWeeks: "",
   faculty: "",
+  status: "draft",
   sections: [],
 };
 
@@ -37,6 +38,7 @@ function CourseEditor() {
       const course = await getCourseById(id);
       setCourseId(course.courseId);
       setFormData({
+        status: course.status || "draft",
         title: course.title || "",
         description: course.description || "",
         durationWeeks: course.durationWeeks ?? "",
@@ -79,6 +81,7 @@ function CourseEditor() {
           }
         : {
             description: formData.description,
+            status: formData.status,
             sections,
           };
       await updateCourse(id, updateData);
@@ -314,7 +317,6 @@ function CourseEditor() {
               <label htmlFor="faculty">Faculty</label>
               <select id="faculty" name="faculty" value={formData.faculty} onChange={handleChange} required>
                 <option value="">Select Faculty</option>
-
                 {faculty.map((facultyMember) => (
                   <option key={facultyMember._id} value={facultyMember._id}>
                     {facultyMember.firstName} {facultyMember.lastName}
@@ -323,6 +325,13 @@ function CourseEditor() {
               </select>
             </div>
           )}
+          <div>
+            <label htmlFor="status">Status</label>
+            <select id="status" name="status" value={formData.status} onChange={handleChange}>
+              {" "}
+              <option value="draft">Draft</option> <option value="published">Published</option> <option value="archived">Archived</option>
+            </select>
+          </div>
         </section>
         {/* Course sections management */}
         <section>
@@ -463,6 +472,7 @@ function CourseEditor() {
         </section>
 
         <div>
+          <br />
           <button type="submit">Save Updates</button>
           {" | "}
           <button type="button" onClick={() => navigate(-1)}>

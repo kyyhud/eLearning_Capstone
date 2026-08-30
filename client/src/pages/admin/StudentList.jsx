@@ -58,7 +58,7 @@ function StudentList() {
         <tbody>
           {students.map((user) => (
             <tr key={user._id}>
-              <td>{user.id}</td>
+              <td>{user.studentProfile?.studentId || "-"}</td>
               <td>{user.isActive ? "Yes" : "No"}</td>
               <td>
                 {user.firstName} {user.lastName}

@@ -15,7 +15,6 @@ const studentSignUp = async (firstName, lastName, email, password, typeOfUser) =
     lastName,
     email,
     passwordHash: hashedPassword,
-    typeOfUser: "student",
     studentProfile: { studentId },
   });
   return newUser;

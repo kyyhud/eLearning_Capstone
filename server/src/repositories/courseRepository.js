@@ -8,6 +8,10 @@ const findCourseById = async (id) => {
   return await Course.findById(id).populate("faculty", "firstName lastName email facultyProfile.facultyId");
 };
 
+const findCourseByCourseId = async (courseId) => {
+  return await Course.findOne({ courseId });
+};
+
 const findCourses = async ({ search, category }) => {
   const filter = {};
   if (category) {
@@ -47,6 +51,7 @@ const deleteCourseById = async (id) => {
 module.exports = {
   createCourse,
   findCourseById,
+  findCourseByCourseId,
   findCourses,
   findCoursesByFacultyId,
   findCoursesByFacultyEmail,

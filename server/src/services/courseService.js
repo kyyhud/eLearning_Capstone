@@ -5,10 +5,11 @@ const path = require("path");
 
 const createCourse = async (courseData) => {
   const { courseLevel, ...courseDetails } = courseData;
-  const courseId = await getNextCourseId(courseLevel);
-  if (!Number.isInteger(courseId) || courseId < 1) {
-    throw new Error("Course ID must be a positive whole number");
+  const level = Number(courseLevel);
+  if (![100, 200, 300, 400].includes(level)) {
+    throw new Error("Invalid course level");
   }
+  const courseId = await getNextCourseId(level);
   const existingCourse = await courseRepository.findCourseByCourseId(courseId);
   if (existingCourse) {
     throw new Error(`Course ID ${courseId} is already in use`);
@@ -16,7 +17,7 @@ const createCourse = async (courseData) => {
   const newCourseData = {
     ...courseDetails,
     courseId,
-    status: courseData.status || "draft",
+    status: "draft",
   };
   return await courseRepository.createCourse(newCourseData);
 };
@@ -70,7 +71,7 @@ const updateCourse = async (id, updatedData, user) => {
     }
   }
   const adminFields = ["title", "description", "category", "faculty", "durationWeeks", "status", "sections"];
-  const facultyFields = ["description", "sections"];
+  const facultyFields = ["description", "status", "sections"];
   const allowedUpdates = getAllowedUpdates(updatedData, isAdmin ? adminFields : facultyFields);
   const updatedCourse = await courseRepository.updateCourse(id, allowedUpdates);
   const newResourceUrls = getUploadedResourceUrls(updatedCourse.sections);
