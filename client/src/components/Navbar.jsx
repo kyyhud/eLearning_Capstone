@@ -28,6 +28,7 @@ function Navbar() {
         <>
           <Link to="/faculty/dashboard">Dashboard</Link> {" | "}
           <Link to="/faculty/courses">My Courses</Link> {" | "}
+          <Link to="/faculty/enrollments">Enrollment Requests</Link> {" | "}
           <Link to={`/faculty/${user._id}`}>Profile</Link> {" | "}
           <Link to="/faculty/settings">Settings</Link> {" | "}
         </>

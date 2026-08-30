@@ -5,6 +5,7 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const courseRoutes = require("./routes/courseRoutes");
+const enrollmentRoutes = require("./routes/enrollmentRoutes");
 const app = express();
 const path = require("path");
 
@@ -22,6 +23,9 @@ app.use("/api/users", userRoutes);
 
 // http://localhost:3000/api/courses/*
 app.use("/api/courses", courseRoutes);
+
+// http://localhost:3000/api/enrollments/*
+app.use("/api/enrollments", enrollmentRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

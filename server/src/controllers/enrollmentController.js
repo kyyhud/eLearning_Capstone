@@ -1,0 +1,77 @@
+const enrollmentService = require("../services/enrollmentService");
+
+// Student requests enrollment in a course
+const requestEnrollment = async (req, res) => {
+  try {
+    const enrollment = await enrollmentService.requestEnrollment(req.userId, req.params.courseId);
+    res.status(201).json({
+      success: true,
+      data: enrollment,
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
+// Student gets their enrollment records
+const getMyEnrollments = async (req, res) => {
+  try {
+    const enrollments = await enrollmentService.getStudentEnrollments(req.userId);
+    res.status(200).json({
+      success: true,
+      data: enrollments,
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
+// Faculty gets enrollment records for their courses
+const getFacultyEnrollments = async (req, res) => {
+  try {
+    const enrollments = await enrollmentService.getFacultyEnrollments(req.userId);
+    res.status(200).json({
+      success: true,
+      data: enrollments,
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
+// Faculty/admin approves or rejects an enrollment request
+const reviewEnrollment = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const user = {
+      userId: req.userId,
+      typeOfUser: req.user.typeOfUser,
+    };
+    const enrollment = await enrollmentService.reviewEnrollment(req.params.id, status, user);
+    res.status(200).json({
+      success: true,
+      data: enrollment,
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
+module.exports = {
+  requestEnrollment,
+  getMyEnrollments,
+  getFacultyEnrollments,
+  reviewEnrollment,
+};

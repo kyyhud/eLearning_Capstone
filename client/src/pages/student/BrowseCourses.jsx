@@ -1,58 +1,108 @@
 import { useState, useEffect } from "react";
 import { viewCourses } from "../../services/courseService.js";
+import { getMyEnrollments, requestEnrollment } from "../../services/enrollmentService.js";
 
-function BrowseCoursesByStudent() {
+function BrowseCourses() {
   const [courses, setCourses] = useState([]);
+  const [enrollments, setEnrollments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    fetchAllCourses();
+    fetchInitialData();
   }, []);
 
-  const fetchAllCourses = async () => {
+  // Load published courses and the student's current enrollments
+  const fetchInitialData = async () => {
     try {
-      const response = await viewCourses();
-      setCourses(response);
+      const [courseResponse, enrollmentsResponse] = await Promise.all([viewCourses(), getMyEnrollments()]);
+      const publishedCourses = courseResponse.filter((course) => course.status === "published");
+      setCourses(publishedCourses);
+      setEnrollments(enrollmentsResponse.data);
       setMessage("");
     } catch (error) {
       console.error(error);
       setCourses([]);
-      setMessage(error.message);
+      setEnrollments([]);
+      setMessage(error.response?.data?.error || error.message);
     }
   };
 
+  // Search courses while still hiding draft/archived courses
   const searchCourses = async () => {
     if (!searchTerm.trim()) {
-      fetchAllCourses();
+      fetchInitialData();
       return;
     }
     try {
       const response = await viewCourses({ search: searchTerm });
-      setCourses(response);
-      setMessage(response.length === 0 ? "No courses found." : "");
+      const publishedCourses = response.filter((course) => course.status === "published");
+      setCourses(publishedCourses);
+      setMessage(publishedCourses.length === 0 ? "No courses found." : "");
     } catch (error) {
+      console.error(error);
       setCourses([]);
-      setMessage(error.message);
+      setMessage(error.response?.data?.error || error.message);
     }
   };
 
   const clearSearch = () => {
     setSearchTerm("");
-    fetchAllCourses();
+    fetchInitialData();
+  };
+
+  // Find this student's enrollment for a specific course
+  const getEnrollmentForCourse = (courseId) => {
+    return enrollments.find((enrollment) => enrollment.course?._id === courseId);
+  };
+
+  // Request enrollment or re-request after rejection
+  const handleEnrollmentRequest = async (courseId) => {
+    try {
+      const response = await requestEnrollment(courseId);
+      const updatedEnrollment = response.data;
+      setEnrollments((currentEnrollments) => {
+        const existingEnrollment = currentEnrollments.find((enrollment) => enrollment.course?._id === courseId);
+        // Re-requested enrollment already exists in state
+        if (existingEnrollment) {
+          return currentEnrollments.map((enrollment) =>
+            enrollment._id === updatedEnrollment._id
+              ? {
+                  ...updatedEnrollment,
+                  course: enrollment.course,
+                }
+              : enrollment,
+          );
+        }
+        // New enrollment request
+        return [
+          ...currentEnrollments,
+          {
+            ...updatedEnrollment,
+            course: {
+              _id: courseId,
+            },
+          },
+        ];
+      });
+      setMessage("Enrollment request submitted.");
+    } catch (error) {
+      console.error(error);
+      setMessage(error.response?.data?.error || error.message);
+    }
   };
 
   return (
     <>
       <h3>Browse Courses</h3>
       <input type="text" placeholder="Search by Course ID or title" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-      <button type="button" value="Search" onClick={searchCourses}>
+      <button type="button" onClick={searchCourses}>
         Search
       </button>
-      <button type="button" value="Clear" onClick={clearSearch}>
+      <button type="button" onClick={clearSearch}>
         Clear
       </button>
-      {message && <p style={{ color: "red" }}>{message}</p>}
+      {message && <p style={{ color: "green" }}>{message}</p>}
       <br />
       <table border="1">
         <thead>
@@ -63,23 +113,44 @@ function BrowseCoursesByStudent() {
             <th>Description</th>
             <th>Faculty</th>
             <th>Duration</th>
+            <th>Enrollment</th>
           </tr>
         </thead>
         <tbody>
-          {courses.map((course) => (
-            <tr key={course._id}>
-              <td>{course.courseId}</td>
-              <td>{course.title}</td>
-              <td>{course.category}</td>
-              <td>{course.description}</td>
-              <td>{course.faculty ? `${course.faculty.firstName} ${course.faculty.lastName}` : "Not assigned"}</td>
-              <td>{course.durationWeeks} weeks</td>
-            </tr>
-          ))}
+          {courses.map((course) => {
+            const enrollment = getEnrollmentForCourse(course._id);
+            return (
+              <tr key={course._id}>
+                <td>{course.courseId}</td>
+                <td>{course.title}</td>
+                <td>{course.category}</td>
+                <td>{course.description}</td>
+                <td>{course.faculty ? `${course.faculty.firstName} ${course.faculty.lastName}` : "Not assigned"}</td>
+                <td>{course.durationWeeks} weeks</td>
+                <td>
+                  {!enrollment && (
+                    <button type="button" onClick={() => handleEnrollmentRequest(course._id)}>
+                      Request Enrollment
+                    </button>
+                  )}
+                  {enrollment?.status === "pending" && <span>Pending Approval</span>}
+                  {enrollment?.status === "approved" && <span>Enrolled</span>}
+                  {enrollment?.status === "rejected" && (
+                    <>
+                      <span>Rejected </span>
+                      <button type="button" onClick={() => handleEnrollmentRequest(course._id)}>
+                        Request Again
+                      </button>
+                    </>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </>
   );
 }
 
-export default BrowseCoursesByStudent;
+export default BrowseCourses;
