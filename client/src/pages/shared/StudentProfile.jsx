@@ -19,6 +19,7 @@ function StudentProfile() {
   const { id } = useParams();
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState(emptyForm);
   const user = JSON.parse(sessionStorage.getItem("user"));
   const isAdmin = user.typeOfUser === "admin";
@@ -31,6 +32,8 @@ function StudentProfile() {
 
   const loadStudent = async () => {
     try {
+      setError("");
+      setMessage("");
       const student = await getStudentById(id);
       setFormData({
         firstName: student.firstName,
@@ -50,7 +53,7 @@ function StudentProfile() {
         isActive: student.isActive,
       });
     } catch (error) {
-      setMessage(error.message);
+      setError(error.message);
     }
   };
 
@@ -103,6 +106,8 @@ function StudentProfile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setError("");
+      setMessage("");
       const skillsArray = formData.skills
         .split(",")
         .map((skill) => skill.trim())
@@ -137,15 +142,17 @@ function StudentProfile() {
       setIsEditing(false);
     } catch (error) {
       console.error(error);
-      setMessage(error.message);
+      setError(error.message);
     }
   };
 
   return (
     <>
       <h3>{isAdmin ? "Student Management" : "Student Profile"}</h3>
-      {message && <p style={{ color: "red" }}>{message}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {message && <p style={{ color: "green" }}>{message}</p>}
       <h4>{isEditing ? "Edit Profile" : "Profile Details"}</h4>
+
       <form onSubmit={handleSubmit}>
         <label htmlFor="firstName">First Name:</label>
         <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} disabled={!isEditing || !isAdmin} required />

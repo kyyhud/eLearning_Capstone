@@ -19,6 +19,7 @@ function FacultyProfile() {
   const { id } = useParams();
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState(emptyForm);
   const user = JSON.parse(sessionStorage.getItem("user"));
   const isAdmin = user.typeOfUser === "admin";
@@ -30,6 +31,8 @@ function FacultyProfile() {
 
   const loadFaculty = async () => {
     try {
+      setError("");
+      setMessage("");
       const facultyMember = await getFacultyById(id);
       setFormData({
         firstName: facultyMember.firstName,
@@ -44,7 +47,7 @@ function FacultyProfile() {
         bio: facultyMember.facultyProfile?.bio || "",
       });
     } catch (error) {
-      setMessage(error.message);
+      setError(error.message);
     }
   };
 
@@ -64,6 +67,8 @@ function FacultyProfile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setError("");
+      setMessage("");
       const facultyData = isAdmin
         ? {
             firstName: formData.firstName,
@@ -89,14 +94,15 @@ function FacultyProfile() {
       setIsEditing(false);
     } catch (error) {
       console.error(error);
-      setMessage(error.message);
+      setError(error.message);
     }
   };
 
   return (
     <>
       <h3>{isAdmin ? "Faculty Management" : "Faculty Profile"}</h3>
-      {message && <p style={{ color: "red" }}>{message}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {message && <p style={{ color: "green" }}>{message}</p>}
       <h4>{isEditing ? "Edit Profile" : "Profile Details"}</h4>
       <form onSubmit={handleSubmit}>
         <label htmlFor="facultyId">Faculty ID:</label>
