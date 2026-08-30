@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { accessFacultyCourses } from "../../services/courseService.js";
 
-function CourseManagementPage() {
+function FacultyCourseList() {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [message, setMessage] = useState("");
@@ -40,23 +40,29 @@ function CourseManagementPage() {
           </tr>
         </thead>
         <tbody>
-          {courses.map((course) => (
-            <tr key={course._id}>
-              <td>{course.courseId}</td>
-              <td>{course.title}</td>
-              <td>{course.category}</td>
-              <td>{course.description}</td>
-              <td>{course.durationWeeks} weeks</td>
-              <td>{course.status}</td>
-              <td>
-                <button onClick={() => navigate(`/courses/${course._id}`)}>View/Edit</button>
-              </td>
-            </tr>
-          ))}
+          {[...courses]
+            .sort((a, b) => {
+              if (a.status === "archived" && b.status !== "archived") return 1;
+              if (a.status !== "archived" && b.status === "archived") return -1;
+              return a.courseId - b.courseId;
+            })
+            .map((course) => (
+              <tr key={course._id}>
+                <td>{course.courseId}</td>
+                <td>{course.title}</td>
+                <td>{course.category}</td>
+                <td>{course.description}</td>
+                <td>{course.durationWeeks} weeks</td>
+                <td>{course.status}</td>
+                <td>
+                  <button onClick={() => navigate(`/courses/${course._id}`)}>View/Edit</button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </>
   );
 }
 
-export default CourseManagementPage;
+export default FacultyCourseList;

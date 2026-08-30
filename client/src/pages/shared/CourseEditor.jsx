@@ -290,12 +290,11 @@ function CourseEditor() {
 
   return (
     <main>
-      <h2>Edit Course</h2>
+      <h3>Edit Course</h3>
       {error && <p>{error}</p>}
       {message && <p style={{ color: "green" }}>{message}</p>}
       <form onSubmit={handleSubmit}>
         <section>
-          <h3>Course Information</h3>
           <div>
             <label htmlFor="courseId">Course ID</label>
             <input type="text" id="courseId" value={courseId} disabled />
@@ -327,9 +326,11 @@ function CourseEditor() {
           )}
           <div>
             <label htmlFor="status">Status</label>
-            <select id="status" name="status" value={formData.status} onChange={handleChange}>
+            <select id="status" name="status" value={formData.status} onChange={handleChange} disabled={!isAdmin && formData.status === "archived"}>
               {" "}
-              <option value="draft">Draft</option> <option value="published">Published</option> <option value="archived">Archived</option>
+              <option value="draft">Draft</option> 
+              <option value="published">Published</option> 
+              {(isAdmin || formData.status === "archived") && <option value="archived">Archived</option>}
             </select>
           </div>
         </section>
@@ -455,6 +456,7 @@ function CourseEditor() {
                   Add Content
                 </button>
               </div>
+              <br />
               <button type="button" onClick={() => handleMoveSection(index, -1)} disabled={index === 0}>
                 Move Up
               </button>

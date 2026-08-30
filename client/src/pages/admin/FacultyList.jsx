@@ -57,22 +57,24 @@ function FacultyList() {
           </tr>
         </thead>
         <tbody>
-          {faculty.map((user) => (
-            <tr key={user._id}>
-              <td>{user.facultyProfile?.facultyId || "-"}</td>
-              <td>{user.isActive ? "Yes" : "No"}</td>
-              <td>
-                {user.firstName} {user.lastName}
-              </td>
-              <td>{user.email}</td>
-              <td>{user.phone || "-"}</td>
-              <td>{user.facultyProfile?.department || "-"}</td>
-              <td>{user.facultyProfile?.title || "-"}</td>
-              <td>
-                <button onClick={() => navigate(`/faculty/${user._id}`)}>View/Edit</button>|<button onClick={() => handleDelete(user._id)}>Delete</button>
-              </td>
-            </tr>
-          ))}
+          {[...faculty]
+            .sort((a, b) => a.facultyProfile?.facultyId - b.facultyProfile?.facultyId)
+            .map((user) => (
+              <tr key={user._id}>
+                <td>{user.facultyProfile?.facultyId || "-"}</td>
+                <td>{user.isActive ? "Yes" : "No"}</td>
+                <td>
+                  {user.firstName} {user.lastName}
+                </td>
+                <td>{user.email}</td>
+                <td>{user.phone || "-"}</td>
+                <td>{user.facultyProfile?.department || "-"}</td>
+                <td>{user.facultyProfile?.title || "-"}</td>
+                <td>
+                  <button onClick={() => navigate(`/faculty/${user._id}`)}>View/Edit</button>|<button onClick={() => handleDelete(user._id)}>Delete</button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
       <br />

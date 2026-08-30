@@ -56,7 +56,9 @@ function StudentList() {
           </tr>
         </thead>
         <tbody>
-          {students.map((user) => (
+          {[...students]
+          .sort((a, b) => a.studentProfile?.studentId - b.studentProfile?.studentId)
+          .map((user) => (
             <tr key={user._id}>
               <td>{user.studentProfile?.studentId || "-"}</td>
               <td>{user.isActive ? "Yes" : "No"}</td>

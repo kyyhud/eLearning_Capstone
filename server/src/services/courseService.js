@@ -47,6 +47,7 @@ const getAllowedUpdates = (updatedData, allowedFields) => {
   });
   return allowedUpdates;
 };
+
 const updateCourse = async (id, updatedData, user) => {
   const course = await courseRepository.findCourseById(id);
   if (!course) {
@@ -54,7 +55,7 @@ const updateCourse = async (id, updatedData, user) => {
     error.statusCode = 404;
     throw error;
   }
-  const oldResourceUrls = getUploadedResourceUrls(course.sections);
+  const oldResourceUrls = getUploadedResourceUrls(course.sections); // Get the list of resource URLs before the update
   const isAdmin = user.typeOfUser === "admin";
   const isFaculty = user.typeOfUser === "faculty";
   if (!isAdmin && !isFaculty) {
@@ -62,6 +63,7 @@ const updateCourse = async (id, updatedData, user) => {
     error.statusCode = 403;
     throw error;
   }
+  // Verify user access based on role and course assignment
   if (isFaculty) {
     const assignedFacultyId = course.faculty?._id?.toString() || course.faculty?.toString();
     if (assignedFacultyId !== user.userId) {
@@ -70,10 +72,23 @@ const updateCourse = async (id, updatedData, user) => {
       throw error;
     }
   }
+  // Restrict faculty from archiving courses or modifying archived courses
+  if (isFaculty && updatedData.status === "archived") {
+    const error = new Error("Only administrators can archive courses");
+    error.statusCode = 403;
+    throw error;
+  }
+  if (isFaculty && course.status === "archived" && updatedData.status !== "archived") {
+    const error = new Error("Only administrators can change an archived course");
+    error.statusCode = 403;
+    throw error;
+  }
+  // Determine which fields the user is allowed to update based on their role
   const adminFields = ["title", "description", "category", "faculty", "durationWeeks", "status", "sections"];
   const facultyFields = ["description", "status", "sections"];
   const allowedUpdates = getAllowedUpdates(updatedData, isAdmin ? adminFields : facultyFields);
   const updatedCourse = await courseRepository.updateCourse(id, allowedUpdates);
+  // Get the list of resource URLs after the update, identify changes, and delete removed files
   const newResourceUrls = getUploadedResourceUrls(updatedCourse.sections);
   const removedResourceUrls = oldResourceUrls.filter((resourceUrl) => !newResourceUrls.includes(resourceUrl));
   removedResourceUrls.forEach(deleteUploadedFile);

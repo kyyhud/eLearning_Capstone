@@ -37,46 +37,49 @@ function CourseDetails() {
 
   // Helper functions to get resource URL and label based on content type
   const getResourceUrl = (contentItem) => {
-  if (!contentItem.resourceUrl) {
-    return "";
-  }
-  if (contentItem.type === "link") {
-    const url = contentItem.resourceUrl.trim();
-    return /^https?:\/\//i.test(url) ? url : `http://${url}`;
-  }
-  return `${SERVER_URL}${contentItem.resourceUrl}`;
-};
+    if (!contentItem.resourceUrl) {
+      return "";
+    }
+    if (contentItem.type === "link") {
+      const url = contentItem.resourceUrl.trim();
+      return /^https?:\/\//i.test(url) ? url : `http://${url}`;
+    }
+    return `${SERVER_URL}${contentItem.resourceUrl}`;
+  };
 
-const getResourceLabel = (type) => {
-  switch (type) {
-    case "document":
-      return "Open Document";
-    case "presentation":
-      return "Open Presentation";
-    case "video":
-      return "Watch Video";
-    case "recording":
-      return "Watch Recording";
-    case "link":
-      return "Open Link";
-    default:
-      return "Open Resource";
-  }
-};
+  const getResourceLabel = (type) => {
+    switch (type) {
+      case "document":
+        return "Open Document";
+      case "presentation":
+        return "Open Presentation";
+      case "video":
+        return "Watch Video";
+      case "recording":
+        return "Watch Recording";
+      case "link":
+        return "Open Link";
+      default:
+        return "Open Resource";
+    }
+  };
 
   return (
     <main>
-      <h2>{course.title}</h2>
       {location.state?.message && <p>{location.state.message}</p>}
       {error && <p>{error}</p>}
 
       <section>
-        <h3>Course Information</h3>
+        <h3>{course.title}</h3>
         <p>
           <strong>Course ID:</strong> {course.courseId}
         </p>
         <p>
-          <strong>Title:</strong> {course.title}
+          <strong>Status:</strong> {course.status}
+        </p>
+        <br />
+        <p>
+          <strong>Category:</strong> {course.category}
         </p>
         <p>
           <strong>Description:</strong> {course.description}
@@ -89,6 +92,7 @@ const getResourceLabel = (type) => {
         </p>
       </section>
       {/* Course sections and content */}
+      <br />
       <section>
         <h3>Course Sections</h3>
         {orderedSections.length === 0 && <p>No course sections have been added yet.</p>}
