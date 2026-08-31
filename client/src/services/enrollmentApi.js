@@ -3,10 +3,10 @@ import axios from "axios";
 const URL = "http://localhost:3000/api/enrollments";
 
 // Student requests enrollment in a course
-const requestEnrollment = async (courseId) => {
+const requestEnrollment = async (id) => {
   const token = sessionStorage.getItem("token");
   const response = await axios.post(
-    `${URL}/courses/${courseId}/request`,
+    `${URL}/courses/${id}/request`,
     {},
     {
       headers: {
@@ -25,6 +25,35 @@ const getMyEnrollments = async () => {
       Authorization: `Bearer ${token}`,
     },
   });
+  return response.data;
+};
+
+// Student gets coursework for an approved enrollment
+const getStudentCoursework = async (id) => {
+  const token = sessionStorage.getItem("token");
+  const response = await axios.get(
+    `${URL}/courses/${id}/coursework`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  return response.data;
+};
+
+// Student marks a course content item as complete
+const markContentComplete = async (id, contentId) => {
+  const token = sessionStorage.getItem("token");
+  const response = await axios.patch(
+    `${URL}/courses/${id}/content/${contentId}/complete`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
   return response.data;
 };
 
@@ -54,4 +83,4 @@ const updateEnrollmentStatus = async (enrollmentId, status) => {
   return response.data;
 };
 
-export { requestEnrollment, getMyEnrollments, getFacultyEnrollments, updateEnrollmentStatus };
+export { requestEnrollment, getMyEnrollments, getFacultyEnrollments, updateEnrollmentStatus, getStudentCoursework, markContentComplete };

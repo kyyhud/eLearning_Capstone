@@ -37,6 +37,7 @@ function Navbar() {
         <>
           <Link to="/student/dashboard">Dashboard</Link> {" | "}
           <Link to="/student/courses">Browse Courses</Link> {" | "}
+          <Link to="/student/courses/my">My Courses</Link> {" | "}
           <Link to={`/student/${user._id}`}>Profile</Link> {" | "}
           <Link to="/student/settings">Settings</Link> {" | "}
         </>

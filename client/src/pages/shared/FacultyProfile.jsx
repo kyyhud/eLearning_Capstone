@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getFacultyById, updateFaculty } from "../../services/userService.js";
+import { getFacultyById, updateFaculty } from "../../services/userApi.js";
 
 const emptyForm = {
   firstName: "",

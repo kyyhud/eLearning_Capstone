@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getCourseById, updateCourse, uploadCourseContent } from "../../services/courseService.js";
-import { viewAllFaculty } from "../../services/userService.js";
+import { getCourseById, updateCourse, uploadCourseContent } from "../../services/courseApi.js";
+import { viewAllFaculty } from "../../services/userApi.js";
 
 const emptyForm = {
   title: "",
@@ -328,20 +328,31 @@ function CourseEditor() {
             <label htmlFor="status">Status</label>
             <select id="status" name="status" value={formData.status} onChange={handleChange} disabled={!isAdmin && formData.status === "archived"}>
               {" "}
-              <option value="draft">Draft</option> 
-              <option value="published">Published</option> 
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
               {(isAdmin || formData.status === "archived") && <option value="archived">Archived</option>}
             </select>
           </div>
         </section>
         {/* Course sections management */}
+        <br />
         <section>
           <h3>Course Sections</h3>
           {formData.sections.length === 0 && <p>No course sections have been added yet.</p>}
 
           {formData.sections.map((section, index) => (
             <div key={section._id || `section-${index}`}>
+              <hr />
               <h4>Section {index + 1}</h4>
+                <button type="button" onClick={() => handleMoveSection(index, -1)} disabled={index === 0}>
+                ↑
+              </button>
+              <button type="button" onClick={() => handleMoveSection(index, 1)} disabled={index === formData.sections.length - 1}>
+                ↓
+              </button>
+              <button type="button"onClick={() => handleRemoveSection(index)}>
+                Remove Section
+              </button>
               <div>
                 <label htmlFor={`section-title-${index}`}>Title</label>
                 <input type="text" id={`section-title-${index}`} name="title" value={section.title} onChange={(e) => handleSectionChange(index, e)} required />
@@ -358,6 +369,18 @@ function CourseEditor() {
                 {(section.content || []).map((contentItem, contentIndex) => (
                   <div key={contentItem._id || `content-${index}-${contentIndex}`}>
                     <h6>Content {contentIndex + 1}</h6>
+                      <button type="button" onClick={() => handleMoveContent(index, contentIndex, -1)} disabled={contentIndex === 0}>
+                      ↑
+                    </button>{" "}
+                    <button
+                      type="button"
+                      onClick={() => handleMoveContent(index, contentIndex, 1)}
+                      disabled={contentIndex === (section.content || []).length - 1}>
+                      ↓
+                    </button>{" "}
+                    <button type="button" onClick={() => handleRemoveContent(index, contentIndex)}>
+                      Remove Content
+                    </button>
                     <div>
                       <label htmlFor={`content-title-${index}-${contentIndex}`}>Title</label>
                       <input
@@ -438,41 +461,19 @@ function CourseEditor() {
                         Required Content
                       </label>
                     </div>
-                    <button type="button" onClick={() => handleMoveContent(index, contentIndex, -1)} disabled={contentIndex === 0}>
-                      Move Up
-                    </button>{" "}
-                    <button
-                      type="button"
-                      onClick={() => handleMoveContent(index, contentIndex, 1)}
-                      disabled={contentIndex === (section.content || []).length - 1}>
-                      Move Down
-                    </button>{" "}
-                    <button type="button" onClick={() => handleRemoveContent(index, contentIndex)}>
-                      Remove Content
-                    </button>
                   </div>
                 ))}
                 <button type="button" onClick={() => handleAddContent(index)}>
-                  Add Content
+                  + Add Content
                 </button>
               </div>
-              <br />
-              <button type="button" onClick={() => handleMoveSection(index, -1)} disabled={index === 0}>
-                Move Up
-              </button>
-              <button type="button" onClick={() => handleMoveSection(index, 1)} disabled={index === formData.sections.length - 1}>
-                Move Down
-              </button>
-              <button type="button" onClick={() => handleRemoveSection(index)}>
-                Remove Section
-              </button>
             </div>
           ))}
+          <hr />
           <button type="button" onClick={handleAddSection}>
-            Add Section
+            + Add Section
           </button>
         </section>
-
         <div>
           <br />
           <button type="submit">Save Updates</button>

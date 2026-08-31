@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getFacultyEnrollments, updateEnrollmentStatus } from "../../services/enrollmentService.js";
+import { getFacultyEnrollments, updateEnrollmentStatus } from "../../services/enrollmentApi.js";
 
 function FacultyEnrollmentRequests() {
   const [enrollments, setEnrollments] = useState([]);
@@ -64,39 +64,41 @@ function FacultyEnrollmentRequests() {
               <td colSpan="8">No enrollment requests found.</td>
             </tr>
           ) : (
-            enrollments.map((enrollment) => (
-              <tr key={enrollment._id}>
-                <td>{enrollment.course?.courseId}</td>
+            [...enrollments]
+              .sort((a, b) => {
+                const aPending = a.status === "pending";
+                const bPending = b.status === "pending";
+                if (aPending !== bPending) {
+                  return aPending ? -1 : 1;
+                }
+                return a.course?.courseId - b.course?.courseId;
+              })
+              .map((enrollment) => (
+                <tr key={enrollment._id}>
+                  <td>{enrollment.course?.courseId}</td>
+                  <td>{enrollment.course?.title}</td>
+                  <td>{enrollment.student?.studentProfile?.studentId || "N/A"}</td>
+                  <td>{enrollment.student ? `${enrollment.student.firstName} ${enrollment.student.lastName}` : "Unknown student"}</td>
+                  <td>{enrollment.student?.email}</td>
+                  <td>{enrollment.requestedAt ? new Date(enrollment.requestedAt).toLocaleDateString() : ""}</td>
+                  <td>{enrollment.status}</td>
+                  <td>
+                    {enrollment.status === "pending" ? (
+                      <>
+                        <button type="button" onClick={() => handleReview(enrollment._id, "approved")}>
+                          Approve
+                        </button>
 
-                <td>{enrollment.course?.title}</td>
-
-                <td>{enrollment.student?.studentProfile?.studentId || "N/A"}</td>
-
-                <td>{enrollment.student ? `${enrollment.student.firstName} ${enrollment.student.lastName}` : "Unknown student"}</td>
-
-                <td>{enrollment.student?.email}</td>
-
-                <td>{enrollment.requestedAt ? new Date(enrollment.requestedAt).toLocaleDateString() : ""}</td>
-
-                <td>{enrollment.status}</td>
-
-                <td>
-                  {enrollment.status === "pending" ? (
-                    <>
-                      <button type="button" onClick={() => handleReview(enrollment._id, "approved")}>
-                        Approve
-                      </button>
-
-                      <button type="button" onClick={() => handleReview(enrollment._id, "rejected")}>
-                        Reject
-                      </button>
-                    </>
-                  ) : (
-                    "-"
-                  )}
-                </td>
-              </tr>
-            ))
+                        <button type="button" onClick={() => handleReview(enrollment._id, "rejected")}>
+                          Reject
+                        </button>
+                      </>
+                    ) : (
+                      "-"
+                    )}
+                  </td>
+                </tr>
+              ))
           )}
         </tbody>
       </table>

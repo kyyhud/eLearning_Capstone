@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { viewCourses, deleteCourseById } from "../../services/courseService.js";
+import { viewCourses } from "../../services/courseApi.js";
 
 function CourseList() {
   const navigate = useNavigate();

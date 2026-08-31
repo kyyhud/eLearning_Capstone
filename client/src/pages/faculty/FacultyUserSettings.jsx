@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { changePassword } from "../../services/userService.js";
+import { changePassword } from "../../services/userApi.js";
 
 function FacultyUserSettings() {
   const [formData, setFormData] = useState({

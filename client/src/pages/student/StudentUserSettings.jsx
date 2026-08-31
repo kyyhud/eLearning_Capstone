@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { changePassword, getStudentById, updateStudent } from "../../services/userService.js";
+import { changePassword, getStudentById, updateStudent } from "../../services/userApi.js";
 
 function StudentUserSettings() {
   const user = JSON.parse(sessionStorage.getItem("user"));
@@ -104,12 +104,11 @@ function StudentUserSettings() {
 
   return (
     <div>
-      <h3>
-        User Settings for {formData.email}
-      </h3>
+      <h3>User Settings for {formData.email}</h3>
       <p>Student ID: {formData.studentId}</p>
       <p>Status: {formData.isActive ? "Active" : "Inactive"}</p>
       <section>
+        <hr />
         <h3>Personal Information</h3>
         <form onSubmit={handlePersonalInfoSubmit}>
           <div>
@@ -167,6 +166,7 @@ function StudentUserSettings() {
             </>
           )}
         </form>
+        <hr />
         <h3>Account Security</h3>
         <form onSubmit={handleSubmit}>
           <div>

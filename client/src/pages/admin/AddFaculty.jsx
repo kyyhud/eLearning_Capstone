@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { registerFaculty } from "../../services/userService.js";
+import { registerFaculty } from "../../services/userApi.js";
 
 const emptyForm = {
   firstName: "",
@@ -58,8 +58,8 @@ function AddFaculty() {
       {message && <p style={{ color: "red" }}>{message}</p>}
       <h4>Add Faculty Member</h4>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="firstName">First Name:</label> 
-          <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} required />
+        <label htmlFor="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} required />
         <br />
         <label htmlFor="lastName">Last Name:</label>
         <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} required />

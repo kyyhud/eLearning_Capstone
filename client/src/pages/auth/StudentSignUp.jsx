@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { studentSignUp } from "../../services/userService.js";
+import { studentSignUp } from "../../services/userApi.js";
 
-function StudentSignUpPage() {
+function StudentSignUp() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -57,4 +57,4 @@ function StudentSignUpPage() {
   );
 }
 
-export default StudentSignUpPage;
+export default StudentSignUp;

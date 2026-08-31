@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { viewCourses } from "../../services/courseService.js";
-import { getMyEnrollments, requestEnrollment } from "../../services/enrollmentService.js";
+import { viewCourses } from "../../services/courseApi.js";
+import { getMyEnrollments, requestEnrollment } from "../../services/enrollmentApi.js";
 
 function BrowseCourses() {
   const [courses, setCourses] = useState([]);
@@ -52,17 +52,17 @@ function BrowseCourses() {
   };
 
   // Find this student's enrollment for a specific course
-  const getEnrollmentForCourse = (courseId) => {
-    return enrollments.find((enrollment) => enrollment.course?._id === courseId);
+  const getEnrollmentForCourse = (id) => {
+    return enrollments.find((enrollment) => enrollment.course?._id === id);
   };
 
   // Request enrollment or re-request after rejection
-  const handleEnrollmentRequest = async (courseId) => {
+  const handleEnrollmentRequest = async (id) => {
     try {
-      const response = await requestEnrollment(courseId);
+      const response = await requestEnrollment(id);
       const updatedEnrollment = response.data;
       setEnrollments((currentEnrollments) => {
-        const existingEnrollment = currentEnrollments.find((enrollment) => enrollment.course?._id === courseId);
+        const existingEnrollment = currentEnrollments.find((enrollment) => enrollment.course?._id === id);
         // Re-requested enrollment already exists in state
         if (existingEnrollment) {
           return currentEnrollments.map((enrollment) =>
@@ -80,7 +80,7 @@ function BrowseCourses() {
           {
             ...updatedEnrollment,
             course: {
-              _id: courseId,
+              _id: id,
             },
           },
         ];
@@ -102,6 +102,7 @@ function BrowseCourses() {
       <button type="button" onClick={clearSearch}>
         Clear
       </button>
+      <br />
       {message && <p style={{ color: "green" }}>{message}</p>}
       <br />
       <table border="1">

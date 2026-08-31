@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { getAllStudents, deleteUser } from "../../services/userService.js";
+import { getAllStudents, deleteUser } from "../../services/userApi.js";
 
 function StudentList() {
   const navigate = useNavigate();
@@ -57,23 +57,22 @@ function StudentList() {
         </thead>
         <tbody>
           {[...students]
-          .sort((a, b) => a.studentProfile?.studentId - b.studentProfile?.studentId)
-          .map((user) => (
-            <tr key={user._id}>
-              <td>{user.studentProfile?.studentId || "-"}</td>
-              <td>{user.isActive ? "Yes" : "No"}</td>
-              <td>
-                {user.firstName} {user.lastName}
-              </td>
-              <td>{user.email}</td>
-              <td>{user.phone}</td>
-              <td>{user.studentProfile?.fieldOfStudy || "-"}</td>
-              <td>
-                <button onClick={() => navigate(`/student/${user._id}`)}>View/Edit</button>|
-                <button onClick={() => handleDelete(user._id)}>Delete</button>
-              </td>
-            </tr>
-          ))}
+            .sort((a, b) => a.studentProfile?.studentId - b.studentProfile?.studentId)
+            .map((user) => (
+              <tr key={user._id}>
+                <td>{user.studentProfile?.studentId || "-"}</td>
+                <td>{user.isActive ? "Yes" : "No"}</td>
+                <td>
+                  {user.firstName} {user.lastName}
+                </td>
+                <td>{user.email}</td>
+                <td>{user.phone}</td>
+                <td>{user.studentProfile?.fieldOfStudy || "-"}</td>
+                <td>
+                  <button onClick={() => navigate(`/student/${user._id}`)}>View/Edit</button>|<button onClick={() => handleDelete(user._id)}>Delete</button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

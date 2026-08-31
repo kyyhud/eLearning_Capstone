@@ -5,10 +5,10 @@ const createEnrollment = async (enrollmentData) => {
 };
 
 // Find the enrollment relationship between one student and one course
-const findEnrollmentByStudentAndCourse = async (studentId, courseId) => {
+const findEnrollmentByStudentAndCourse = async (userid, id) => {
   return await Enrollment.findOne({
-    student: studentId,
-    course: courseId,
+    student: userid,
+    course: id,
   });
 };
 
@@ -18,17 +18,19 @@ const findEnrollmentById = async (id) => {
 };
 
 // Get all enrollments belonging to one student
-const findEnrollmentsByStudent = async (studentId) => {
-  return await Enrollment.find({ student: studentId }).populate("course", "courseId title category status durationWeeks faculty").sort({ requestedAt: -1 });
+const findEnrollmentsByStudent = async (userid) => {
+  return await Enrollment.find({ student: userid })
+    .populate("course", "courseId title category status durationWeeks faculty sections.content._id sections.content.isRequired")
+    .sort({ requestedAt: -1 });
 };
 
 // Get enrollments for a group of courses
-const findEnrollmentsByCourseIds = async (courseIds) => {
+const findEnrollmentsByCourseIds = async (ids) => {
   return await Enrollment.find({
-    course: { $in: courseIds },
+    course: { $in: ids },
   })
     .populate("student", "firstName lastName email studentProfile.studentId")
-    .populate("course", "courseId title status faculty")
+    .populate("course", "courseId title category status durationWeeks faculty sections.content._id sections.content.isRequired")
     .sort({ requestedAt: -1 });
 };
 

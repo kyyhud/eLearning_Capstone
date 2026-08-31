@@ -74,18 +74,6 @@ export const updateCourse = async (id, updatedData) => {
   }
 };
 
-export const deleteCourseById = async (id) => {
-  try {
-    const result = await axios.delete(`${URL}/${id}`, getAuthHeaders());
-    return result.data.data;
-  } catch (error) {
-    if (error.response) {
-      throw new Error(error.response.data.error);
-    }
-    throw error;
-  }
-};
-
 export const uploadCourseContent = async (file, contentType) => {
   try {
     const token = sessionStorage.getItem("token");

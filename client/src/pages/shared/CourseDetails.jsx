@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { getCourseById } from "../../services/courseService.js";
+import { getCourseById } from "../../services/courseApi.js";
 
 const SERVER_URL = "http://localhost:3000";
 
@@ -94,10 +94,12 @@ function CourseDetails() {
       {/* Course sections and content */}
       <br />
       <section>
+        <br />
         <h3>Course Sections</h3>
         {orderedSections.length === 0 && <p>No course sections have been added yet.</p>}
         {orderedSections.map((section, index) => (
           <div key={section._id || `section-${index}`}>
+            <hr />
             <h4>Section {index + 1}</h4>
             <p>
               <strong>Title:</strong> {section.title}
@@ -146,6 +148,7 @@ function CourseDetails() {
         ))}
       </section>
       <br />
+      <hr />
       <div>
         {canEdit && (
           <button type="button" onClick={() => navigate(`/courses/${id}/edit`)}>

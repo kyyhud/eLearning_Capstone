@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { accessFacultyCourses } from "../../services/courseService.js";
+import { accessFacultyCourses } from "../../services/courseApi.js";
 
 function FacultyCourseList() {
   const navigate = useNavigate();

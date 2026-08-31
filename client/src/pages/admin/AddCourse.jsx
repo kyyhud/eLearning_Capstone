@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { createCourse } from "../../services/courseService.js";
-import { viewAllFaculty } from "../../services/userService.js";
+import { createCourse } from "../../services/courseApi.js";
+import { viewAllFaculty } from "../../services/userApi.js";
 
 function AddCourse() {
   const initialFormData = {
@@ -77,13 +77,13 @@ function AddCourse() {
           <select id="faculty" name="faculty" value={formData.faculty} onChange={handleChange} required>
             <option value="">Select Faculty</option>
             {[...facultyMembers]
-            .sort((a, b) => a.lastName.localeCompare(b.lastName))
-            .map((faculty) => (
-              <option key={faculty._id} value={faculty._id}>
-                {faculty.lastName}
-                {","} {faculty.firstName}
-              </option>
-            ))}
+              .sort((a, b) => a.lastName.localeCompare(b.lastName))
+              .map((faculty) => (
+                <option key={faculty._id} value={faculty._id}>
+                  {faculty.lastName}
+                  {","} {faculty.firstName}
+                </option>
+              ))}
           </select>
         </div>
         <div>

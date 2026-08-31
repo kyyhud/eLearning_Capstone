@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { viewAllFaculty, deleteUser } from "../../services/userService.js";
+import { viewAllFaculty, deleteUser } from "../../services/userApi.js";
 
 function FacultyList() {
   const navigate = useNavigate();
