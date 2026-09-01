@@ -30,7 +30,8 @@ function CourseList() {
             <th>Title</th>
             <th>Category</th>
             <th>Faculty</th>
-            <th>Duration (weeks)</th>
+            <th>Duration</th>
+            <th>Rating</th>
             <th>Status</th>
             <th>Manage</th>
           </tr>
@@ -48,7 +49,14 @@ function CourseList() {
                 <td>{course.title}</td>
                 <td>{course.category}</td>
                 <td>{`${course.faculty.firstName} ${course.faculty.lastName}`}</td>
-                <td>{course.durationWeeks}</td>
+                <td>{course.durationWeeks} weeks</td>
+                <td>
+                  {course.rating?.count > 0
+                    ? `${"★".repeat(Math.round(course.rating.average))}${"☆".repeat(
+                        5 - Math.round(course.rating.average),
+                      )} ${course.rating.average.toFixed(1)} (${course.rating.count})`
+                    : "No ratings yet"}
+                </td>
                 <td>{course.status}</td>
                 <td>
                   <button onClick={() => navigate(`/courses/${course._id}`)}>View/Edit</button>

@@ -33,7 +33,7 @@ const getCourses = async (req, res) => {
 
 const getCourseById = async (req, res) => {
   try {
-    const course = await courseService.getCourseById(req.params.id);
+    const course = await courseService.getCourseById(req.params.id, req.user);
     res.status(200).json({ success: true, data: course });
   } catch (error) {
     res.status(404).json({ success: false, error: error.message });

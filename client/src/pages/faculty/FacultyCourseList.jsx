@@ -35,6 +35,7 @@ function FacultyCourseList() {
             <th>Category</th>
             <th>Description</th>
             <th>Duration</th>
+            <th>Rating</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -53,6 +54,13 @@ function FacultyCourseList() {
                 <td>{course.category}</td>
                 <td>{course.description}</td>
                 <td>{course.durationWeeks} weeks</td>
+                <td>
+                  {course.rating?.count > 0
+                    ? `${"★".repeat(Math.round(course.rating.average))}${"☆".repeat(
+                        5 - Math.round(course.rating.average),
+                      )} ${course.rating.average.toFixed(1)} (${course.rating.count})`
+                    : "No ratings yet"}
+                </td>
                 <td>{course.status}</td>
                 <td>
                   <button onClick={() => navigate(`/courses/${course._id}`)}>View/Edit</button>

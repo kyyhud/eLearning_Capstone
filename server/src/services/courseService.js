@@ -1,4 +1,5 @@
 const courseRepository = require("../repositories/courseRepository");
+const courseReviewRepository = require("../repositories/courseReviewRepository");
 const { getNextCourseId } = require("./idService");
 const fs = require("fs");
 const path = require("path");
@@ -23,19 +24,60 @@ const createCourse = async (courseData) => {
 };
 
 const getCourses = async (filters) => {
-  return await courseRepository.findCourses(filters);
+  const courses = await courseRepository.findCourses(filters);
+  const ids = courses.map((course) => course._id);
+  const ratingSummaries = await courseReviewRepository.getRatingSummariesForCourses(ids);
+  const ratingsByCourse = new Map(
+    ratingSummaries.map((summary) => [
+      summary._id.toString(),
+      {
+        average: Math.round(summary.averageRating * 10) / 10,
+        count: summary.reviewCount,
+      },
+    ]),
+  );
+  return courses.map((course) => ({
+    ...course.toObject(),
+    rating: ratingsByCourse.get(course._id.toString()) || {
+      average: 0,
+      count: 0,
+    },
+  }));
 };
 
-const getCourseById = async (id) => {
+const getCourseById = async (id, user) => {
   const course = await courseRepository.findCourseById(id);
   if (!course) {
     throw new Error("Course not found");
   }
+  if (user.typeOfUser === "student") {
+    const courseData = course.toObject();
+    delete courseData.sections;
+    return courseData;
+  }
   return course;
 };
 
-const getCoursesByFacultyId = async (facultyId) => {
-  return await courseRepository.findCoursesByFacultyId(facultyId);
+const getCoursesByFacultyId = async (userId) => {
+  const courses = await courseRepository.findCoursesByFacultyId(userId);
+  const ids = courses.map((course) => course._id);
+  const ratingSummaries = await courseReviewRepository.getRatingSummariesForCourses(ids);
+  const ratingsByCourse = new Map(
+    ratingSummaries.map((summary) => [
+      summary._id.toString(),
+      {
+        average: Math.round(summary.averageRating * 10) / 10,
+        count: summary.reviewCount,
+      },
+    ]),
+  );
+  return courses.map((course) => ({
+    ...course.toObject(),
+    rating: ratingsByCourse.get(course._id.toString()) || {
+      average: 0,
+      count: 0,
+    },
+  }));
 };
 
 const getAllowedUpdates = (updatedData, allowedFields) => {

@@ -27,17 +27,19 @@ const findCourses = async ({ search, category }) => {
     }
     filter.$or = searchConditions;
   }
-  return await Course.find(filter).populate("faculty", "firstName lastName email facultyProfile.facultyId");
+  return await Course.find(filter).select("-sections").populate("faculty", "firstName lastName email facultyProfile.facultyId");
 };
 
 const findCoursesByFacultyEmail = async (facultyEmail) => {
   return await Course.find({ faculty: facultyEmail });
 };
 
-const findCoursesByFacultyId = async (facultyId) => {
+const findCoursesByFacultyId = async (userId) => {
   return await Course.find({
-    faculty: facultyId,
-  }).populate("faculty", "firstName lastName email facultyProfile.facultyId");
+    faculty: userId,
+  })
+    .select("-sections")
+    .populate("faculty", "firstName lastName email facultyProfile.facultyId");
 };
 
 const updateCourse = async (id, updatedData) => {

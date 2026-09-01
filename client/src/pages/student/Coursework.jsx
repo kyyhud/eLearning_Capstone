@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getStudentCoursework, markContentComplete } from "../../services/enrollmentApi.js";
+import { getCourseReviews, submitCourseReview } from "../../services/reviewApi.js";
 
 const SERVER_URL = "http://localhost:3000";
 
@@ -13,23 +14,34 @@ function Coursework() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const [review, setReview] = useState(null);
+  const [rating, setRating] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const [reviewMessage, setReviewMessage] = useState("");
+
   useEffect(() => {
     fetchCoursework();
   }, [id]);
 
-  // Load the full course and this student's enrollment/progress
+  // Load the full course and this student's enrollment/progress/review
   const fetchCoursework = async () => {
     try {
       setLoading(true);
-      const response = await getStudentCoursework(id);
-      setCourse(response.data.course);
-      setEnrollment(response.data.enrollment);
+      const [courseworkResponse, reviewResponse] = await Promise.all([getStudentCoursework(id), getCourseReviews(id)]);
+      const reviewData = reviewResponse.data;
+      const courseData = courseworkResponse.data.course;
+      const enrollmentData = courseworkResponse.data.enrollment;
+      setCourse(courseData);
+      setEnrollment(enrollmentData);
+      const existingReview = reviewData.reviews.find((courseReview) => courseReview.enrollment?.toString() === enrollmentData._id.toString());
+      setReview(existingReview || null);
       setMessage("");
     } catch (error) {
       console.error(error);
       setCourse(null);
       setEnrollment(null);
-      setMessage(error.response?.data?.error || error.message);
+      setReview(null);
+      setMessage(error.response?.data?.error || error.response?.data?.message || error.message);
     } finally {
       setLoading(false);
     }
@@ -84,6 +96,25 @@ function Coursework() {
     }
   };
 
+  // Handle submitting a course review
+  const handleSubmitReview = async (event) => {
+    event.preventDefault();
+    try {
+      setReviewMessage("");
+      const response = await submitCourseReview(id, {
+        rating: Number(rating),
+        feedback,
+      });
+      setReview(response.data);
+      setRating("");
+      setFeedback("");
+      setReviewMessage("Review submitted successfully.");
+    } catch (error) {
+      console.error(error);
+      setReviewMessage(error.response?.data?.error || error.response?.data?.message || error.message);
+    }
+  };
+
   // Helper functions to get resource URL and label based on content type
   const getResourceUrl = (contentItem) => {
     if (!contentItem.resourceUrl) {
@@ -117,25 +148,17 @@ function Coursework() {
       <button type="button" onClick={() => navigate("/student/courses/my")}>
         Back to My Courses
       </button>
-
       <h2>{course.title}</h2>
-
       <p>
         <strong>Course ID:</strong> {course.courseId}
       </p>
-
       {course.description && <p>{course.description}</p>}
-
       <hr />
-
       <h3>Course Progress</h3>
-
       <p>
         <strong>Progress:</strong> {progressPercent}% Complete
       </p>
-
       {enrollment.progress?.completedAt && <p>Course Complete</p>}
-
       <hr />
 
       <h3>Coursework</h3>
@@ -160,23 +183,18 @@ function Coursework() {
                   return (
                     <li style={{ listStyle: "none" }} key={content._id}>
                       <h5>{content.title}</h5>
-
                       <p>
                         <strong>Type:</strong> {content.type}
                       </p>
-
                       <p>
                         <strong>Status:</strong> {content.isRequired ? "Required" : "Optional"}
                       </p>
-
                       {content.description && <p>{content.description}</p>}
-
                       {content.fileName && (
                         <p>
                           <strong>File:</strong> {content.fileName}
                         </p>
                       )}
-
                       {content.resourceUrl && (
                         <p>
                           <a href={getResourceUrl(content)} target="_blank" rel="noreferrer">
@@ -184,7 +202,6 @@ function Coursework() {
                           </a>
                         </p>
                       )}
-
                       {completed ? (
                         <p>Completed</p>
                       ) : (
@@ -202,6 +219,50 @@ function Coursework() {
           </section>
         ))
       )}
+
+      <section>
+        <h3>Course Review</h3>
+        {progressPercent < 100 ? (
+          <p>Complete the course to leave a review.</p>
+        ) : review ? (
+          <div>
+            <p>
+              <strong>Your Rating:</strong> {"★".repeat(review.rating)}
+              {"☆".repeat(5 - review.rating)}
+            </p>
+            {review.feedback && (
+              <p>
+                <strong>Your Feedback:</strong> {review.feedback}
+              </p>
+            )}
+            <p>Your review has been submitted and cannot be changed.</p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmitReview}>
+            <div>
+              <label htmlFor="rating">Rating:</label>
+              <select id="rating" value={rating} onChange={(event) => setRating(event.target.value)} required>
+                <option value="">Select a rating</option>
+                <option value="5">★★★★★ - Excellent</option>
+                <option value="4">★★★★☆ - Very Good</option>
+                <option value="3">★★★☆☆ - Good</option>
+                <option value="2">★★☆☆☆ - Fair</option>
+                <option value="1">★☆☆☆☆ - Poor</option>
+              </select>
+            </div>
+            <br />
+            <div>
+              <label htmlFor="feedback">Feedback:</label>
+              <br />
+              <textarea id="feedback" value={feedback} onChange={(event) => setFeedback(event.target.value)} rows="4" />
+            </div>
+            <br />
+            <button type="submit">Submit Review</button>
+          </form>
+        )}
+
+        {reviewMessage && <p>{reviewMessage}</p>}
+      </section>
     </>
   );
 }

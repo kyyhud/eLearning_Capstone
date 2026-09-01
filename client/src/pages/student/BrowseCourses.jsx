@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { viewCourses } from "../../services/courseApi.js";
 import { getMyEnrollments, requestEnrollment } from "../../services/enrollmentApi.js";
 
 function BrowseCourses() {
+  const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [enrollments, setEnrollments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -114,6 +116,8 @@ function BrowseCourses() {
             <th>Description</th>
             <th>Faculty</th>
             <th>Duration</th>
+            <th>Rating</th>
+            <th>Details</th>
             <th>Enrollment</th>
           </tr>
         </thead>
@@ -128,6 +132,18 @@ function BrowseCourses() {
                 <td>{course.description}</td>
                 <td>{course.faculty ? `${course.faculty.firstName} ${course.faculty.lastName}` : "Not assigned"}</td>
                 <td>{course.durationWeeks} weeks</td>
+                <td>
+                  {course.rating?.count > 0
+                    ? `${"★".repeat(Math.round(course.rating.average))}${"☆".repeat(
+                        5 - Math.round(course.rating.average),
+                      )} ${course.rating.average.toFixed(1)} (${course.rating.count})`
+                    : "No ratings yet"}
+                </td>
+                <td>
+                  <button type="button" onClick={() => navigate(`/courses/${course._id}`)}>
+                    View Details
+                  </button>
+                </td>
                 <td>
                   {!enrollment && (
                     <button type="button" onClick={() => handleEnrollmentRequest(course._id)}>
