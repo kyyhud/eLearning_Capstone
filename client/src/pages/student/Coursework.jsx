@@ -153,7 +153,12 @@ function Coursework() {
         <strong>Course ID:</strong> {course.courseId}
       </p>
       {course.description && <p>{course.description}</p>}
+      {/* Course discussion Button */}
+      <button type="button" onClick={() => navigate(`/courses/${id}/messages`)}>
+        Course Discussion
+      </button>
       <hr />
+
       <h3>Course Progress</h3>
       <p>
         <strong>Progress:</strong> {progressPercent}% Complete
@@ -162,7 +167,6 @@ function Coursework() {
       <hr />
 
       <h3>Coursework</h3>
-
       {orderedSections.length === 0 ? (
         <p>No coursework has been added yet.</p>
       ) : (
@@ -172,54 +176,64 @@ function Coursework() {
               Section {section.order}: {section.title}
             </h4>
             {section.description && <p>{section.description}</p>}
-
             {section.content.length === 0 ? (
               <p>No content has been added to this section.</p>
             ) : (
-              <ul>
-                {section.content.map((content) => {
-                  const completed = isContentComplete(content._id);
-
-                  return (
-                    <li style={{ listStyle: "none" }} key={content._id}>
-                      <h5>{content.title}</h5>
-                      <p>
-                        <strong>Type:</strong> {content.type}
-                      </p>
-                      <p>
-                        <strong>Status:</strong> {content.isRequired ? "Required" : "Optional"}
-                      </p>
-                      {content.description && <p>{content.description}</p>}
-                      {content.fileName && (
-                        <p>
-                          <strong>File:</strong> {content.fileName}
-                        </p>
-                      )}
-                      {content.resourceUrl && (
-                        <p>
-                          <a href={getResourceUrl(content)} target="_blank" rel="noreferrer">
-                            {getResourceLabel(content.type)}
-                          </a>
-                        </p>
-                      )}
-                      {completed ? (
-                        <p>Completed</p>
-                      ) : (
-                        <button type="button" onClick={() => handleMarkComplete(content._id)}>
-                          Mark Complete
-                        </button>
-                      )}
-
-                      <hr />
-                    </li>
-                  );
-                })}
-              </ul>
+              <table border="1" align="center">
+                <thead>
+                  <tr>
+                    <th>Content</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Resource</th>
+                    <th>Progress</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {section.content.map((content) => {
+                    const completed = isContentComplete(content._id);
+                    return (
+                      <tr key={content._id}>
+                        <td>
+                          <strong>{content.title}</strong>
+                          {content.description && <p>{content.description}</p>}
+                          {content.fileName && (
+                            <p>
+                              <strong>File:</strong> {content.fileName}
+                            </p>
+                          )}
+                        </td>
+                        <td>{content.type}</td>
+                        <td>{content.isRequired ? "Required" : "Optional"}</td>
+                        <td>
+                          {content.resourceUrl ? (
+                            <a href={getResourceUrl(content)} target="_blank" rel="noreferrer">
+                              {getResourceLabel(content.type)}
+                            </a>
+                          ) : (
+                            "N/A"
+                          )}
+                        </td>
+                        <td>
+                          {completed ? (
+                            "Completed"
+                          ) : (
+                            <button type="button" onClick={() => handleMarkComplete(content._id)}>
+                              Mark Complete
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             )}
           </section>
         ))
       )}
 
+      <hr />
       <section>
         <h3>Course Review</h3>
         {progressPercent < 100 ? (

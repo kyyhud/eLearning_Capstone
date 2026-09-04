@@ -12,6 +12,7 @@ function StudentUserSettings() {
     emergencyContactName: "",
     emergencyContactRelationship: "",
     emergencyContactPhone: "",
+    chatAutoRefresh: true,
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
@@ -36,6 +37,7 @@ function StudentUserSettings() {
         emergencyContactName: student.studentProfile?.emergencyContact?.name || "",
         emergencyContactRelationship: student.studentProfile?.emergencyContact?.relationship || "",
         emergencyContactPhone: student.studentProfile?.emergencyContact?.phone || "",
+        chatAutoRefresh: student.preferences?.chatAutoRefresh ?? true,
       }));
     } catch (error) {
       setMessage(error.message);
@@ -45,7 +47,7 @@ function StudentUserSettings() {
     loadStudent();
   }, []);
 
-  const handlePersonalInfoSubmit = async (e) => {
+  const handleInfoSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
     setError("");
@@ -59,6 +61,9 @@ function StudentUserSettings() {
             phone: formData.emergencyContactPhone,
           },
         },
+        preferences: {
+          chatAutoRefresh: formData.chatAutoRefresh,
+        },
       });
       setMessage(response.message);
     } catch (error) {
@@ -67,9 +72,10 @@ function StudentUserSettings() {
   };
 
   const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -78,7 +84,7 @@ function StudentUserSettings() {
     loadStudent();
   };
 
-  const handleSubmit = async (e) => {
+  const handleChangePassword = async (e) => {
     e.preventDefault();
     setMessage("");
     setError("");
@@ -92,11 +98,12 @@ function StudentUserSettings() {
         newPassword: formData.newPassword,
       });
       setMessage(response.message);
-      setFormData({
+      setFormData((prev) => ({
+        ...prev,
         currentPassword: "",
         newPassword: "",
         confirmPassword: "",
-      });
+      }));
     } catch (error) {
       setError(error.message);
     }
@@ -107,10 +114,11 @@ function StudentUserSettings() {
       <h3>User Settings for {formData.email}</h3>
       <p>Student ID: {formData.studentId}</p>
       <p>Status: {formData.isActive ? "Active" : "Inactive"}</p>
+
       <section>
         <hr />
-        <h3>Personal Information</h3>
-        <form onSubmit={handlePersonalInfoSubmit}>
+        <h3>User Information</h3>
+        <form onSubmit={handleInfoSubmit}>
           <div>
             <label htmlFor="phone">Phone</label>
             <input type="text" id="phone" name="phone" value={formData.phone} onChange={handleChange} disabled={!isEditing} />
@@ -150,10 +158,18 @@ function StudentUserSettings() {
                 disabled={!isEditing}
               />
             </div>
+
+            <h4>Discussion Settings</h4>
+            <div>
+              <label>
+                <input type="checkbox" name="chatAutoRefresh" checked={formData.chatAutoRefresh} onChange={handleChange} disabled={!isEditing} />
+                Automatically refresh course discussions
+              </label>
+            </div>
           </div>
           {!isEditing && (
             <button type="button" onClick={() => setIsEditing(true)}>
-              Edit Personal Information
+              Edit
             </button>
           )}
           {isEditing && (
@@ -166,9 +182,10 @@ function StudentUserSettings() {
             </>
           )}
         </form>
+
         <hr />
-        <h3>Account Security</h3>
-        <form onSubmit={handleSubmit}>
+        <h3>Update Password</h3>
+        <form onSubmit={handleChangePassword}>
           <div>
             <label htmlFor="currentPassword">Current Password</label>
             <input type="password" id="currentPassword" name="currentPassword" value={formData.currentPassword} onChange={handleChange} required />

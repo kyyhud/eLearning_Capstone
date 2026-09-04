@@ -7,6 +7,7 @@ const userRoutes = require("./routes/userRoutes");
 const courseRoutes = require("./routes/courseRoutes");
 const enrollmentRoutes = require("./routes/enrollmentRoutes");
 const courseReviewRoutes = require("./routes/courseReviewRoutes");
+const chatMessageRoutes = require("./routes/chatMessageRoutes");
 const app = express();
 const path = require("path");
 
@@ -30,6 +31,8 @@ app.use("/api/enrollments", enrollmentRoutes);
 
 // http://localhost:3000/api/reviews/*
 app.use("/api/reviews", courseReviewRoutes);
+
+app.use("/api/chat", chatMessageRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

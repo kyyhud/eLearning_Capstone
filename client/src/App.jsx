@@ -30,6 +30,8 @@ import FacultyProfile from "./pages/shared/FacultyProfile.jsx";
 
 import StudentProfile from "./pages/shared/StudentProfile.jsx";
 
+import CourseChat from "./pages/shared/CourseChat.jsx";
+
 import "./App.css";
 
 function App() {
@@ -76,6 +78,10 @@ function App() {
 
         <Route element={<AuthenticatedLayout allowedRoles={["admin", "student"]} />}>
           <Route path="/student/:id" element={<StudentProfile />} />
+        </Route>
+
+        <Route element={<AuthenticatedLayout allowedRoles={["faculty", "student"]} />}>
+          <Route path="/courses/:id/messages" element={<CourseChat />} />
         </Route>
       </Routes>
     </>

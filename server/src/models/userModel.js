@@ -110,13 +110,13 @@ const studentProfileSchema = new mongoose.Schema(
         trim: true,
         default: "",
         validate: {
-        validator: function (value) {
-          if (!value) return true;
-          const digitsOnly = value.replace(/\D/g, "");
-          return digitsOnly.length === 10;
+          validator: function (value) {
+            if (!value) return true;
+            const digitsOnly = value.replace(/\D/g, "");
+            return digitsOnly.length === 10;
+          },
+          message: "Please enter a valid phone number",
         },
-        message: "Please enter a valid phone number",
-      },
       },
     },
   },
@@ -171,6 +171,12 @@ const userSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true,
+    },
+    preferences: {
+      chatAutoRefresh: {
+        type: Boolean,
+        default: true,
+      },
     },
     facultyProfile: {
       type: facultyProfileSchema,

@@ -20,7 +20,7 @@ function CourseDetails() {
 
   const user = JSON.parse(sessionStorage.getItem("user"));
   const canEdit = user?.typeOfUser === "admin" || user?.typeOfUser === "faculty";
-
+  const isFaculty = user?.typeOfUser === "faculty";
   const isStudent = user?.typeOfUser === "student";
   const [enrollment, setEnrollment] = useState(null);
   const [enrollmentMessage, setEnrollmentMessage] = useState("");
@@ -53,6 +53,8 @@ function CourseDetails() {
   }
 
   const facultyName = course.faculty ? `${course.faculty.firstName} ${course.faculty.lastName}` : "Not assigned";
+  const assignedFacultyId = course.faculty?._id?.toString() || course.faculty?.toString();
+  const isAssignedFaculty = isFaculty && assignedFacultyId === user?._id?.toString();
   const orderedSections = [...(course.sections || [])].sort((a, b) => a.order - b.order);
 
   // Request enrollment or re-request after rejection
@@ -114,6 +116,13 @@ function CourseDetails() {
         <p>
           <strong>Status:</strong> {course.status}
         </p>
+        {isAssignedFaculty && (
+          <button type="button" onClick={() => navigate(`/courses/${id}/messages`)}>
+            Course Discussion
+          </button>
+        )}
+
+        <br />
         <br />
         <p>
           <strong>Category:</strong> {course.category}
@@ -139,6 +148,7 @@ function CourseDetails() {
         </p>
       </section>
 
+      {/* Enrollment for students */}
       {isStudent && (
         <section>
           <hr />
@@ -227,9 +237,11 @@ function CourseDetails() {
               </div>
             ))}
           </section>
+          <hr />
         </>
       )}
 
+      {/* Course Reviews section */}
       <section>
         <h3>Course Reviews</h3>
         {reviews.length === 0 ? (
@@ -256,10 +268,14 @@ function CourseDetails() {
       </section>
 
       <div>
+        <br />
         {canEdit && (
-          <button type="button" onClick={() => navigate(`/courses/${id}/edit`)}>
-            Edit Course
-          </button>
+          <>
+            {" "}
+            <button type="button" onClick={() => navigate(`/courses/${id}/edit`)}>
+              Edit Course
+            </button>
+          </>
         )}
         <br />
         <button type="button" onClick={() => navigate(-1)}>

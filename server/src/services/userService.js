@@ -81,6 +81,9 @@ const updateFaculty = async (id, updatedData) => {
   if (updatedData.isActive !== undefined) {
     facultyUser.isActive = updatedData.isActive;
   }
+  if (typeof updatedData.preferences?.chatAutoRefresh === "boolean") {
+    facultyUser.preferences.chatAutoRefresh = updatedData.preferences.chatAutoRefresh;
+  }
   if (updatedData.facultyProfile) {
     facultyUser.facultyProfile = {
       ...facultyUser.facultyProfile,
@@ -158,6 +161,9 @@ const updateStudent = async (id, updatedData) => {
   }
   if (updatedData.isActive !== undefined) {
     student.isActive = updatedData.isActive;
+  }
+  if (typeof updatedData.preferences?.chatAutoRefresh === "boolean") {
+    student.preferences.chatAutoRefresh = updatedData.preferences.chatAutoRefresh;
   }
   if (updatedData.studentProfile) {
     student.studentProfile = {

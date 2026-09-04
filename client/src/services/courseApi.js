@@ -2,7 +2,7 @@ import axios from "axios";
 
 let URL = "http://localhost:3000/api/courses";
 
-const getAuthHeaders = () => {
+export const getAuthHeaders = () => {
   const token = sessionStorage.getItem("token");
   return {
     headers: {

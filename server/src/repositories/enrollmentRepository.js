@@ -18,8 +18,8 @@ const findEnrollmentById = async (id) => {
 };
 
 // Get all enrollments belonging to one student
-const findEnrollmentsByStudent = async (userid) => {
-  return await Enrollment.find({ student: userid })
+const findEnrollmentsByStudent = async (userId) => {
+  return await Enrollment.find({ student: userId })
     .populate("course", "courseId title category status durationWeeks faculty sections.content._id sections.content.isRequired")
     .sort({ requestedAt: -1 });
 };
@@ -37,7 +37,7 @@ const findEnrollmentsByCourseIds = async (ids) => {
 // Update any enrollment fields
 const updateEnrollmentById = async (id, updatedData) => {
   return await Enrollment.findByIdAndUpdate(id, updatedData, {
-    new: true,
+    returnDocument: "after",
     runValidators: true,
   });
 };
