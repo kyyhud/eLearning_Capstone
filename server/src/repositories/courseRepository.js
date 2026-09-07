@@ -30,10 +30,6 @@ const findCourses = async ({ search, category }) => {
   return await Course.find(filter).select("-sections").populate("faculty", "firstName lastName email facultyProfile.facultyId");
 };
 
-const findCoursesByFacultyEmail = async (facultyEmail) => {
-  return await Course.find({ faculty: facultyEmail });
-};
-
 const findCoursesByFacultyId = async (userId) => {
   return await Course.find({
     faculty: userId,
@@ -46,17 +42,11 @@ const updateCourse = async (id, updatedData) => {
   return await Course.findByIdAndUpdate(id, updatedData, { returnDocument: "after", runValidators: true });
 };
 
-const deleteCourseById = async (id) => {
-  return await Course.findByIdAndDelete(id);
-};
-
 module.exports = {
   createCourse,
   findCourseById,
   findCourseByCourseId,
   findCourses,
   findCoursesByFacultyId,
-  findCoursesByFacultyEmail,
   updateCourse,
-  deleteCourseById,
 };

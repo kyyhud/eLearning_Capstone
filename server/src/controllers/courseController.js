@@ -58,15 +58,6 @@ const updateCourse = async (req, res) => {
   }
 };
 
-const deleteCourseById = async (req, res) => {
-  try {
-    const deletedCourse = await courseService.deleteCourseById(req.params.id);
-    res.status(200).json({ success: true, data: deletedCourse, message: "Course deleted successfully" });
-  } catch (error) {
-    res.status(404).json({ success: false, error: error.message });
-  }
-};
-
 const uploadCourseContent = async (req, res) => {
   try {
     if (!req.file) {
@@ -85,6 +76,5 @@ module.exports = {
   getCourseById,
   getMyCourses,
   updateCourse,
-  deleteCourseById,
   uploadCourseContent,
 };

@@ -9,7 +9,6 @@ router.get("/", authenticateUser, authorizeRoles("admin", "faculty", "student"),
 router.get("/my-courses", authenticateUser, authorizeRoles("faculty"), courseController.getMyCourses);
 router.get("/:id", authenticateUser, authorizeRoles("admin", "faculty", "student"), courseController.getCourseById);
 router.put("/:id/edit", authenticateUser, authorizeRoles("admin", "faculty"), courseController.updateCourse);
-router.delete("/:id", authenticateUser, authorizeRoles("admin"), courseController.deleteCourseById);
 router.post("/uploads", authenticateUser, authorizeRoles("admin", "faculty"), courseContentUpload.single("file"), courseController.uploadCourseContent);
 
 module.exports = router;

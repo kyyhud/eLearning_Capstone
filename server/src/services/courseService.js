@@ -100,6 +100,11 @@ const updateCourse = async (id, updatedData, user) => {
   const oldResourceUrls = getUploadedResourceUrls(course.sections); // Get the list of resource URLs before the update
   const isAdmin = user.typeOfUser === "admin";
   const isFaculty = user.typeOfUser === "faculty";
+  if (isFaculty && course.status === "archived") {
+    const error = new Error("Archived courses cannot be edited");
+    error.statusCode = 403;
+    throw error;
+  }
   if (!isAdmin && !isFaculty) {
     const error = new Error("Access denied");
     error.statusCode = 403;
@@ -137,14 +142,6 @@ const updateCourse = async (id, updatedData, user) => {
   return updatedCourse;
 };
 
-const deleteCourseById = async (id) => {
-  const course = await courseRepository.findCourseById(id);
-  if (!course) {
-    throw new Error("Course not found");
-  }
-  return await courseRepository.deleteCourseById(id);
-};
-
 // Helper function to extract uploaded resource URLs from course sections
 const getUploadedResourceUrls = (sections = []) => {
   return sections.flatMap((section) =>
@@ -166,7 +163,6 @@ module.exports = {
   getCourseById,
   getCoursesByFacultyId,
   updateCourse,
-  deleteCourseById,
   getUploadedResourceUrls,
   deleteUploadedFile,
 };
