@@ -3,6 +3,16 @@ const { getNextId } = require("./idService.js");
 const userRepository = require("../repositories/userRepository");
 let passwordHashing = require("../middleware/passwordHashing");
 
+const verifySelfOrAdmin = (targetUserId, expectedRole, currentUser) => {
+  const isAdmin = currentUser.typeOfUser === "admin";
+  const isOwner = currentUser.typeOfUser === expectedRole && String(currentUser.userId) === String(targetUserId);
+  if (!isAdmin && !isOwner) {
+    const error = new Error("Access denied");
+    error.statusCode = 403;
+    throw error;
+  }
+};
+
 const studentSignUp = async (firstName, lastName, email, password, typeOfUser) => {
   const existingUser = await userRepository.findUserByEmail(email);
   if (existingUser) {
@@ -42,7 +52,7 @@ const changePassword = async (userId, currentPassword, newPassword) => {
     throw new Error("Current password is incorrect.");
   }
   user.passwordHash = await passwordHashing.hashPassword(newPassword);
-  await user.save();
+  await userRepository.saveUser(user);
   return {
     message: "Password changed successfully.",
   };
@@ -61,10 +71,13 @@ const getFacultyById = async (id) => {
   return facultyUser;
 };
 
-const updateFaculty = async (id, updatedData) => {
+const updateFaculty = async (id, updatedData, currentUser) => {
+  verifySelfOrAdmin(id, "faculty", currentUser);
   const facultyUser = await userRepository.findUserById(id);
   if (!facultyUser || facultyUser.typeOfUser !== "faculty") {
-    throw new Error("Faculty user not found");
+    const error = new Error("Faculty user not found");
+    error.statusCode = 404;
+    throw error;
   }
   if (updatedData.firstName !== undefined) {
     facultyUser.firstName = updatedData.firstName;
@@ -78,7 +91,7 @@ const updateFaculty = async (id, updatedData) => {
   if (updatedData.phone !== undefined) {
     facultyUser.phone = updatedData.phone;
   }
-  if (updatedData.isActive !== undefined) {
+  if (currentUser.typeOfUser === "admin" && updatedData.isActive !== undefined) {
     facultyUser.isActive = updatedData.isActive;
   }
   if (typeof updatedData.preferences?.chatAutoRefresh === "boolean") {
@@ -90,7 +103,7 @@ const updateFaculty = async (id, updatedData) => {
       ...updatedData.facultyProfile,
     };
   }
-  await facultyUser.save();
+  await userRepository.saveUser(facultyUser);
   return facultyUser;
 };
 
@@ -134,18 +147,24 @@ const getAllStudents = async () => {
   return students;
 };
 
-const getStudentById = async (id) => {
+const getStudentById = async (id, currentUser) => {
+  verifySelfOrAdmin(id, "student", currentUser);
   const student = await userRepository.findUserById(id);
   if (!student || student.typeOfUser !== "student") {
-    throw new Error("Student not found");
+    const error = new Error("Student not found");
+    error.statusCode = 404;
+    throw error;
   }
   return student;
 };
 
-const updateStudent = async (id, updatedData) => {
+const updateStudent = async (id, updatedData, currentUser) => {
+  verifySelfOrAdmin(id, "student", currentUser);
   const student = await userRepository.findUserById(id);
   if (!student || student.typeOfUser !== "student") {
-    throw new Error("Student not found");
+    const error = new Error("Student not found");
+    error.statusCode = 404;
+    throw error;
   }
   if (updatedData.firstName !== undefined) {
     student.firstName = updatedData.firstName;
@@ -159,7 +178,7 @@ const updateStudent = async (id, updatedData) => {
   if (updatedData.phone !== undefined) {
     student.phone = updatedData.phone;
   }
-  if (updatedData.isActive !== undefined) {
+  if (currentUser.typeOfUser === "admin" && updatedData.isActive !== undefined) {
     student.isActive = updatedData.isActive;
   }
   if (typeof updatedData.preferences?.chatAutoRefresh === "boolean") {
@@ -171,7 +190,7 @@ const updateStudent = async (id, updatedData) => {
       ...updatedData.studentProfile,
     };
   }
-  await student.save();
+  await userRepository.saveUser(student);
   return student;
 };
 

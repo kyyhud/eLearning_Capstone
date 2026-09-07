@@ -28,6 +28,10 @@ const deleteUser = async (id) => {
   return await User.findByIdAndDelete(id);
 };
 
+const saveUser = async (user) => {
+  return await user.save();
+};
+
 const findAllStudents = async () => {
   return await User.find({ typeOfUser: "student" }).select("-passwordHash");
 };
@@ -44,6 +48,7 @@ module.exports = {
   createFacultyUser,
   findAllFacultyUsers,
   deleteUser,
+  saveUser,
   findAllStudents,
   findStudentById,
 };

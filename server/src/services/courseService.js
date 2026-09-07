@@ -1,7 +1,7 @@
 const courseRepository = require("../repositories/courseRepository");
 const courseReviewRepository = require("../repositories/courseReviewRepository");
 const { getNextCourseId } = require("./idService");
-const fs = require("fs");
+const fs = require("fs/promises");
 const path = require("path");
 
 const createCourse = async (courseData) => {
@@ -138,7 +138,7 @@ const updateCourse = async (id, updatedData, user) => {
   // Get the list of resource URLs after the update, identify changes, and delete removed files
   const newResourceUrls = getUploadedResourceUrls(updatedCourse.sections);
   const removedResourceUrls = oldResourceUrls.filter((resourceUrl) => !newResourceUrls.includes(resourceUrl));
-  removedResourceUrls.forEach(deleteUploadedFile);
+  await Promise.all(removedResourceUrls.map((resourceUrl) => deleteUploadedFile(resourceUrl)));
   return updatedCourse;
 };
 
@@ -148,12 +148,17 @@ const getUploadedResourceUrls = (sections = []) => {
     (section.content || []).map((contentItem) => contentItem.resourceUrl).filter((resourceUrl) => resourceUrl?.startsWith("/uploads/course-content/")),
   );
 };
+
 // Delete an uploaded file from the server based on its resource URL
-const deleteUploadedFile = (resourceUrl) => {
+const deleteUploadedFile = async (resourceUrl) => {
   const fileName = path.basename(resourceUrl);
   const filePath = path.join(__dirname, "../../uploads/course-content", fileName);
-  if (fs.existsSync(filePath)) {
-    fs.unlinkSync(filePath);
+  try {
+    await fs.unlink(filePath);
+  } catch (error) {
+    if (error.code !== "ENOENT") {
+      console.error(`Failed to delete uploaded file ${fileName}`, error.message);
+    }
   }
 };
 
@@ -163,6 +168,4 @@ module.exports = {
   getCourseById,
   getCoursesByFacultyId,
   updateCourse,
-  getUploadedResourceUrls,
-  deleteUploadedFile,
 };
