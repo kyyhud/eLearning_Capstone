@@ -24,6 +24,7 @@ function CourseEditor() {
 
   const user = JSON.parse(sessionStorage.getItem("user"));
   const isAdmin = user?.typeOfUser === "admin";
+  const isArchivedForFaculty = !isAdmin && formData.status === "archived";
 
   useEffect(() => {
     loadCourse();
@@ -68,6 +69,12 @@ function CourseEditor() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
+    setError("");
+    if (isArchivedForFaculty) {
+      setError("You cannot edit an archived course.");
+      return;
+    }
     try {
       setError("");
       const sections = formData.sections.map((section, index) => ({
@@ -291,8 +298,6 @@ function CourseEditor() {
   return (
     <main>
       <h3>Edit Course</h3>
-      {error && <p>{error}</p>}
-      {message && <p style={{ color: "green" }}>{message}</p>}
       <form onSubmit={handleSubmit}>
         <section>
           <div>
@@ -305,7 +310,7 @@ function CourseEditor() {
           </div>
           <div>
             <label htmlFor="description">Description</label>
-            <textarea id="description" name="description" value={formData.description} onChange={handleChange} />
+            <textarea id="description" name="description" value={formData.description} onChange={handleChange} disabled={isArchivedForFaculty} />
           </div>
           <div>
             <label htmlFor="durationWeeks">Duration</label>
@@ -344,13 +349,13 @@ function CourseEditor() {
             <div key={section._id || `section-${index}`}>
               <hr />
               <h4>Section {index + 1}</h4>
-                <button type="button" onClick={() => handleMoveSection(index, -1)} disabled={index === 0}>
+              <button type="button" onClick={() => handleMoveSection(index, -1)} disabled={index === 0}>
                 ↑
               </button>
               <button type="button" onClick={() => handleMoveSection(index, 1)} disabled={index === formData.sections.length - 1}>
                 ↓
               </button>
-              <button type="button"onClick={() => handleRemoveSection(index)}>
+              <button type="button" onClick={() => handleRemoveSection(index)}>
                 Remove Section
               </button>
               <div>
@@ -369,7 +374,7 @@ function CourseEditor() {
                 {(section.content || []).map((contentItem, contentIndex) => (
                   <div key={contentItem._id || `content-${index}-${contentIndex}`}>
                     <h6>Content {contentIndex + 1}</h6>
-                      <button type="button" onClick={() => handleMoveContent(index, contentIndex, -1)} disabled={contentIndex === 0}>
+                    <button type="button" onClick={() => handleMoveContent(index, contentIndex, -1)} disabled={contentIndex === 0}>
                       ↑
                     </button>{" "}
                     <button
@@ -476,7 +481,12 @@ function CourseEditor() {
         </section>
         <div>
           <br />
-          <button type="submit">Save Updates</button>
+          {message && <p style={{ color: "green" }}>{message}</p>}
+          {error && <p>{error}</p>}
+          {isArchivedForFaculty && <p style={{ color: "red" }}>This course is archived and cannot be edited.</p>}
+          <button type="submit" disabled={isArchivedForFaculty}>
+            Save Updates
+          </button>
           {" | "}
           <button type="button" onClick={() => navigate(-1)}>
             Back

@@ -14,6 +14,8 @@ function AddCourse() {
 
   const [formData, setFormData] = useState(initialFormData);
   const [facultyMembers, setFacultyMembers] = useState([]);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const loadFaculty = async () => {
@@ -21,7 +23,7 @@ function AddCourse() {
         const faculty = await viewAllFaculty();
         setFacultyMembers(faculty);
       } catch (error) {
-        alert(`Error loading faculty: ${error.message}`);
+        setError(error.message);
       }
     };
     loadFaculty();
@@ -38,17 +40,19 @@ function AddCourse() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setError("");
+      setMessage("");
       await createCourse(formData);
-      alert("Course added successfully");
+      setMessage("Course added successfully");
       setFormData(initialFormData);
     } catch (error) {
-      alert(`Error adding course: ${error.message}`);
+      setError(error.message);
     }
   };
 
   return (
     <div>
-      <h1>Add Course</h1>
+      <h3>Add Course</h3>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="courseLevel">Course Level:</label>
@@ -90,6 +94,8 @@ function AddCourse() {
           <label htmlFor="durationWeeks">Duration (weeks):</label>
           <input type="number" id="durationWeeks" name="durationWeeks" value={formData.durationWeeks} onChange={handleChange} required />
         </div>
+        {error && <p>{error}</p>}
+        {message && <p style={{ color: "green" }}>{message}</p>}
         <button type="submit">Add Course</button>
       </form>
     </div>
