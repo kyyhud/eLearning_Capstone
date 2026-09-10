@@ -26,21 +26,20 @@ function CourseChat() {
     });
   };
 
-  const loadDiscussion = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const [courseResponse, messageResponse] = await Promise.all([getCourseById(id), getCourseMessages(id)]);
-      setCourse(courseResponse.data);
-      setMessages(messageResponse.data);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const loadDiscussion = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const [courseResponse, messageResponse] = await Promise.all([getCourseById(id), getCourseMessages(id)]);
+        setCourse(courseResponse.data);
+        setMessages(messageResponse.data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
     loadDiscussion();
   }, [id]);
 

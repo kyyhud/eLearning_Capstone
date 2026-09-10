@@ -9,7 +9,9 @@ export const getCourseMessages = async (id) => {
     return response.data;
   } catch (error) {
     if (error.response) {
-      throw new Error(error.response.data.error);
+      throw new Error(error.response.data.error, {
+        cause: error,
+      });
     }
     throw error;
   }
@@ -21,7 +23,9 @@ export const sendCourseMessage = async (id, message) => {
     return response.data;
   } catch (error) {
     if (error.response) {
-      throw new Error(error.response.data.error);
+      throw new Error(error.response.data.error, {
+        cause: error,
+      });
     }
     throw error;
   }

@@ -6,32 +6,33 @@ function StudentList() {
   const navigate = useNavigate();
   const location = useLocation();
   const [students, setStudents] = useState([]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(location.state?.message || "");
 
   useEffect(() => {
+    const fetchAllStudents = async () => {
+      try {
+        const response = await getAllStudents();
+        setStudents(response.data);
+      } catch (error) {
+        console.error(error);
+        setMessage(error.message);
+      }
+    };
     fetchAllStudents();
-    if (location.state?.message) {
-      setMessage(location.state.message);
-      navigate(location.pathname, { replace: true }); // Clear the message from the location state
-    }
-  }, [location, navigate]);
+  }, []);
 
-  const fetchAllStudents = async () => {
-    try {
-      const response = await getAllStudents();
-      setStudents(response.data);
-    } catch (error) {
-      console.error(error);
-      setMessage(error.message);
+  useEffect(() => {
+    if (location.state?.message) {
+      navigate(location.pathname, { replace: true, state: {} }); // Clear the message from the location state
     }
-  };
+  }, [location.pathname, location.state?.message, navigate]);
 
   const handleDelete = async (id) => {
     try {
       const confirmDelete = window.confirm("Are you sure you want to delete this student?");
       if (!confirmDelete) return;
       await deleteUser(id);
-      fetchAllStudents();
+      setStudents((currentStudents) => currentStudents.filter((user) => user._id !== id));
     } catch (error) {
       console.error(error);
       setMessage(error.message);

@@ -5,26 +5,24 @@ import { getMyEnrollments } from "../../services/enrollmentApi.js";
 function StudentCourses() {
   const [enrollments, setEnrollments] = useState([]);
   const [message, setMessage] = useState("");
-
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Load the student's approved enrollments
+    const fetchMyCourses = async () => {
+      try {
+        const response = await getMyEnrollments();
+        const approvedEnrollments = response.data.filter((enrollment) => enrollment.status === "approved");
+        setEnrollments(approvedEnrollments);
+        setMessage("");
+      } catch (error) {
+        console.error(error);
+        setEnrollments([]);
+        setMessage(error.response?.data?.error || error.message);
+      }
+    };
     fetchMyCourses();
   }, []);
-
-  // Load the student's approved enrollments
-  const fetchMyCourses = async () => {
-    try {
-      const response = await getMyEnrollments();
-      const approvedEnrollments = response.data.filter((enrollment) => enrollment.status === "approved");
-      setEnrollments(approvedEnrollments);
-      setMessage("");
-    } catch (error) {
-      console.error(error);
-      setEnrollments([]);
-      setMessage(error.response?.data?.error || error.message);
-    }
-  };
 
   // Open the student's coursework page for this course
   const openCourse = (id) => {

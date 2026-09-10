@@ -3,6 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { getCourses } from "../../services/courseApi.js";
 import { getMyEnrollments, requestEnrollment } from "../../services/enrollmentApi.js";
 
+const getInitialCourseData = async () => {
+  const [courseResponse, enrollmentsResponse] = await Promise.all([
+    getCourses(),
+    getMyEnrollments(),
+  ]);
+  return {
+    courses: courseResponse.data.filter(
+      (course) => course.status === "published",
+    ),
+    enrollments: enrollmentsResponse.data,
+  };
+};
+
 function BrowseCourses() {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
@@ -10,30 +23,47 @@ function BrowseCourses() {
   const [searchTerm, setSearchTerm] = useState("");
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    fetchInitialData();
-  }, []);
+const reloadInitialData = async () => {
+  try {
+    const initialData = await getInitialCourseData();
+    setCourses(initialData.courses);
+    setEnrollments(initialData.enrollments);
+    setMessage("");
+  } catch (error) {
+    setCourses([]);
+    setEnrollments([]);
+    setMessage(error.message);
+  }
+};
 
-  // Load published courses and the student's current enrollments
-  const fetchInitialData = async () => {
+useEffect(() => {
+  let cancelled = false;
+  const loadInitialData = async () => {
     try {
-      const [courseResponse, enrollmentsResponse] = await Promise.all([getCourses(), getMyEnrollments()]);
-      const publishedCourses = courseResponse.data.filter((course) => course.status === "published");
-      setCourses(publishedCourses);
-      setEnrollments(enrollmentsResponse.data);
-      setMessage("");
+      const initialData = await getInitialCourseData();
+      if (!cancelled) {
+        setCourses(initialData.courses);
+        setEnrollments(initialData.enrollments);
+        setMessage("");
+      }
     } catch (error) {
-      console.error(error);
-      setCourses([]);
-      setEnrollments([]);
-      setMessage(error.response?.data?.error || error.message);
+      if (!cancelled) {
+        setCourses([]);
+        setEnrollments([]);
+        setMessage(error.message);
+      }
     }
   };
+  loadInitialData();
+  return () => {
+    cancelled = true;
+  };
+}, []);
 
   // Search courses while still hiding draft/archived courses
   const searchCourses = async () => {
     if (!searchTerm.trim()) {
-      fetchInitialData();
+      reloadInitialData();
       return;
     }
     try {
@@ -48,9 +78,9 @@ function BrowseCourses() {
     }
   };
 
-  const clearSearch = () => {
+  const clearSearch = async () => {
     setSearchTerm("");
-    fetchInitialData();
+    await reloadInitialData();
   };
 
   // Find this student's enrollment for a specific course

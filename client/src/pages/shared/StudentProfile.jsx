@@ -15,6 +15,28 @@ const emptyForm = {
   isActive: true,
 };
 
+const getStudentFormData = async (id) => {
+  const response = await getStudentById(id);
+  const student = response.data;
+  return {
+    firstName: student.firstName,
+    lastName: student.lastName,
+    email: student.email,
+    phone: student.phone || "",
+    bio: student.studentProfile?.bio || "",
+    fieldOfStudy: student.studentProfile?.fieldOfStudy || "",
+    careerGoal: student.studentProfile?.careerGoal || "",
+    skills: student.studentProfile?.skills?.join(", ") || "",
+    certifications:
+      student.studentProfile?.certifications?.map((certification) => ({
+        name: certification.name || "",
+        issuer: certification.issuer || "",
+        dateEarned: certification.dateEarned ? certification.dateEarned.split("T")[0] : "",
+      })) || [],
+    isActive: student.isActive ?? true,
+  };
+};
+
 function StudentProfile() {
   const { id } = useParams();
   const [isEditing, setIsEditing] = useState(false);
@@ -26,37 +48,27 @@ function StudentProfile() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setIsEditing(false);
+    let cancelled = false;
+    const loadStudent = async () => {
+      try {
+        const studentData = await getStudentFormData(id);
+        if (!cancelled) {
+          setFormData(studentData);
+          setIsEditing(false);
+          setError("");
+          setMessage("");
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setError(error.message);
+        }
+      }
+    };
     loadStudent();
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
-
-  const loadStudent = async () => {
-    try {
-      setError("");
-      setMessage("");
-      const response = await getStudentById(id);
-      const student = response.data;
-      setFormData({
-        firstName: student.firstName,
-        lastName: student.lastName,
-        email: student.email,
-        phone: student.phone || "",
-        bio: student.studentProfile?.bio || "",
-        fieldOfStudy: student.studentProfile?.fieldOfStudy || "",
-        careerGoal: student.studentProfile?.careerGoal || "",
-        skills: student.studentProfile?.skills?.join(", ") || "",
-        certifications:
-          student.studentProfile?.certifications?.map((cert) => ({
-            name: cert.name || "",
-            issuer: cert.issuer || "",
-            dateEarned: cert.dateEarned ? cert.dateEarned.split("T")[0] : "",
-          })) || [],
-        isActive: student.isActive,
-      });
-    } catch (error) {
-      setError(error.message);
-    }
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -99,9 +111,16 @@ function StudentProfile() {
     }));
   };
 
-  const handleCancelEdit = () => {
+  const handleCancelEdit = async () => {
     setIsEditing(false);
-    loadStudent();
+    setError("");
+    setMessage("");
+    try {
+      const studentData = await getStudentFormData(id);
+      setFormData(studentData);
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   const handleSubmit = async (e) => {

@@ -6,21 +6,20 @@ function FacultyEnrollmentRequests() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
+    // Load enrollment requests for courses assigned to this faculty member
+    const fetchEnrollments = async () => {
+      try {
+        const response = await getFacultyEnrollments();
+        setEnrollments(response.data);
+        setMessage("");
+      } catch (error) {
+        console.error(error);
+        setEnrollments([]);
+        setMessage(error.response?.data?.error || error.message);
+      }
+    };
     fetchEnrollments();
   }, []);
-
-  // Load enrollment requests for courses assigned to this faculty member
-  const fetchEnrollments = async () => {
-    try {
-      const response = await getFacultyEnrollments();
-      setEnrollments(response.data);
-      setMessage("");
-    } catch (error) {
-      console.error(error);
-      setEnrollments([]);
-      setMessage(error.response?.data?.error || error.message);
-    }
-  };
 
   // Approve or reject a pending enrollment request
   const handleReview = async (enrollmentId, status) => {

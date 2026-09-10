@@ -23,7 +23,9 @@ export const registerFaculty = async (facultyData) => {
     return result.data;
   } catch (error) {
     if (error.response) {
-      throw new Error(error.response.data.error);
+      throw new Error(error.response.data.error, {
+        cause: error,
+      });
     }
     throw error;
   }
@@ -67,7 +69,9 @@ export const getFacultyById = async (id) => {
     return result.data;
   } catch (error) {
     if (error.response) {
-      throw new Error(error.response.data.error);
+      throw new Error(error.response.data.error, {
+        cause: error,
+      });
     }
     throw error;
   }
@@ -84,7 +88,9 @@ export const updateFaculty = async (id, updatedData) => {
     return result.data;
   } catch (error) {
     if (error.response) {
-      throw new Error(error.response.data.error);
+      throw new Error(error.response.data.error, {
+        cause: error,
+      });
     }
     throw error;
   }
@@ -101,7 +107,9 @@ export const deleteUser = async (id) => {
     return result.data;
   } catch (error) {
     if (error.response) {
-      throw new Error(error.response.data.error);
+      throw new Error(error.response.data.error, {
+        cause: error,
+      });
     }
     throw error;
   }
@@ -128,7 +136,9 @@ export const getStudentById = async (id) => {
     return result.data;
   } catch (error) {
     if (error.response) {
-      throw new Error(error.response.data.error);
+      throw new Error(error.response.data.error, {
+        cause: error,
+      });
     }
     throw error;
   }
@@ -145,7 +155,9 @@ export const updateStudent = async (id, updatedData) => {
     return result.data;
   } catch (error) {
     if (error.response) {
-      throw new Error(error.response.data.error);
+      throw new Error(error.response.data.error, {
+        cause: error,
+      });
     }
     throw error;
   }

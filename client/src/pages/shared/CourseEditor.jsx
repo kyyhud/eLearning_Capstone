@@ -27,39 +27,37 @@ function CourseEditor() {
   const isArchivedForFaculty = !isAdmin && formData.status === "archived";
 
   useEffect(() => {
+    const loadCourse = async () => {
+      try {
+        setError("");
+        const response = await getCourseById(id);
+        const course = response.data;
+        setCourseId(course.courseId);
+        setFormData({
+          status: course.status || "draft",
+          title: course.title || "",
+          description: course.description || "",
+          durationWeeks: course.durationWeeks ?? "",
+          faculty: course.faculty?._id || "",
+          sections: course.sections || [],
+        });
+      } catch (error) {
+        setError(error.message);
+      }
+    };
     loadCourse();
     if (isAdmin) {
+      const loadFaculty = async () => {
+        try {
+          const response = await viewAllFaculty();
+          setFaculty(response.data);
+        } catch (error) {
+          setError(error.message);
+        }
+      };
       loadFaculty();
     }
   }, [id, isAdmin]);
-
-  const loadCourse = async () => {
-    try {
-      setError("");
-      const response = await getCourseById(id);
-      const course = response.data;
-      setCourseId(course.courseId);
-      setFormData({
-        status: course.status || "draft",
-        title: course.title || "",
-        description: course.description || "",
-        durationWeeks: course.durationWeeks ?? "",
-        faculty: course.faculty?._id || "",
-        sections: course.sections || [],
-      });
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
-  const loadFaculty = async () => {
-    try {
-      const response = await viewAllFaculty();
-      setFaculty(response.data);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
 
   const handleChange = (e) => {
     setFormData({

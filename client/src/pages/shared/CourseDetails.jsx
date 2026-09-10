@@ -26,28 +26,27 @@ function CourseDetails() {
   const [enrollmentMessage, setEnrollmentMessage] = useState("");
 
   useEffect(() => {
-    loadCourseDetails();
-  }, [id]);
-
-  // Load the course details and its ratings/reviews
-  const loadCourseDetails = async () => {
-    try {
-      setError("");
-      const [courseResponse, reviewResponse] = await Promise.all([getCourseById(id), getCourseReviews(id)]);
-      setCourse(courseResponse.data);
-      setReviews(reviewResponse.data.reviews);
-      setAverageRating(reviewResponse.data.averageRating);
-      setReviewCount(reviewResponse.data.reviewCount);
-      if (isStudent) {
-        const enrollmentResponse = await getMyEnrollments();
-        const currentEnrollment = enrollmentResponse.data.find((enrollment) => enrollment.course?._id === id);
-        setEnrollment(currentEnrollment || null);
+    // Load the course details and its ratings/reviews
+    const loadCourseDetails = async () => {
+      try {
+        setError("");
+        const [courseResponse, reviewResponse] = await Promise.all([getCourseById(id), getCourseReviews(id)]);
+        setCourse(courseResponse.data);
+        setReviews(reviewResponse.data.reviews);
+        setAverageRating(reviewResponse.data.averageRating);
+        setReviewCount(reviewResponse.data.reviewCount);
+        if (isStudent) {
+          const enrollmentResponse = await getMyEnrollments();
+          const currentEnrollment = enrollmentResponse.data.find((enrollment) => enrollment.course?._id === id);
+          setEnrollment(currentEnrollment || null);
+        }
+      } catch (error) {
+        console.error(error);
+        setError(error.response?.data?.error || error.response?.data?.message || error.message);
       }
-    } catch (error) {
-      console.error(error);
-      setError(error.response?.data?.error || error.response?.data?.message || error.message);
-    }
-  };
+    };
+    loadCourseDetails();
+  }, [id, isStudent]);
   if (!course) {
     return <main>{error ? <p>{error}</p> : <p>Loading course...</p>}</main>;
   }

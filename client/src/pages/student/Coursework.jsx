@@ -20,32 +20,31 @@ function Coursework() {
   const [reviewMessage, setReviewMessage] = useState("");
 
   useEffect(() => {
+    // Load the full course and this student's enrollment/progress/review
+    const fetchCoursework = async () => {
+      try {
+        setLoading(true);
+        const [courseworkResponse, reviewResponse] = await Promise.all([getStudentCoursework(id), getCourseReviews(id)]);
+        const reviewData = reviewResponse.data;
+        const courseData = courseworkResponse.data.course;
+        const enrollmentData = courseworkResponse.data.enrollment;
+        setCourse(courseData);
+        setEnrollment(enrollmentData);
+        const existingReview = reviewData.reviews.find((courseReview) => courseReview.enrollment?.toString() === enrollmentData._id.toString());
+        setReview(existingReview || null);
+        setMessage("");
+      } catch (error) {
+        console.error(error);
+        setCourse(null);
+        setEnrollment(null);
+        setReview(null);
+        setMessage(error.response?.data?.error || error.response?.data?.message || error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchCoursework();
   }, [id]);
-
-  // Load the full course and this student's enrollment/progress/review
-  const fetchCoursework = async () => {
-    try {
-      setLoading(true);
-      const [courseworkResponse, reviewResponse] = await Promise.all([getStudentCoursework(id), getCourseReviews(id)]);
-      const reviewData = reviewResponse.data;
-      const courseData = courseworkResponse.data.course;
-      const enrollmentData = courseworkResponse.data.enrollment;
-      setCourse(courseData);
-      setEnrollment(enrollmentData);
-      const existingReview = reviewData.reviews.find((courseReview) => courseReview.enrollment?.toString() === enrollmentData._id.toString());
-      setReview(existingReview || null);
-      setMessage("");
-    } catch (error) {
-      console.error(error);
-      setCourse(null);
-      setEnrollment(null);
-      setReview(null);
-      setMessage(error.response?.data?.error || error.response?.data?.message || error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Check whether a content item's _id is stored in completedContent
   const isContentComplete = (contentId) => {

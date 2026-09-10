@@ -15,6 +15,23 @@ const emptyForm = {
   isActive: true,
 };
 
+const getFacultyFormData = async (id) => {
+  const response = await getFacultyById(id);
+  const facultyMember = response.data;
+  return {
+    firstName: facultyMember.firstName,
+    lastName: facultyMember.lastName,
+    email: facultyMember.email,
+    phone: facultyMember.phone || "",
+    isActive: facultyMember.isActive ?? true,
+    facultyId: facultyMember.facultyProfile?.facultyId || "",
+    department: facultyMember.facultyProfile?.department || "",
+    title: facultyMember.facultyProfile?.title || "",
+    specialization: facultyMember.facultyProfile?.specialization || "",
+    bio: facultyMember.facultyProfile?.bio || "",
+  };
+};
+
 function FacultyProfile() {
   const { id } = useParams();
   const [isEditing, setIsEditing] = useState(false);
@@ -25,32 +42,27 @@ function FacultyProfile() {
   const isAdmin = user.typeOfUser === "admin";
 
   useEffect(() => {
-    setIsEditing(false);
+    let cancelled = false;
+    const loadFaculty = async () => {
+      try {
+        const facultyData = await getFacultyFormData(id);
+        if (!cancelled) {
+          setFormData(facultyData);
+          setIsEditing(false);
+          setError("");
+          setMessage("");
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setError(error.message);
+        }
+      }
+    };
     loadFaculty();
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
-
-  const loadFaculty = async () => {
-    try {
-      setError("");
-      setMessage("");
-      const response = await getFacultyById(id);
-      const facultyMember = response.data;
-      setFormData({
-        firstName: facultyMember.firstName,
-        lastName: facultyMember.lastName,
-        email: facultyMember.email,
-        phone: facultyMember.phone || "",
-        isActive: facultyMember.isActive ?? true,
-        facultyId: facultyMember.facultyProfile?.facultyId || "",
-        department: facultyMember.facultyProfile?.department || "",
-        title: facultyMember.facultyProfile?.title || "",
-        specialization: facultyMember.facultyProfile?.specialization || "",
-        bio: facultyMember.facultyProfile?.bio || "",
-      });
-    } catch (error) {
-      setError(error.message);
-    }
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -60,9 +72,16 @@ function FacultyProfile() {
     }));
   };
 
-  const handleCancelEdit = () => {
+  const handleCancelEdit = async () => {
     setIsEditing(false);
-    loadFaculty();
+    setError("");
+    setMessage("");
+    try {
+      const facultyData = await getFacultyFormData(id);
+      setFormData(facultyData);
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   const handleSubmit = async (e) => {

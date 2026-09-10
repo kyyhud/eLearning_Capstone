@@ -17,7 +17,9 @@ export const createCourse = async (courseData) => {
     return result.data;
   } catch (error) {
     if (error.response) {
-      throw new Error(error.response.data.error);
+      throw new Error(error.response.data.error, {
+        cause: error,
+      });
     }
     throw error;
   }
@@ -32,7 +34,9 @@ export const getCourses = async (filters = {}) => {
     return result.data;
   } catch (error) {
     if (error.response) {
-      throw new Error(error.response.data.error);
+      throw new Error(error.response.data.error, {
+        cause: error,
+      });
     }
     throw error;
   }
@@ -44,7 +48,9 @@ export const getCourseById = async (id) => {
     return result.data;
   } catch (error) {
     if (error.response) {
-      throw new Error(error.response.data.error);
+      throw new Error(error.response.data.error, {
+        cause: error,
+      });
     }
     throw error;
   }
@@ -56,7 +62,9 @@ export const getFacultyCourses = async () => {
     return result.data;
   } catch (error) {
     if (error.response) {
-      throw new Error(error.response.data.error);
+      throw new Error(error.response.data.error, {
+        cause: error,
+      });
     }
     throw error;
   }
@@ -68,7 +76,9 @@ export const updateCourse = async (id, updatedData) => {
     return result.data;
   } catch (error) {
     if (error.response) {
-      throw new Error(error.response.data.error);
+      throw new Error(error.response.data.error, {
+        cause: error,
+      });
     }
     throw error;
   }
@@ -87,6 +97,8 @@ export const uploadCourseContent = async (file, contentType) => {
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.error || "Failed to upload course content.");
+    throw new Error(error.response?.data?.error || "Failed to upload course content.", {
+      cause: error,
+    });
   }
 };
