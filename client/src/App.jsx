@@ -41,7 +41,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/signUp" element={<StudentSignUp />} />
+        <Route path="/signup" element={<StudentSignUp />} />
 
         <Route element={<AuthenticatedLayout allowedRoles={["admin"]} />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />

@@ -36,7 +36,8 @@ function CourseEditor() {
   const loadCourse = async () => {
     try {
       setError("");
-      const course = await getCourseById(id);
+      const response = await getCourseById(id);
+      const course = response.data;
       setCourseId(course.courseId);
       setFormData({
         status: course.status || "draft",
@@ -53,8 +54,8 @@ function CourseEditor() {
 
   const loadFaculty = async () => {
     try {
-      const facultyData = await viewAllFaculty();
-      setFaculty(facultyData);
+      const response = await viewAllFaculty();
+      setFaculty(response.data);
     } catch (error) {
       setError(error.message);
     }
@@ -247,6 +248,7 @@ function CourseEditor() {
       ),
     }));
   };
+
   // File upload handling
   const getAcceptedFileTypes = (contentType) => {
     switch (contentType) {
@@ -261,13 +263,15 @@ function CourseEditor() {
         return "";
     }
   };
+  // Handle file upload for course content
   const handleFileUpload = async (sectionIndex, contentIndex, file, contentType) => {
     if (!file) return;
     const uploadKey = `${sectionIndex}-${contentIndex}`;
     try {
       setError("");
       setUploadingContent(uploadKey);
-      const uploadedFile = await uploadCourseContent(file, contentType);
+      const response = await uploadCourseContent(file, contentType);
+      const uploadedFile = response.data;
       setFormData((prev) => ({
         ...prev,
         sections: prev.sections.map((section, currentSectionIndex) =>

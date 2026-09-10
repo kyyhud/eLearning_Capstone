@@ -19,7 +19,7 @@ function StudentList() {
   const fetchAllStudents = async () => {
     try {
       const response = await getAllStudents();
-      setStudents(response);
+      setStudents(response.data);
     } catch (error) {
       console.error(error);
       setMessage(error.message);

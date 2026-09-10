@@ -1,5 +1,12 @@
 const express = require("express");
-const { requestEnrollment, getMyEnrollments, getFacultyEnrollments, reviewEnrollment, getStudentCoursework, markContentComplete, } = require("../controllers/enrollmentController");
+const {
+  requestEnrollment,
+  getMyEnrollments,
+  getFacultyEnrollments,
+  reviewEnrollment,
+  getStudentCoursework,
+  markContentComplete,
+} = require("../controllers/enrollmentController");
 const { authenticateUser, authorizeRoles } = require("../middleware/authMiddleware");
 const router = express.Router();
 

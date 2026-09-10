@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { accessFacultyCourses } from "../../services/courseApi.js";
+import { getFacultyCourses } from "../../services/courseApi.js";
 
 function FacultyCourseList() {
   const navigate = useNavigate();
@@ -11,8 +11,8 @@ function FacultyCourseList() {
   useEffect(() => {
     const loadCourses = async () => {
       try {
-        const response = await accessFacultyCourses();
-        setCourses(response);
+        const response = await getFacultyCourses();
+        setCourses(response.data);
         setMessage("");
       } catch (error) {
         setCourses([]);

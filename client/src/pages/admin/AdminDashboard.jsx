@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-
 function AdminDashboard() {
   const user = JSON.parse(sessionStorage.getItem("user"));
 

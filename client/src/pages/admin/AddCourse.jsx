@@ -20,8 +20,8 @@ function AddCourse() {
   useEffect(() => {
     const loadFaculty = async () => {
       try {
-        const faculty = await viewAllFaculty();
-        setFacultyMembers(faculty);
+        const response = await viewAllFaculty();
+        setFacultyMembers(response.data);
       } catch (error) {
         setError(error.message);
       }

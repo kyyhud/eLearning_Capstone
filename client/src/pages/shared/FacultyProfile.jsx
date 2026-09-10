@@ -33,7 +33,8 @@ function FacultyProfile() {
     try {
       setError("");
       setMessage("");
-      const facultyMember = await getFacultyById(id);
+      const response = await getFacultyById(id);
+      const facultyMember = response.data;
       setFormData({
         firstName: facultyMember.firstName,
         lastName: facultyMember.lastName,

@@ -34,7 +34,8 @@ function StudentProfile() {
     try {
       setError("");
       setMessage("");
-      const student = await getStudentById(id);
+      const response = await getStudentById(id);
+      const student = response.data;
       setFormData({
         firstName: student.firstName,
         lastName: student.lastName,

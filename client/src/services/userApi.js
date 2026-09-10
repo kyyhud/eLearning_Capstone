@@ -1,6 +1,6 @@
 import axios from "axios";
 
-let URL = "http://localhost:3000/api/users";
+const URL = "http://localhost:3000/api/users";
 
 export const studentSignUp = async (userData) => {
   let result = await axios.post(`${URL}/signup`, userData);
@@ -53,7 +53,7 @@ export const viewAllFaculty = async () => {
       Authorization: `Bearer ${token}`,
     },
   });
-  return result.data.data;
+  return result.data;
 };
 
 export const getFacultyById = async (id) => {
@@ -64,7 +64,7 @@ export const getFacultyById = async (id) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    return result.data.data;
+    return result.data;
   } catch (error) {
     if (error.response) {
       throw new Error(error.response.data.error);
@@ -114,7 +114,7 @@ export const getAllStudents = async () => {
       Authorization: `Bearer ${token}`,
     },
   });
-  return result.data.data;
+  return result.data;
 };
 
 export const getStudentById = async (id) => {
@@ -125,7 +125,7 @@ export const getStudentById = async (id) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    return result.data.data;
+    return result.data;
   } catch (error) {
     if (error.response) {
       throw new Error(error.response.data.error);

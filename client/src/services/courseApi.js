@@ -1,6 +1,6 @@
 import axios from "axios";
 
-let URL = "http://localhost:3000/api/courses";
+const URL = "http://localhost:3000/api/courses";
 
 export const getAuthHeaders = () => {
   const token = sessionStorage.getItem("token");
@@ -23,13 +23,13 @@ export const createCourse = async (courseData) => {
   }
 };
 
-export const viewCourses = async (filters = {}) => {
+export const getCourses = async (filters = {}) => {
   try {
     let result = await axios.get(URL, {
       ...getAuthHeaders(),
       params: filters,
     });
-    return result.data.data;
+    return result.data;
   } catch (error) {
     if (error.response) {
       throw new Error(error.response.data.error);
@@ -41,7 +41,7 @@ export const viewCourses = async (filters = {}) => {
 export const getCourseById = async (id) => {
   try {
     const result = await axios.get(`${URL}/${id}`, getAuthHeaders());
-    return result.data.data;
+    return result.data;
   } catch (error) {
     if (error.response) {
       throw new Error(error.response.data.error);
@@ -50,10 +50,10 @@ export const getCourseById = async (id) => {
   }
 };
 
-export const accessFacultyCourses = async () => {
+export const getFacultyCourses = async () => {
   try {
     const result = await axios.get(`${URL}/my-courses`, getAuthHeaders());
-    return result.data.data;
+    return result.data;
   } catch (error) {
     if (error.response) {
       throw new Error(error.response.data.error);
@@ -65,7 +65,7 @@ export const accessFacultyCourses = async () => {
 export const updateCourse = async (id, updatedData) => {
   try {
     const result = await axios.put(`${URL}/${id}/edit`, updatedData, getAuthHeaders());
-    return result.data.data;
+    return result.data;
   } catch (error) {
     if (error.response) {
       throw new Error(error.response.data.error);
@@ -85,7 +85,7 @@ export const uploadCourseContent = async (file, contentType) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    return response.data.data;
+    return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.error || "Failed to upload course content.");
   }

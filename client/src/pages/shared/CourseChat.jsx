@@ -30,8 +30,8 @@ function CourseChat() {
     setLoading(true);
     setError("");
     try {
-      const [courseData, messageResponse] = await Promise.all([getCourseById(id), getCourseMessages(id)]);
-      setCourse(courseData);
+      const [courseResponse, messageResponse] = await Promise.all([getCourseById(id), getCourseMessages(id)]);
+      setCourse(courseResponse.data);
       setMessages(messageResponse.data);
     } catch (error) {
       setError(error.message);

@@ -31,7 +31,7 @@ function FacultyList() {
   const fetchAllFaculty = async () => {
     try {
       const response = await viewAllFaculty();
-      setFaculty(response);
+      setFaculty(response.data);
     } catch (error) {
       console.error(error);
       setMessage(error.message);

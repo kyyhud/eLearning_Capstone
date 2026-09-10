@@ -18,14 +18,16 @@ const loginUser = async (req, res) => {
     const token = jwt.sign({ userId: user._id, typeOfUser: user.typeOfUser }, process.env.JWT_SECRET, { expiresIn: "12h" });
     res.status(200).json({
       success: true,
-      message: `Logged in as ${typeOfUser}`,
-      token,
-      user: {
-        _id: user._id,
-        email: user.email,
-        typeOfUser: user.typeOfUser,
-        preferences: user.preferences,
+      data: {
+        token,
+        user: {
+          _id: user._id,
+          email: user.email,
+          typeOfUser: user.typeOfUser,
+          preferences: user.preferences,
+        },
       },
+      message: `Logged in as ${typeOfUser}`,
     });
   } catch (error) {
     res.status(401).json({ success: false, error: error.message });

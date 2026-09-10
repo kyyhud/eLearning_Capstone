@@ -23,8 +23,7 @@ const createCourse = async (courseData) => {
   return await courseRepository.createCourse(newCourseData);
 };
 
-const getCourses = async (filters) => {
-  const courses = await courseRepository.findCourses(filters);
+const addRatingSummaries = async (courses) => {
   const ids = courses.map((course) => course._id);
   const ratingSummaries = await courseReviewRepository.getRatingSummariesForCourses(ids);
   const ratingsByCourse = new Map(
@@ -43,6 +42,11 @@ const getCourses = async (filters) => {
       count: 0,
     },
   }));
+};
+
+const getCourses = async (filters) => {
+  const courses = await courseRepository.findCourses(filters);
+  return await addRatingSummaries(courses);
 };
 
 const getCourseById = async (id, user) => {
@@ -60,24 +64,7 @@ const getCourseById = async (id, user) => {
 
 const getCoursesByFacultyId = async (userId) => {
   const courses = await courseRepository.findCoursesByFacultyId(userId);
-  const ids = courses.map((course) => course._id);
-  const ratingSummaries = await courseReviewRepository.getRatingSummariesForCourses(ids);
-  const ratingsByCourse = new Map(
-    ratingSummaries.map((summary) => [
-      summary._id.toString(),
-      {
-        average: Math.round(summary.averageRating * 10) / 10,
-        count: summary.reviewCount,
-      },
-    ]),
-  );
-  return courses.map((course) => ({
-    ...course.toObject(),
-    rating: ratingsByCourse.get(course._id.toString()) || {
-      average: 0,
-      count: 0,
-    },
-  }));
+  return await addRatingSummaries(courses);
 };
 
 const getAllowedUpdates = (updatedData, allowedFields) => {

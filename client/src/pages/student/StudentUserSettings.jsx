@@ -25,7 +25,8 @@ function StudentUserSettings() {
 
   const loadStudent = async () => {
     try {
-      const student = await getStudentById(id);
+      const response = await getStudentById(id);
+      const student = response.data;
       setFormData((prev) => ({
         ...prev,
         firstName: student.firstName,

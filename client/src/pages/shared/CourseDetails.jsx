@@ -33,8 +33,8 @@ function CourseDetails() {
   const loadCourseDetails = async () => {
     try {
       setError("");
-      const [courseData, reviewResponse] = await Promise.all([getCourseById(id), getCourseReviews(id)]);
-      setCourse(courseData);
+      const [courseResponse, reviewResponse] = await Promise.all([getCourseById(id), getCourseReviews(id)]);
+      setCourse(courseResponse.data);
       setReviews(reviewResponse.data.reviews);
       setAverageRating(reviewResponse.data.averageRating);
       setReviewCount(reviewResponse.data.reviewCount);

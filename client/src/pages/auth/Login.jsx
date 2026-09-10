@@ -15,9 +15,10 @@ function Login() {
     try {
       const result = await loginUser(login);
       if (result.success) {
-        sessionStorage.setItem("user", JSON.stringify(result.user));
-        sessionStorage.setItem("token", result.token);
-        const userType = result.user.typeOfUser;
+        const { token, user } = result.data;
+        sessionStorage.setItem("user", JSON.stringify(user));
+        sessionStorage.setItem("token", token);
+        const userType = user.typeOfUser;
         if (userType === "admin") {
           navigate("/admin/dashboard");
         } else if (userType === "faculty") {

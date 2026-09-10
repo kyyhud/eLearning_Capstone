@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { viewCourses } from "../../services/courseApi.js";
+import { getCourses } from "../../services/courseApi.js";
 
 function CourseList() {
   const navigate = useNavigate();
@@ -10,8 +10,8 @@ function CourseList() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const data = await viewCourses();
-        setCourses(data);
+        const response = await getCourses();
+        setCourses(response.data);
       } catch (error) {
         setMessage(`Error fetching courses: ${error.message}`);
       }

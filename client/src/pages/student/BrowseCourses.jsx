@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { viewCourses } from "../../services/courseApi.js";
+import { getCourses } from "../../services/courseApi.js";
 import { getMyEnrollments, requestEnrollment } from "../../services/enrollmentApi.js";
 
 function BrowseCourses() {
@@ -17,8 +17,8 @@ function BrowseCourses() {
   // Load published courses and the student's current enrollments
   const fetchInitialData = async () => {
     try {
-      const [courseResponse, enrollmentsResponse] = await Promise.all([viewCourses(), getMyEnrollments()]);
-      const publishedCourses = courseResponse.filter((course) => course.status === "published");
+      const [courseResponse, enrollmentsResponse] = await Promise.all([getCourses(), getMyEnrollments()]);
+      const publishedCourses = courseResponse.data.filter((course) => course.status === "published");
       setCourses(publishedCourses);
       setEnrollments(enrollmentsResponse.data);
       setMessage("");
@@ -37,8 +37,8 @@ function BrowseCourses() {
       return;
     }
     try {
-      const response = await viewCourses({ search: searchTerm });
-      const publishedCourses = response.filter((course) => course.status === "published");
+      const response = await getCourses({ search: searchTerm });
+      const publishedCourses = response.data.filter((course) => course.status === "published");
       setCourses(publishedCourses);
       setMessage(publishedCourses.length === 0 ? "No courses found." : "");
     } catch (error) {
