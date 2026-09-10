@@ -156,35 +156,41 @@ Authentication and authorization middleware protect routes before requests reach
 Capstone_Project/
 │
 ├── client/
+│   ├── public/
 │   └── src/
 │       ├── assets/
-│       │
 │       ├── components/
 │       │   ├── AuthenticatedLayout.jsx
 │       │   └── Navbar.jsx
-│       │
 │       ├── pages/
 │       │   ├── admin/
 │       │   ├── auth/
 │       │   ├── faculty/
-│       │   ├── student/
-│       │   └── shared/
-│       │
-│       └── services/
-│           ├── authService.js
-│           ├── courseService.js
-│           └── userService.js
+│       │   ├── shared/
+│       │   └── student/
+│       ├── services/
+│       │   ├── chatApi.js
+│       │   ├── courseApi.js
+│       │   ├── enrollmentApi.js
+│       │   ├── reviewApi.js
+│       │   └── userApi.js
+│       ├── App.jsx
+│       └── main.jsx
 │
 └── server/
     └── src/
         ├── config/
         ├── controllers/
         ├── middleware/
+        │   ├── authMiddleware.js
+        │   └── uploadMiddleware.js
         ├── models/
         ├── repositories/
         ├── routes/
+        ├── scripts/
         ├── services/
         ├── utils/
+        │   └── passwordUtils.js
         └── app.js
 ```
 

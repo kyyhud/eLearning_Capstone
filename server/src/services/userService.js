@@ -1,7 +1,7 @@
 const { getNextId } = require("./idService.js");
 
 const userRepository = require("../repositories/userRepository");
-let passwordHashing = require("../middleware/passwordHashing");
+const passwordUtils = require("../utils/passwordUtils");
 
 const verifySelfOrAdmin = (targetUserId, expectedRole, currentUser) => {
   const isAdmin = currentUser.typeOfUser === "admin";
@@ -19,7 +19,7 @@ const studentSignUp = async (firstName, lastName, email, password, typeOfUser) =
     throw new Error("Email already exists");
   }
   const studentId = await getNextId("studentId", 10001);
-  const hashedPassword = await passwordHashing.hashPassword(password);
+  const hashedPassword = await passwordUtils.hashPassword(password);
   const newUser = await userRepository.createStudent({
     firstName,
     lastName,
@@ -35,7 +35,7 @@ const loginUser = async (email, password, typeOfUser) => {
   if (!existingUser) {
     throw new Error("Invalid email");
   }
-  const isPasswordValid = await passwordHashing.comparePassword(password, existingUser.passwordHash);
+  const isPasswordValid = await passwordUtils.comparePassword(password, existingUser.passwordHash);
   if (!isPasswordValid || existingUser.typeOfUser !== typeOfUser) {
     throw new Error("Invalid credentials");
   }
@@ -47,11 +47,11 @@ const changePassword = async (userId, currentPassword, newPassword) => {
   if (!user) {
     throw new Error("User not found.");
   }
-  const isPasswordValid = await passwordHashing.comparePassword(currentPassword, user.passwordHash);
+  const isPasswordValid = await passwordUtils.comparePassword(currentPassword, user.passwordHash);
   if (!isPasswordValid) {
     throw new Error("Current password is incorrect.");
   }
-  user.passwordHash = await passwordHashing.hashPassword(newPassword);
+  user.passwordHash = await passwordUtils.hashPassword(newPassword);
   await userRepository.saveUser(user);
   return {
     message: "Password changed successfully.",
@@ -113,7 +113,7 @@ const registerFaculty = async (facultyData) => {
   if (existingUser) {
     throw new Error("Email already exists");
   }
-  const hashedPassword = await passwordHashing.hashPassword(password);
+  const hashedPassword = await passwordUtils.hashPassword(password);
   const facultyId = await getNextId("facultyId", 1001);
   const newFaculty = await userRepository.createFacultyUser({
     firstName,
