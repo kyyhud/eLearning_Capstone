@@ -82,6 +82,14 @@ function StudentUserSettings() {
           chatAutoRefresh: formData.chatAutoRefresh,
         },
       });
+      const updatedUser = {
+        ...user,
+        preferences: {
+          ...user.preferences,
+          chatAutoRefresh: formData.chatAutoRefresh,
+        },
+      };
+      sessionStorage.setItem("user", JSON.stringify(updatedUser));
       setMessage(response.message);
     } catch (error) {
       setError(error.message);

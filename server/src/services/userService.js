@@ -23,6 +23,30 @@ const getAllowedUpdates = (updatedData, allowedFields) => {
   return allowedUpdates;
 };
 
+const saveProfileUpdate = async (user) => {
+  try {
+    await userRepository.saveUser(user);
+  } catch (error) {
+    const duplicateEmail =
+      error.code === 11000 &&
+      (error.keyPattern?.email || error.keyValue?.email);
+    if (duplicateEmail) {
+      const duplicateEmailError = new Error("Email already exists");
+      duplicateEmailError.statusCode = 400;
+      throw duplicateEmailError;
+    }
+    if (error.name === "ValidationError") {
+      const validationMessage =
+        Object.values(error.errors)[0]?.message ||
+        "Invalid user information";
+      const validationError = new Error(validationMessage);
+      validationError.statusCode = 400;
+      throw validationError;
+    }
+    throw error;
+  }
+};
+
 const studentSignUp = async (firstName, lastName, email, password, typeOfUser) => {
   passwordUtils.validatePassword(password);
   const existingUser = await userRepository.findUserByEmail(email);
@@ -126,7 +150,7 @@ const updateFaculty = async (id, updatedData, currentUser) => {
     const allowedFacultyProfileUpdates = getAllowedUpdates(updatedData.facultyProfile, ["department", "title", "specialization", "bio"]);
     Object.assign(facultyUser.facultyProfile, allowedFacultyProfileUpdates);
   }
-  await userRepository.saveUser(facultyUser);
+  await saveProfileUpdate(facultyUser);
   return facultyUser;
 };
 
@@ -218,7 +242,7 @@ const updateStudent = async (id, updatedData, currentUser) => {
     ]);
     Object.assign(student.studentProfile, allowedStudentProfileUpdates);
   }
-  await userRepository.saveUser(student);
+  await saveProfileUpdate(student);
   return student;
 };
 

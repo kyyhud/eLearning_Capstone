@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const nameRegex = /^[A-Za-z'-]+(?: [A-Za-z'-]+)*$/;
 const studentTextRegex = /^[A-Za-z0-9\s.,+#&'/-]+$/;
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const facultyProfileSchema = new mongoose.Schema(
   {
@@ -63,10 +64,18 @@ const studentProfileSchema = new mongoose.Schema(
       match: [studentTextRegex, "Career Goal contains invalid characters"],
     },
     skills: {
-      type: [String],
+      type: [
+        {
+          type: String,
+          trim: true,
+          match: [studentTextRegex, "Skills contain invalid characters"],
+        },
+      ],
       default: [],
-      maxlength: [250, "Skills cannot exceed 250 characters"],
-      match: [studentTextRegex, "Skills contains invalid characters"],
+      validate: {
+        validator: (skills) => skills.join(", ").length <= 250,
+        message: "Skills cannot exceed 250 characters",
+      },
     },
     certifications: [
       {
@@ -148,6 +157,7 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
+      match: [emailRegex, "Please enter a valid email address"],
     },
     phone: {
       type: String,
