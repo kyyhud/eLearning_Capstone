@@ -5,6 +5,7 @@ const { authenticateUser, authorizeRoles } = require("../middleware/authMiddlewa
 
 router.post("/signup", userController.studentSignUp);
 router.post("/login", userController.loginUser);
+router.get("/me", authenticateUser, userController.getCurrentUser);
 router.put("/change-password", authenticateUser, userController.changePassword);
 
 router.get("/faculty", authenticateUser, authorizeRoles("admin"), userController.getAllFacultyUsers);

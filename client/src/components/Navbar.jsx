@@ -9,6 +9,7 @@ function Navbar() {
 
   const handleLogout = () => {
     sessionStorage.removeItem("user");
+    sessionStorage.removeItem("token");
     navigate("/login");
   };
 

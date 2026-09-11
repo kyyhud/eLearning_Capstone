@@ -47,6 +47,8 @@ function StudentSignUp() {
         <br />
         <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
         <br />
+        <small>Password must be 12 to 64 characters and include an uppercase letter, lowercase letter, number, and special character.</small>
+        <br />
         <button type="submit">Sign Up</button>
       </form>
       <hr />

@@ -198,7 +198,7 @@ Additional files and services are added as their corresponding application featu
 
 ## Authentication Flow
 
-After a successful login, the server creates a JWT containing authenticated user information including the user's database ID and role.
+After a successful login, the server creates a JWT containing the user's database ID. Protected requests use that ID to load the current user and role from the database.
 
 Protected API requests send the token through the authorization header:
 

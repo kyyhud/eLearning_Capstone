@@ -123,6 +123,11 @@ const studentProfileSchema = new mongoose.Schema(
   { _id: false },
 );
 
+const removeSensitiveUserFields = (_document, returnedObject) => {
+  delete returnedObject.passwordHash;
+  return returnedObject;
+};
+
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -187,7 +192,15 @@ const userSchema = new mongoose.Schema(
       default: undefined,
     },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    toJSON: {
+      transform: removeSensitiveUserFields,
+    },
+    toObject: {
+      transform: removeSensitiveUserFields,
+    },
+  },
 );
 
 module.exports = mongoose.model("User", userSchema);

@@ -14,6 +14,7 @@ const verifySelfOrAdmin = (targetUserId, expectedRole, currentUser) => {
 };
 
 const studentSignUp = async (firstName, lastName, email, password, typeOfUser) => {
+  passwordUtils.validatePassword(password);
   const existingUser = await userRepository.findUserByEmail(email);
   if (existingUser) {
     throw new Error("Email already exists");
@@ -30,14 +31,19 @@ const studentSignUp = async (firstName, lastName, email, password, typeOfUser) =
   return newUser;
 };
 
-const loginUser = async (email, password, typeOfUser) => {
+const loginUser = async (email, password) => {
   const existingUser = await userRepository.findUserByEmail(email);
   if (!existingUser) {
-    throw new Error("Invalid email");
+    throw new Error("Invalid credentials");
   }
   const isPasswordValid = await passwordUtils.comparePassword(password, existingUser.passwordHash);
-  if (!isPasswordValid || existingUser.typeOfUser !== typeOfUser) {
+  if (!isPasswordValid) {
     throw new Error("Invalid credentials");
+  }
+  if (!existingUser.isActive) {
+    const error = new Error("This account is inactive");
+    error.statusCode = 403;
+    throw error;
   }
   return existingUser;
 };
@@ -51,6 +57,12 @@ const changePassword = async (userId, currentPassword, newPassword) => {
   if (!isPasswordValid) {
     throw new Error("Current password is incorrect.");
   }
+  passwordUtils.validatePassword(newPassword);
+  const isSamePassword = await passwordUtils.comparePassword(newPassword, user.passwordHash);
+  if (isSamePassword) {
+    throw new Error("New password must be different from the current password.");
+  }
+
   user.passwordHash = await passwordUtils.hashPassword(newPassword);
   await userRepository.saveUser(user);
   return {
@@ -63,10 +75,13 @@ const getAllFacultyUsers = async () => {
   return facultyUsers;
 };
 
-const getFacultyById = async (id) => {
+const getFacultyById = async (id, currentUser) => {
+  verifySelfOrAdmin(id, "faculty", currentUser);
   const facultyUser = await userRepository.findUserById(id);
   if (!facultyUser || facultyUser.typeOfUser !== "faculty") {
-    throw new Error("Faculty user not found");
+    const error = new Error("Faculty user not found");
+    error.statusCode = 404;
+    throw error;
   }
   return facultyUser;
 };
@@ -109,6 +124,7 @@ const updateFaculty = async (id, updatedData, currentUser) => {
 
 const registerFaculty = async (facultyData) => {
   const { firstName, lastName, email, password, phone, facultyProfile } = facultyData;
+  passwordUtils.validatePassword(password);
   let existingUser = await userRepository.findUserByEmail(email);
   if (existingUser) {
     throw new Error("Email already exists");

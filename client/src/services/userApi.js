@@ -1,6 +1,21 @@
 import axios from "axios";
 
-const URL = "http://localhost:3000/api/users";
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+export const getAuthHeaders = () => {
+  const token = sessionStorage.getItem("token");
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+};
+export const createApiError = (error, fallbackMessage) => {
+  if (error.response || fallbackMessage) {
+    return new Error(error.response?.data?.error || fallbackMessage || error.message, { cause: error });
+  }
+  return error;
+};
+const URL = `${API_BASE_URL}/users`;
 
 export const studentSignUp = async (userData) => {
   let result = await axios.post(`${URL}/signup`, userData);
@@ -12,32 +27,26 @@ export const loginUser = async (credentials) => {
   return result.data;
 };
 
+export const getCurrentUser = async () => {
+  const result = await axios.get(`${URL}/me`, getAuthHeaders());
+  return result.data;
+};
+
 export const registerFaculty = async (facultyData) => {
-  const token = sessionStorage.getItem("token");
   try {
-    let result = await axios.post(`${URL}/faculty`, facultyData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    let result = await axios.post(`${URL}/faculty`, facultyData, getAuthHeaders());
     return result.data;
   } catch (error) {
-    if (error.response) {
-      throw new Error(error.response.data.error, {
-        cause: error,
-      });
-    }
-    throw error;
+    throw createApiError(error);
   }
 };
 
 export const changePassword = async (passwordData) => {
-  const token = sessionStorage.getItem("token");
   const response = await fetch(`${URL}/change-password`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      ...getAuthHeaders().headers,
     },
     body: JSON.stringify(passwordData),
   });
@@ -49,116 +58,56 @@ export const changePassword = async (passwordData) => {
 };
 
 export const viewAllFaculty = async () => {
-  const token = sessionStorage.getItem("token");
-  let result = await axios.get(`${URL}/faculty`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  let result = await axios.get(`${URL}/faculty`, getAuthHeaders());
   return result.data;
 };
 
 export const getFacultyById = async (id) => {
-  const token = sessionStorage.getItem("token");
   try {
-    let result = await axios.get(`${URL}/faculty/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    let result = await axios.get(`${URL}/faculty/${id}`, getAuthHeaders());
     return result.data;
   } catch (error) {
-    if (error.response) {
-      throw new Error(error.response.data.error, {
-        cause: error,
-      });
-    }
-    throw error;
+    throw createApiError(error);
   }
 };
 
 export const updateFaculty = async (id, updatedData) => {
-  const token = sessionStorage.getItem("token");
   try {
-    let result = await axios.put(`${URL}/faculty/${id}`, updatedData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    let result = await axios.put(`${URL}/faculty/${id}`, updatedData, getAuthHeaders());
     return result.data;
   } catch (error) {
-    if (error.response) {
-      throw new Error(error.response.data.error, {
-        cause: error,
-      });
-    }
-    throw error;
+    throw createApiError(error);
   }
 };
 
 export const deleteUser = async (id) => {
-  const token = sessionStorage.getItem("token");
   try {
-    let result = await axios.delete(`${URL}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    let result = await axios.delete(`${URL}/${id}`, getAuthHeaders());
     return result.data;
   } catch (error) {
-    if (error.response) {
-      throw new Error(error.response.data.error, {
-        cause: error,
-      });
-    }
-    throw error;
+    throw createApiError(error);
   }
 };
 
 export const getAllStudents = async () => {
-  const token = sessionStorage.getItem("token");
-  let result = await axios.get(`${URL}/students`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  let result = await axios.get(`${URL}/students`, getAuthHeaders());
   return result.data;
 };
 
 export const getStudentById = async (id) => {
-  const token = sessionStorage.getItem("token");
   try {
-    let result = await axios.get(`${URL}/students/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    let result = await axios.get(`${URL}/students/${id}`, getAuthHeaders());
     return result.data;
   } catch (error) {
-    if (error.response) {
-      throw new Error(error.response.data.error, {
-        cause: error,
-      });
-    }
-    throw error;
+    throw createApiError(error);
   }
 };
 
 export const updateStudent = async (id, updatedData) => {
-  const token = sessionStorage.getItem("token");
   try {
-    let result = await axios.put(`${URL}/students/${id}`, updatedData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    let result = await axios.put(`${URL}/students/${id}`, updatedData, getAuthHeaders());
     return result.data;
   } catch (error) {
-    if (error.response) {
-      throw new Error(error.response.data.error, {
-        cause: error,
-      });
-    }
-    throw error;
+    throw createApiError(error);
   }
 };

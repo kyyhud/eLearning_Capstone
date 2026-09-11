@@ -5,13 +5,12 @@ import { useNavigate, Link } from "react-router-dom";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [typeOfUser, setTypeOfUser] = useState("");
   const navigate = useNavigate();
   const [msg, setMsg] = useState("");
 
   const signIn = async (e) => {
     e.preventDefault();
-    const login = { email, password, typeOfUser };
+    const login = { email, password };
     try {
       const result = await loginUser(login);
       if (result.success) {
@@ -28,7 +27,6 @@ function Login() {
         }
         setEmail("");
         setPassword("");
-        setTypeOfUser("");
         setMsg("");
       }
     } catch (error) {
@@ -45,13 +43,6 @@ function Login() {
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <br />
         <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <br />
-        <select value={typeOfUser} onChange={(e) => setTypeOfUser(e.target.value)}>
-          <option value="">Select User Type</option>
-          <option value="admin">Admin</option>
-          <option value="faculty">Faculty</option>
-          <option value="student">Student</option>
-        </select>
         <br />
         <button type="submit">Login</button>
       </form>
