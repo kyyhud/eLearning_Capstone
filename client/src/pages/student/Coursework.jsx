@@ -10,7 +10,8 @@ function Coursework() {
 
   const [course, setCourse] = useState(null);
   const [enrollment, setEnrollment] = useState(null);
-  const [message, setMessage] = useState("");
+  const [loadError, setLoadError] = useState("");
+  const [actionError, setActionError] = useState("");
   const [loading, setLoading] = useState(true);
 
   const [review, setReview] = useState(null);
@@ -23,6 +24,7 @@ function Coursework() {
     const fetchCoursework = async () => {
       try {
         setLoading(true);
+        setLoadError("");
         const [courseworkResponse, reviewResponse] = await Promise.all([getStudentCoursework(id), getCourseReviews(id)]);
         const reviewData = reviewResponse.data;
         const courseData = courseworkResponse.data.course;
@@ -31,13 +33,12 @@ function Coursework() {
         setEnrollment(enrollmentData);
         const existingReview = reviewData.reviews.find((courseReview) => courseReview.enrollment?.toString() === enrollmentData._id.toString());
         setReview(existingReview || null);
-        setMessage("");
       } catch (error) {
         console.error(error);
         setCourse(null);
         setEnrollment(null);
         setReview(null);
-        setMessage(error.response?.data?.error || error.response?.data?.message || error.message);
+        setLoadError(error.response?.data?.error || error.response?.data?.message || error.message);
       } finally {
         setLoading(false);
       }
@@ -65,10 +66,10 @@ function Coursework() {
   if (loading) {
     return <p>Loading coursework...</p>;
   }
-  if (message) {
+  if (loadError) {
     return (
       <>
-        <p>{message}</p>
+        <p>{loadError}</p>
         <button type="button" onClick={() => navigate("/student/courses/my")}>
           Back to My Courses
         </button>
@@ -85,12 +86,12 @@ function Coursework() {
   // Mark a content item complete and update the student's progress
   const handleMarkComplete = async (contentId) => {
     try {
+      setActionError("");
       const response = await markContentComplete(id, contentId);
       setEnrollment(response.data);
-      setMessage("");
     } catch (error) {
       console.error(error);
-      setMessage(error.response?.data?.error || error.message);
+      setActionError(error.response?.data?.error || error.response?.data?.message || error.message);
     }
   };
 
@@ -120,7 +121,7 @@ function Coursework() {
       newTab.opener = null;
     }
     try {
-      setMessage("");
+      setActionError("");
       const fileBlob = await getCourseContentFile(id, contentItem._id);
       const fileUrl = URL.createObjectURL(fileBlob);
       if (newTab) {
@@ -131,7 +132,7 @@ function Coursework() {
       }, 60000);
     } catch (error) {
       newTab?.close();
-      setMessage(error.message);
+      setActionError(error.message);
     }
   };
 
@@ -187,6 +188,7 @@ function Coursework() {
       <hr />
 
       <h3>Coursework</h3>
+      {actionError && <p>{actionError}</p>}
       {orderedSections.length === 0 ? (
         <p>No coursework has been added yet.</p>
       ) : (
