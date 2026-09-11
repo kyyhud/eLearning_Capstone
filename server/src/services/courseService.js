@@ -67,6 +67,12 @@ const getCourseById = async (id, user) => {
   return course;
 };
 
+const getCoursesByFacultyId = async (userId) => {
+  const courses = await courseRepository.findCoursesByFacultyId(userId);
+  return await addRatingSummaries(courses);
+};
+
+// Get the file path and MIME type of a course content item by course ID and content ID
 const getCourseContentFile = async (courseId, contentId, user) => {
   const course = await courseRepository.findCourseById(courseId);
   if (!course) {
@@ -124,9 +130,44 @@ const getCourseContentFile = async (courseId, contentId, user) => {
   };
 };
 
-const getCoursesByFacultyId = async (userId) => {
-  const courses = await courseRepository.findCoursesByFacultyId(userId);
-  return await addRatingSummaries(courses);
+// Validates the uploaded resource of course content items and throws an error for invalid resources
+const throwInvalidContentResource = (message) => {
+  const error = new Error(message);
+  error.statusCode = 400;
+  throw error;
+};
+const validateCourseContentResources = (sections = []) => {
+  sections.forEach((section, sectionIndex) => {
+    (section.content || []).forEach((contentItem, contentIndex) => {
+      const resourceUrl = contentItem.resourceUrl?.trim();
+      const contentLabel = `Section ${sectionIndex + 1}, content ${contentIndex + 1}`;
+      if (!resourceUrl) {
+        throwInvalidContentResource(`${contentLabel} must include a resource.`);
+      }
+      if (contentItem.type === "link") {
+        const hasProtocol = /^[a-z][a-z\d+.-]*:/i.test(resourceUrl);
+        const hasHttpProtocol = /^https?:\/\//i.test(resourceUrl);
+        if (hasProtocol && !hasHttpProtocol) {
+          throwInvalidContentResource(`${contentLabel} must use an HTTP or HTTPS link.`);
+        }
+        const normalizedUrl = hasHttpProtocol ? resourceUrl : `https://${resourceUrl}`;
+        try {
+          const parsedUrl = new URL(normalizedUrl);
+          if (!parsedUrl.hostname) {
+            throw new Error();
+          }
+        } catch {
+          throwInvalidContentResource(`${contentLabel} must include a valid web link.`);
+        }
+        contentItem.resourceUrl = normalizedUrl;
+        return;
+      }
+      const uploadedFilePattern = /^\/uploads\/course-content\/[^/\\]+$/;
+      if (!uploadedFilePattern.test(resourceUrl)) {
+        throwInvalidContentResource(`${contentLabel} must reference an uploaded course file.`);
+      }
+    });
+  });
 };
 
 const getAllowedUpdates = (updatedData, allowedFields) => {
@@ -183,6 +224,9 @@ const updateCourse = async (id, updatedData, user) => {
   const adminFields = ["title", "description", "category", "faculty", "durationWeeks", "status", "sections"];
   const facultyFields = ["description", "status", "sections"];
   const allowedUpdates = getAllowedUpdates(updatedData, isAdmin ? adminFields : facultyFields);
+  if (allowedUpdates.sections !== undefined) {
+    validateCourseContentResources(allowedUpdates.sections);
+  }
   const updatedCourse = await courseRepository.updateCourse(id, allowedUpdates);
   // Get the list of resource URLs after the update, identify changes, and delete removed files
   const newResourceUrls = getUploadedResourceUrls(updatedCourse.sections);
@@ -215,7 +259,7 @@ module.exports = {
   createCourse,
   getCourses,
   getCourseById,
-  getCourseContentFile,
   getCoursesByFacultyId,
+  getCourseContentFile,
   updateCourse,
 };

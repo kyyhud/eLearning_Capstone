@@ -18,7 +18,8 @@ const contentSchema = new mongoose.Schema({
   },
   resourceUrl: {
     type: String,
-    default: "",
+    required: true,
+    trim: true,
   },
   fileName: {
     type: String,

@@ -448,6 +448,7 @@ function CourseEditor() {
                           accept={getAcceptedFileTypes(contentItem.type)}
                           onChange={(e) => handleFileUpload(index, contentIndex, e.target.files[0], contentItem.type)}
                           disabled={uploadingContent === `${index}-${contentIndex}`}
+                          required={!contentItem.resourceUrl}
                         />
                         {uploadingContent === `${index}-${contentIndex}` && <p>Uploading...</p>}
                       </div>
