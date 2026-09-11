@@ -1,19 +1,14 @@
 import axios from "axios";
-import { getAuthHeaders } from "./courseApi.js";
+import { API_BASE_URL, createApiError, getAuthHeaders } from "./userApi.js";
 
-const URL = "http://localhost:3000/api/chat";
+const URL = `${API_BASE_URL}/chat`;
 
 export const getCourseMessages = async (id) => {
   try {
     const response = await axios.get(`${URL}/courses/${id}/messages`, getAuthHeaders());
     return response.data;
   } catch (error) {
-    if (error.response) {
-      throw new Error(error.response.data.error, {
-        cause: error,
-      });
-    }
-    throw error;
+    throw createApiError(error);
   }
 };
 
@@ -22,11 +17,6 @@ export const sendCourseMessage = async (id, message) => {
     const response = await axios.post(`${URL}/courses/${id}/messages`, { message }, getAuthHeaders());
     return response.data;
   } catch (error) {
-    if (error.response) {
-      throw new Error(error.response.data.error, {
-        cause: error,
-      });
-    }
-    throw error;
+    throw createApiError(error);
   }
 };
