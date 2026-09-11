@@ -141,10 +141,8 @@ function CourseChat() {
           messages.map((chatMessage) => (
             <div key={chatMessage._id}>
               <p>
-                <strong>
-                  {chatMessage.sender.firstName} {chatMessage.sender.lastName}
-                </strong>{" "}
-                ({chatMessage.sender.typeOfUser})
+                <strong>{chatMessage.sender ? `${chatMessage.sender.firstName} ${chatMessage.sender.lastName}` : "Unknown User"}</strong>
+                {chatMessage.sender?.typeOfUser && ` (${chatMessage.sender.typeOfUser})`}
               </p>
               <p>{new Date(chatMessage.createdAt).toLocaleString()}</p>
               <p>{chatMessage.message}</p>

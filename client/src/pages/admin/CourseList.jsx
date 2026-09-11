@@ -48,7 +48,7 @@ function CourseList() {
                 <td>{course.courseId}</td>
                 <td>{course.title}</td>
                 <td>{course.category}</td>
-                <td>{`${course.faculty.firstName} ${course.faculty.lastName}`}</td>
+                <td>{course.faculty ? `${course.faculty.firstName} ${course.faculty.lastName}` : "Faculty unavailable"}</td>
                 <td>{course.durationWeeks} weeks</td>
                 <td>
                   {course.rating?.count > 0
