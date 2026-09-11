@@ -15,7 +15,7 @@ function FacultyEnrollmentRequests() {
         setError("");
       } catch (error) {
         setEnrollments([]);
-        setError(error.response?.data?.error || error.message);
+        setError(error.message);
       }
     };
     fetchEnrollments();
@@ -34,7 +34,7 @@ function FacultyEnrollmentRequests() {
       );
       setMessage(status === "approved" ? "Enrollment approved." : "Enrollment rejected.");
     } catch (error) {
-      setError(error.response?.data?.error || error.message);
+      setError(error.message);
     }
   };
 

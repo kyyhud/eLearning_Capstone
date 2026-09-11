@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { viewAllFaculty, deleteUser } from "../../services/userApi.js";
 
 function FacultyList() {
   const navigate = useNavigate();
-  const location = useLocation();
   const [faculty, setFaculty] = useState([]);
-  const [message, setMessage] = useState(location.state?.message || "");
+  const [message, setMessage] = useState("");
   const [facultyToDelete, setFacultyToDelete] = useState(null);
 
   useEffect(() => {
@@ -20,12 +19,6 @@ function FacultyList() {
     };
     fetchAllFaculty();
   }, []);
-
-  useEffect(() => {
-    if (location.state?.message) {
-      navigate(location.pathname, { replace: true, state: {} });
-    }
-  }, [location.pathname, location.state?.message, navigate]);
 
   const handleDelete = async () => {
     if (!facultyToDelete) return;

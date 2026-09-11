@@ -17,7 +17,7 @@ function StudentCourses() {
         setMessage("");
       } catch (error) {
         setEnrollments([]);
-        setMessage(error.response?.data?.error || error.message);
+        setMessage(error.message);
       }
     };
     fetchMyCourses();

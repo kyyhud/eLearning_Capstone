@@ -8,19 +8,22 @@ function StudentSignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [msg, setMsg] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   const signUp = async (e) => {
     e.preventDefault();
+    setMessage("");
+    setError("");
     if (password !== confirmPassword) {
-      setMsg("Passwords do not match.");
+      setError("Passwords do not match.");
       return;
     }
     const newUser = { firstName, lastName, email, password };
     try {
       const result = await studentSignUp(newUser);
       if (result.success) {
-        setMsg("Student account created successfully. Please login.");
+        setMessage("Student account created successfully. Please login.");
         setFirstName("");
         setLastName("");
         setEmail("");
@@ -28,14 +31,15 @@ function StudentSignUp() {
         setConfirmPassword("");
       }
     } catch (error) {
-      setMsg(error.response?.data?.error || "Sign up failed. Please try again.");
+      setError(error.response?.data?.error || "Sign up failed. Please try again.");
     }
   };
 
   return (
     <>
       <h3>Student Sign Up Page</h3>
-      <span style={{ color: "red" }}>{msg}</span>
+      {message && <p className="success-message">{message}</p>}
+      {error && <p className="error-message">{error}</p>}
       <form onSubmit={signUp}>
         <input type="text" placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
         <br />

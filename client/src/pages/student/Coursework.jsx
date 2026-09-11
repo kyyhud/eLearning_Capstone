@@ -38,7 +38,7 @@ function Coursework() {
         setCourse(null);
         setEnrollment(null);
         setReview(null);
-        setLoadError(error.response?.data?.error || error.response?.data?.message || error.message);
+        setLoadError(error.message);
       } finally {
         setLoading(false);
       }
@@ -90,7 +90,7 @@ function Coursework() {
       const response = await markContentComplete(id, contentId);
       setEnrollment(response.data);
     } catch (error) {
-      setActionError(error.response?.data?.error || error.response?.data?.message || error.message);
+      setActionError(error.message);
     }
   };
 

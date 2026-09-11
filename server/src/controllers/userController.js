@@ -5,7 +5,7 @@ const createUserResponse = require("../utils/userResponse");
 const studentSignUp = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
-    const newUser = await userService.studentSignUp(firstName, lastName, email, password, "student");
+    const newUser = await userService.studentSignUp(firstName, lastName, email, password);
     const safeUser = createUserResponse(newUser);
     res.status(201).json({ success: true, data: safeUser, message: "User registered successfully" });
   } catch (error) {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getCourseById, getCourseContentFile } from "../../services/courseApi.js";
 import { getMyEnrollments, requestEnrollment } from "../../services/enrollmentApi.js";
 import { getCourseReviews } from "../../services/reviewApi.js";
@@ -7,7 +7,6 @@ import { getCourseReviews } from "../../services/reviewApi.js";
 function CourseDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [course, setCourse] = useState(null);
   const [error, setError] = useState("");
@@ -40,7 +39,7 @@ function CourseDetails() {
           setEnrollment(currentEnrollment || null);
         }
       } catch (error) {
-        setError(error.response?.data?.error || error.response?.data?.message || error.message);
+        setError(error.message);
       }
     };
     loadCourseDetails();
@@ -125,7 +124,6 @@ function CourseDetails() {
 
   return (
     <main>
-      {location.state?.message && <p>{location.state.message}</p>}
       {error && <p>{error}</p>}
 
       <section>

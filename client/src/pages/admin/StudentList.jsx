@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getAllStudents, deleteUser } from "../../services/userApi.js";
 
 function StudentList() {
   const navigate = useNavigate();
-  const location = useLocation();
   const [students, setStudents] = useState([]);
-  const [message, setMessage] = useState(location.state?.message || "");
+  const [message, setMessage] = useState("");
   const [studentToDelete, setStudentToDelete] = useState(null);
 
   useEffect(() => {
@@ -20,12 +19,6 @@ function StudentList() {
     };
     fetchAllStudents();
   }, []);
-
-  useEffect(() => {
-    if (location.state?.message) {
-      navigate(location.pathname, { replace: true, state: {} }); // Clear the message from the location state
-    }
-  }, [location.pathname, location.state?.message, navigate]);
 
   const handleDelete = async () => {
     if (!studentToDelete) return;
