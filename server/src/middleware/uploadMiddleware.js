@@ -22,7 +22,13 @@ const allowedExtensionsByType = {
   document: [".pdf", ".doc", ".docx", ".txt"],
   presentation: [".ppt", ".pptx", ".pdf"],
   video: [".mp4", ".webm", ".mov"],
-  recording: [".mp4", ".webm"],
+  recording: [".mp4", ".webm", ".mov"],
+};
+
+const createUploadValidationError = (message) => {
+  const error = new Error(message);
+  error.statusCode = 400;
+  return error;
 };
 
 const fileFilter = (req, file, cb) => {
@@ -30,10 +36,10 @@ const fileFilter = (req, file, cb) => {
   const fileExtension = path.extname(file.originalname).toLowerCase();
   const allowedExtensions = allowedExtensionsByType[contentType];
   if (!allowedExtensions) {
-    return cb(new Error("Invalid course content type."), false);
+    return cb(createUploadValidationError("Invalid course content type."), false);
   }
   if (!allowedExtensions.includes(fileExtension)) {
-    return cb(new Error(`Unsupported file type for ${contentType}.`), false);
+    return cb(createUploadValidationError(`Unsupported file type for ${contentType}.`), false);
   }
   cb(null, true);
 };
@@ -46,4 +52,23 @@ const courseContentUpload = multer({
   },
 });
 
-module.exports = courseContentUpload;
+const handleCourseContentUpload = (req, res, next) => {
+  courseContentUpload.single("file")(req, res, (error) => {
+    if (!error) {
+      return next();
+    }
+    if (error instanceof multer.MulterError) {
+      const fileTooLarge = error.code === "LIMIT_FILE_SIZE";
+      return res.status(fileTooLarge ? 413 : 400).json({
+        success: false,
+        error: fileTooLarge ? "Course content files cannot exceed 50 MB." : "Unable to process the uploaded file.",
+      });
+    }
+    return res.status(error.statusCode || 500).json({
+      success: false,
+      error: error.statusCode ? error.message : "Unable to upload course content.",
+    });
+  });
+};
+
+module.exports = handleCourseContentUpload;
