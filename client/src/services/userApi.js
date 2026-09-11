@@ -42,19 +42,12 @@ export const registerFaculty = async (facultyData) => {
 };
 
 export const changePassword = async (passwordData) => {
-  const response = await fetch(`${URL}/change-password`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      ...getAuthHeaders().headers,
-    },
-    body: JSON.stringify(passwordData),
-  });
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.error || "Failed to change password");
+  try {
+    const response = await axios.put(`${URL}/change-password`, passwordData, getAuthHeaders());
+    return response.data;
+  } catch (error) {
+    throw createApiError(error, "Failed to change password");
   }
-  return data;
 };
 
 export const viewAllFaculty = async () => {
