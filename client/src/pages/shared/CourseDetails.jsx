@@ -17,7 +17,7 @@ function CourseDetails() {
   const [reviewCount, setReviewCount] = useState(0);
 
   const user = JSON.parse(sessionStorage.getItem("user"));
-  const canEdit = user?.typeOfUser === "admin" || user?.typeOfUser === "faculty";
+  const isAdmin = user?.typeOfUser === "admin";
   const isFaculty = user?.typeOfUser === "faculty";
   const isStudent = user?.typeOfUser === "student";
   const [enrollment, setEnrollment] = useState(null);
@@ -52,6 +52,7 @@ function CourseDetails() {
   const facultyName = course.faculty ? `${course.faculty.firstName} ${course.faculty.lastName}` : "Not assigned";
   const assignedFacultyId = course.faculty?._id?.toString() || course.faculty?.toString();
   const isAssignedFaculty = isFaculty && assignedFacultyId === user?._id?.toString();
+  const canEdit = isAdmin || isAssignedFaculty;
   const orderedSections = [...(course.sections || [])].sort((a, b) => a.order - b.order);
 
   // Request enrollment or re-request after rejection

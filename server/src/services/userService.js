@@ -146,7 +146,6 @@ const registerFaculty = async (facultyData) => {
     phone,
     passwordHash: hashedPassword,
     typeOfUser: "faculty",
-    isActive: true,
     facultyProfile: {
       facultyId,
       department: facultyProfile.department,

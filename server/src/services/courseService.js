@@ -1,9 +1,23 @@
 const courseRepository = require("../repositories/courseRepository");
+const userRepository = require("../repositories/userRepository");
 const courseReviewRepository = require("../repositories/courseReviewRepository");
 const enrollmentRepository = require("../repositories/enrollmentRepository");
 const { getNextCourseId } = require("./idService");
 const fs = require("fs/promises");
 const path = require("path");
+const mongoose = require("mongoose");
+
+const validateAssignedFaculty = async (facultyId) => {
+  let facultyUser = null;
+  if (mongoose.isObjectIdOrHexString(facultyId)) {
+    facultyUser = await userRepository.findUserById(facultyId);
+  }
+  if (!facultyUser || facultyUser.typeOfUser !== "faculty") {
+    const error = new Error("A valid faculty member must be assigned to the course.");
+    error.statusCode = 400;
+    throw error;
+  }
+};
 
 const createCourse = async (courseData) => {
   const { courseLevel, ...courseDetails } = courseData;
@@ -11,6 +25,7 @@ const createCourse = async (courseData) => {
   if (![100, 200, 300, 400].includes(level)) {
     throw new Error("Invalid course level");
   }
+  await validateAssignedFaculty(courseDetails.faculty);
   const courseId = await getNextCourseId(level);
   const existingCourse = await courseRepository.findCourseByCourseId(courseId);
   if (existingCourse) {
@@ -224,6 +239,9 @@ const updateCourse = async (id, updatedData, user) => {
   const adminFields = ["title", "description", "category", "faculty", "durationWeeks", "status", "sections"];
   const facultyFields = ["description", "status", "sections"];
   const allowedUpdates = getAllowedUpdates(updatedData, isAdmin ? adminFields : facultyFields);
+  if (allowedUpdates.faculty !== undefined) {
+    await validateAssignedFaculty(allowedUpdates.faculty);
+  }
   if (allowedUpdates.sections !== undefined) {
     validateCourseContentResources(allowedUpdates.sections);
   }

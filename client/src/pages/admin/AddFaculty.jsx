@@ -11,7 +11,6 @@ const emptyForm = {
   department: "",
   title: "",
   specialization: "",
-  isActive: true,
 };
 
 function AddFaculty() {
@@ -34,7 +33,6 @@ function AddFaculty() {
         lastName: formData.lastName,
         email: formData.email,
         password: formData.password,
-        isActive: formData.isActive,
         phone: formData.phone,
         facultyProfile: {
           department: formData.department,
@@ -70,6 +68,8 @@ function AddFaculty() {
         <label htmlFor="password">Password:</label>
         <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required />
         <br />
+        <small>Password must be 12 to 64 characters and include an uppercase letter, lowercase letter, number, and special character.</small>
+        <br />
         <label htmlFor="phone">Phone:</label>
         <input type="text" id="phone" name="phone" maxLength={13} value={formData.phone} onChange={handleChange} />
         <br />
@@ -84,20 +84,6 @@ function AddFaculty() {
         <br />
         <label htmlFor="bio">Bio:</label>
         <textarea id="bio" name="bio" maxLength={500} value={formData.bio} onChange={handleChange} />
-        <br />
-        <label>
-          Status: {formData.isActive ? "Active" : "Inactive"}
-          <input
-            type="checkbox"
-            checked={formData.isActive}
-            onChange={(e) =>
-              setFormData((prevData) => ({
-                ...prevData,
-                isActive: e.target.checked,
-              }))
-            }
-          />
-        </label>
         <br />
         <button type="submit">Add Faculty</button>
       </form>
