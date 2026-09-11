@@ -19,16 +19,12 @@ app.use(
   }),
 );
 
-// http://localhost:3000/api/users/*
 app.use("/api/users", userRoutes);
 
-// http://localhost:3000/api/courses/*
 app.use("/api/courses", courseRoutes);
 
-// http://localhost:3000/api/enrollments/*
 app.use("/api/enrollments", enrollmentRoutes);
 
-// http://localhost:3000/api/reviews/*
 app.use("/api/reviews", courseReviewRoutes);
 
 app.use("/api/chat", chatMessageRoutes);
