@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getMyEnrollments } from "../../services/enrollmentApi.js";
 
 function StudentCourses() {
+  const user = JSON.parse(sessionStorage.getItem("user"));
   const [enrollments, setEnrollments] = useState([]);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
@@ -30,8 +31,7 @@ function StudentCourses() {
 
   return (
     <>
-      <h3>My Courses</h3>
-
+      <h3>Courses for {user?.email}</h3>
       {message && <p>{message}</p>}
 
       {enrollments.length === 0 ? (

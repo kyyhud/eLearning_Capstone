@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getFacultyById, updateFaculty } from "../../services/userApi.js";
 
 const emptyForm = {
@@ -38,6 +38,7 @@ function FacultyProfile() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [formData, setFormData] = useState(emptyForm);
+  const navigate = useNavigate();
   const user = JSON.parse(sessionStorage.getItem("user"));
   const isAdmin = user.typeOfUser === "admin";
 
@@ -178,9 +179,19 @@ function FacultyProfile() {
           </>
         )}
         {!isEditing && (
+          <>
           <button type="button" onClick={() => setIsEditing(true)}>
             Edit
           </button>
+          {(isAdmin && !isEditing) && (
+            <>
+            {" | "}
+            <button type="button" onClick={() => navigate(-1)}>
+              Back
+            </button>
+            </>
+          )}
+          </>
         )}
         {isEditing && (
           <>
