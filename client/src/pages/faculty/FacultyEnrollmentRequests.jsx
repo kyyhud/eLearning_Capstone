@@ -4,6 +4,7 @@ import { getFacultyEnrollments, updateEnrollmentStatus } from "../../services/en
 function FacultyEnrollmentRequests() {
   const [enrollments, setEnrollments] = useState([]);
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     // Load enrollment requests for courses assigned to this faculty member
@@ -11,11 +12,11 @@ function FacultyEnrollmentRequests() {
       try {
         const response = await getFacultyEnrollments();
         setEnrollments(response.data);
-        setMessage("");
+        setError("");
       } catch (error) {
         console.error(error);
         setEnrollments([]);
-        setMessage(error.response?.data?.error || error.message);
+        setError(error.response?.data?.error || error.message);
       }
     };
     fetchEnrollments();
@@ -23,6 +24,8 @@ function FacultyEnrollmentRequests() {
 
   // Approve or reject a pending enrollment request
   const handleReview = async (enrollmentId, status) => {
+    setMessage("");
+    setError("");
     try {
       await updateEnrollmentStatus(enrollmentId, status);
 
@@ -33,7 +36,7 @@ function FacultyEnrollmentRequests() {
       setMessage(status === "approved" ? "Enrollment approved." : "Enrollment rejected.");
     } catch (error) {
       console.error(error);
-      setMessage(error.response?.data?.error || error.message);
+      setError(error.response?.data?.error || error.message);
     }
   };
 
@@ -41,7 +44,8 @@ function FacultyEnrollmentRequests() {
     <>
       <h3>Enrollment Requests</h3>
 
-      {message && <p>{message}</p>}
+      {message && <p style={{ color: "green" }}>{message}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
       <table border="1">
         <thead>

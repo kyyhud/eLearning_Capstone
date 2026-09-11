@@ -22,6 +22,7 @@ function CourseDetails() {
   const isStudent = user?.typeOfUser === "student";
   const [enrollment, setEnrollment] = useState(null);
   const [enrollmentMessage, setEnrollmentMessage] = useState("");
+  const [enrollmentError, setEnrollmentError] = useState("");
 
   useEffect(() => {
     // Load the course details and its ratings/reviews
@@ -59,12 +60,13 @@ function CourseDetails() {
   const handleEnrollmentRequest = async () => {
     try {
       setEnrollmentMessage("");
+      setEnrollmentError("");
       const response = await requestEnrollment(id);
       setEnrollment(response.data);
       setEnrollmentMessage("Enrollment request submitted.");
     } catch (error) {
       console.error(error);
-      setEnrollmentMessage(error.response?.data?.error || error.response?.data?.message || error.message);
+      setEnrollmentError(error.message);
     }
   };
 
@@ -195,7 +197,8 @@ function CourseDetails() {
               </button>
             </>
           )}
-          {enrollmentMessage && <p>{enrollmentMessage}</p>}
+          {enrollmentMessage && <p className="success-message">{enrollmentMessage}</p>}
+          {enrollmentError && <p className="error-message">{enrollmentError}</p>}
         </section>
       )}
 

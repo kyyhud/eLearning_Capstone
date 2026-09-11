@@ -18,6 +18,7 @@ function Coursework() {
   const [rating, setRating] = useState("");
   const [feedback, setFeedback] = useState("");
   const [reviewMessage, setReviewMessage] = useState("");
+  const [reviewError, setReviewError] = useState("");
 
   useEffect(() => {
     // Load the full course and this student's enrollment/progress/review
@@ -98,8 +99,9 @@ function Coursework() {
   // Handle submitting a course review
   const handleSubmitReview = async (event) => {
     event.preventDefault();
+    setReviewMessage("");
+    setReviewError("");
     try {
-      setReviewMessage("");
       const response = await submitCourseReview(id, {
         rating: Number(rating),
         feedback,
@@ -110,7 +112,7 @@ function Coursework() {
       setReviewMessage("Review submitted successfully.");
     } catch (error) {
       console.error(error);
-      setReviewMessage(error.response?.data?.error || error.response?.data?.message || error.message);
+      setReviewError(error.message);
     }
   };
 
@@ -299,7 +301,8 @@ function Coursework() {
           </form>
         )}
 
-        {reviewMessage && <p>{reviewMessage}</p>}
+        {reviewMessage && <p className="success-message">{reviewMessage}</p>}
+        {reviewError && <p className="error-message">{reviewError}</p>}
       </section>
     </>
   );

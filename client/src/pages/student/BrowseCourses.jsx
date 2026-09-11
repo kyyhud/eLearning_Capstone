@@ -17,6 +17,7 @@ function BrowseCourses() {
   const [enrollments, setEnrollments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   const reloadInitialData = async () => {
     try {
@@ -24,10 +25,12 @@ function BrowseCourses() {
       setCourses(initialData.courses);
       setEnrollments(initialData.enrollments);
       setMessage("");
+      setError("");
     } catch (error) {
       setCourses([]);
       setEnrollments([]);
-      setMessage(error.message);
+      setMessage("");
+      setError(error.message);
     }
   };
 
@@ -40,12 +43,14 @@ function BrowseCourses() {
           setCourses(initialData.courses);
           setEnrollments(initialData.enrollments);
           setMessage("");
+          setError("");
         }
       } catch (error) {
         if (!cancelled) {
           setCourses([]);
           setEnrollments([]);
-          setMessage(error.message);
+          setMessage("");
+          setError(error.message);
         }
       }
     };
@@ -65,10 +70,12 @@ function BrowseCourses() {
       const response = await getCourses({ search: searchTerm });
       setCourses(response.data);
       setMessage(response.data.length === 0 ? "No courses found." : "");
+      setError("");
     } catch (error) {
       console.error(error);
       setCourses([]);
-      setMessage(error.response?.data?.error || error.message);
+      setMessage("");
+      setError(error.message);
     }
   };
 
@@ -84,6 +91,8 @@ function BrowseCourses() {
 
   // Request enrollment or re-request after rejection
   const handleEnrollmentRequest = async (id) => {
+    setMessage("");
+    setError("");
     try {
       const response = await requestEnrollment(id);
       const updatedEnrollment = response.data;
@@ -114,7 +123,8 @@ function BrowseCourses() {
       setMessage("Enrollment request submitted.");
     } catch (error) {
       console.error(error);
-      setMessage(error.response?.data?.error || error.message);
+      setMessage("");
+      setError(error.message);
     }
   };
 
@@ -129,7 +139,8 @@ function BrowseCourses() {
         Clear
       </button>
       <br />
-      {message && <p style={{ color: "green" }}>{message}</p>}
+      {message && <p className="status-message">{message}</p>}
+      {error && <p className="error-message">{error}</p>}
       <br />
       <table border="1">
         <thead>

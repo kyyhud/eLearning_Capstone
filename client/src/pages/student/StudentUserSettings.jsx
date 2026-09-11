@@ -43,6 +43,8 @@ function StudentUserSettings() {
   useEffect(() => {
     let cancelled = false;
     const loadStudent = async () => {
+      setMessage("");
+      setError("");
       try {
         const studentData = await getStudentSettingsData(id);
         if (!cancelled) {
@@ -54,7 +56,7 @@ function StudentUserSettings() {
         }
       } catch (error) {
         if (!cancelled) {
-          setMessage(error.message);
+          setError(error.message);
         }
       }
     };
@@ -107,6 +109,7 @@ function StudentUserSettings() {
   const handleCancelEdit = async () => {
     setIsEditing(false);
     setMessage("");
+    setError("");
     try {
       const studentData = await getStudentSettingsData(id);
       setFormData((previousData) => ({
@@ -114,7 +117,7 @@ function StudentUserSettings() {
         ...studentData,
       }));
     } catch (error) {
-      setMessage(error.message);
+      setError(error.message);
     }
   };
 

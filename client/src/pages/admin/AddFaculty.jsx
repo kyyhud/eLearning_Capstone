@@ -15,6 +15,7 @@ const emptyForm = {
 
 function AddFaculty() {
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState(emptyForm);
 
   const handleChange = (e) => {
@@ -27,6 +28,8 @@ function AddFaculty() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
+    setError("");
     try {
       const facultyData = {
         firstName: formData.firstName,
@@ -46,14 +49,15 @@ function AddFaculty() {
       setFormData(emptyForm);
     } catch (error) {
       console.error(error);
-      setMessage(error.message);
+      setError(error.message);
     }
   };
 
   return (
     <>
       <h3>Faculty Management</h3>
-      {message && <p style={{ color: "red" }}>{message}</p>}
+      {message && <p style={{ color: "green" }}>{message}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <h4>Add Faculty Member</h4>
       <form onSubmit={handleSubmit}>
         <label htmlFor="firstName">First Name:</label>
