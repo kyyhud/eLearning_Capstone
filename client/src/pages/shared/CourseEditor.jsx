@@ -6,6 +6,7 @@ import { viewAllFaculty } from "../../services/userApi.js";
 const emptyForm = {
   title: "",
   description: "",
+  category: "",
   durationWeeks: "",
   faculty: "",
   status: "draft",
@@ -37,6 +38,7 @@ function CourseEditor() {
           status: course.status || "draft",
           title: course.title || "",
           description: course.description || "",
+          category: course.category || "",
           durationWeeks: course.durationWeeks ?? "",
           faculty: course.faculty?._id || "",
           sections: course.sections || [],
@@ -309,6 +311,10 @@ function CourseEditor() {
           <div>
             <label htmlFor="title">Course Title</label>
             <input type="text" id="title" name="title" value={formData.title} onChange={handleChange} disabled={!isAdmin} required />
+          </div>
+          <div>
+            <label htmlFor="category">Category</label>
+            <input type="text" id="category" name="category" value={formData.category} onChange={handleChange} disabled={!isAdmin} required />
           </div>
           <div>
             <label htmlFor="description">Description</label>
