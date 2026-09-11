@@ -130,7 +130,7 @@ function StudentDashboard() {
               </table>
             )}
           </section>
-
+          <br />
           <p>
             <Link to="/student/courses">Browse Available Courses</Link>
           </p>
