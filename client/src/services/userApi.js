@@ -58,8 +58,12 @@ export const changePassword = async (passwordData) => {
 };
 
 export const viewAllFaculty = async () => {
-  let result = await axios.get(`${URL}/faculty`, getAuthHeaders());
-  return result.data;
+  try {
+    const result = await axios.get(`${URL}/faculty`, getAuthHeaders());
+    return result.data;
+  } catch (error) {
+    throw createApiError(error);
+  }
 };
 
 export const getFacultyById = async (id) => {
@@ -90,8 +94,12 @@ export const deleteUser = async (id) => {
 };
 
 export const getAllStudents = async () => {
-  let result = await axios.get(`${URL}/students`, getAuthHeaders());
-  return result.data;
+  try {
+    const result = await axios.get(`${URL}/students`, getAuthHeaders());
+    return result.data;
+  } catch (error) {
+    throw createApiError(error);
+  }
 };
 
 export const getStudentById = async (id) => {
