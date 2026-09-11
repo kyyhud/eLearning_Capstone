@@ -7,6 +7,7 @@ function FacultyList() {
   const location = useLocation();
   const [faculty, setFaculty] = useState([]);
   const [message, setMessage] = useState(location.state?.message || "");
+  const [facultyToDelete, setFacultyToDelete] = useState(null);
 
   useEffect(() => {
     const fetchAllFaculty = async () => {
@@ -14,7 +15,6 @@ function FacultyList() {
         const response = await viewAllFaculty();
         setFaculty(response.data);
       } catch (error) {
-        console.error(error);
         setMessage(error.message);
       }
     };
@@ -27,14 +27,14 @@ function FacultyList() {
     }
   }, [location.pathname, location.state?.message, navigate]);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
+    if (!facultyToDelete) return;
+    setMessage("");
     try {
-      const confirmDelete = window.confirm("Are you sure you want to delete this faculty member?");
-      if (!confirmDelete) return;
-      await deleteUser(id);
-      setFaculty((currentFaculty) => currentFaculty.filter((user) => user._id !== id));
+      await deleteUser(facultyToDelete._id);
+      setFaculty((currentFaculty) => currentFaculty.filter((user) => user._id !== facultyToDelete._id));
+      setFacultyToDelete(null);
     } catch (error) {
-      console.error(error);
       setMessage(error.message);
     }
   };
@@ -43,6 +43,20 @@ function FacultyList() {
     <>
       <h3>Faculty Management</h3>
       {message && <p style={{ color: "red" }}>{message}</p>}
+      {facultyToDelete && (
+        <div className="confirmation-dialog" role="dialog" aria-labelledby="delete-faculty-heading">
+          <h4 id="delete-faculty-heading">Delete faculty member?</h4>
+          <p>
+            Are you sure you want to delete {facultyToDelete.firstName} {facultyToDelete.lastName}? This action cannot be undone.
+          </p>
+          <button type="button" onClick={handleDelete}>
+            Delete
+          </button>
+          <button type="button" onClick={() => setFacultyToDelete(null)}>
+            Cancel
+          </button>
+        </div>
+      )}
       <h4>Faculty Members</h4>
       <table border="1">
         <thead>
@@ -72,7 +86,7 @@ function FacultyList() {
                 <td>{user.facultyProfile?.department || "-"}</td>
                 <td>{user.facultyProfile?.title || "-"}</td>
                 <td>
-                  <button onClick={() => navigate(`/faculty/${user._id}`)}>View/Edit</button>|<button onClick={() => handleDelete(user._id)}>Delete</button>
+                  <button onClick={() => navigate(`/faculty/${user._id}`)}>View/Edit</button>|<button onClick={() => setFacultyToDelete(user)}>Delete</button>
                 </td>
               </tr>
             ))}

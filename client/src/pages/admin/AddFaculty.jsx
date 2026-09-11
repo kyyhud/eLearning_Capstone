@@ -48,7 +48,6 @@ function AddFaculty() {
       setMessage("Faculty member added successfully.");
       setFormData(emptyForm);
     } catch (error) {
-      console.error(error);
       setError(error.message);
     }
   };

@@ -113,7 +113,6 @@ function FacultyProfile() {
       setMessage("Faculty member updated successfully.");
       setIsEditing(false);
     } catch (error) {
-      console.error(error);
       setError(error.message);
     }
   };

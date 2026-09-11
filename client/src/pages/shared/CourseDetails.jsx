@@ -40,7 +40,6 @@ function CourseDetails() {
           setEnrollment(currentEnrollment || null);
         }
       } catch (error) {
-        console.error(error);
         setError(error.response?.data?.error || error.response?.data?.message || error.message);
       }
     };
@@ -65,7 +64,6 @@ function CourseDetails() {
       setEnrollment(response.data);
       setEnrollmentMessage("Enrollment request submitted.");
     } catch (error) {
-      console.error(error);
       setEnrollmentError(error.message);
     }
   };

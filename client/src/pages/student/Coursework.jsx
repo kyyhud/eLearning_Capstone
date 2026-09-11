@@ -35,7 +35,6 @@ function Coursework() {
         const existingReview = reviewData.reviews.find((courseReview) => courseReview.enrollment?.toString() === enrollmentData._id.toString());
         setReview(existingReview || null);
       } catch (error) {
-        console.error(error);
         setCourse(null);
         setEnrollment(null);
         setReview(null);
@@ -91,7 +90,6 @@ function Coursework() {
       const response = await markContentComplete(id, contentId);
       setEnrollment(response.data);
     } catch (error) {
-      console.error(error);
       setActionError(error.response?.data?.error || error.response?.data?.message || error.message);
     }
   };
@@ -111,7 +109,6 @@ function Coursework() {
       setFeedback("");
       setReviewMessage("Review submitted successfully.");
     } catch (error) {
-      console.error(error);
       setReviewError(error.message);
     }
   };

@@ -16,7 +16,6 @@ function StudentCourses() {
         setEnrollments(approvedEnrollments);
         setMessage("");
       } catch (error) {
-        console.error(error);
         setEnrollments([]);
         setMessage(error.response?.data?.error || error.message);
       }

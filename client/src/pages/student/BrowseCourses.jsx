@@ -72,7 +72,6 @@ function BrowseCourses() {
       setMessage(response.data.length === 0 ? "No courses found." : "");
       setError("");
     } catch (error) {
-      console.error(error);
       setCourses([]);
       setMessage("");
       setError(error.message);
@@ -122,7 +121,6 @@ function BrowseCourses() {
       });
       setMessage("Enrollment request submitted.");
     } catch (error) {
-      console.error(error);
       setMessage("");
       setError(error.message);
     }

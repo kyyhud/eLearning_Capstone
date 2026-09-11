@@ -96,8 +96,8 @@ function CourseChat() {
       try {
         const response = await getCourseMessages(id);
         setMessages(response.data);
-      } catch (error) {
-        console.error("Unable to refresh course discussion:", error);
+      } catch {
+        // Keep the current messages and retry during the next refresh.
       } finally {
         pollingRef.current = false;
       }

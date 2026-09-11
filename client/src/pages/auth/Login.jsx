@@ -30,7 +30,6 @@ function Login() {
         setMsg("");
       }
     } catch (error) {
-      console.error("Login error:", error);
       setMsg(error.response?.data?.error || "Invalid credentials. Please try again.");
     }
   };
