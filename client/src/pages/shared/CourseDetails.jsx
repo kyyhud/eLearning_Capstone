@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { getCourseById } from "../../services/courseApi.js";
+import { getCourseById, getCourseContentFile } from "../../services/courseApi.js";
 import { getMyEnrollments, requestEnrollment } from "../../services/enrollmentApi.js";
 import { getCourseReviews } from "../../services/reviewApi.js";
-
-const SERVER_URL = "http://localhost:3000";
 
 function CourseDetails() {
   const { id } = useParams();
@@ -69,6 +67,28 @@ function CourseDetails() {
     }
   };
 
+  // Handle opening course content file in a new tab
+  const handleOpenCourseFile = async (contentItem) => {
+    const newTab = window.open("about:blank", "_blank");
+    if (newTab) {
+      newTab.opener = null;
+    }
+    try {
+      setError("");
+      const fileBlob = await getCourseContentFile(id, contentItem._id);
+      const fileUrl = URL.createObjectURL(fileBlob);
+      if (newTab) {
+        newTab.location.href = fileUrl;
+      }
+      window.setTimeout(() => {
+        URL.revokeObjectURL(fileUrl);
+      }, 60000);
+    } catch (error) {
+      newTab?.close();
+      setError(error.message);
+    }
+  };
+
   // Helper functions to get resource URL and label based on content type
   const getResourceUrl = (contentItem) => {
     if (!contentItem.resourceUrl) {
@@ -78,7 +98,7 @@ function CourseDetails() {
       const url = contentItem.resourceUrl.trim();
       return /^https?:\/\//i.test(url) ? url : `http://${url}`;
     }
-    return `${SERVER_URL}${contentItem.resourceUrl}`;
+    return "";
   };
   const getResourceLabel = (type) => {
     switch (type) {
@@ -217,9 +237,15 @@ function CourseDetails() {
                             </p>
                             {contentItem.resourceUrl && (
                               <p>
-                                <a href={getResourceUrl(contentItem)} target="_blank" rel="noreferrer">
-                                  {getResourceLabel(contentItem.type)}
-                                </a>
+                                {contentItem.type === "link" ? (
+                                  <a href={getResourceUrl(contentItem)} target="_blank" rel="noreferrer">
+                                    {getResourceLabel(contentItem.type)}
+                                  </a>
+                                ) : (
+                                  <button type="button" onClick={() => handleOpenCourseFile(contentItem)}>
+                                    {getResourceLabel(contentItem.type)}
+                                  </button>
+                                )}
                               </p>
                             )}
                             {contentItem.fileName && (

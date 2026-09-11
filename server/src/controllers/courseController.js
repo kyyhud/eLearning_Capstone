@@ -24,7 +24,7 @@ const getCourses = async (req, res) => {
       search: req.query.search,
       category: req.query.category,
     };
-    const courses = await courseService.getCourses(filters);
+    const courses = await courseService.getCourses(filters, req.user);
     res.status(200).json({ success: true, data: courses });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -37,6 +37,19 @@ const getCourseById = async (req, res) => {
     res.status(200).json({ success: true, data: course });
   } catch (error) {
     res.status(404).json({ success: false, error: error.message });
+  }
+};
+
+const getCourseContentFile = async (req, res) => {
+  try {
+    const file = await courseService.getCourseContentFile(req.params.id, req.params.contentId, req.user);
+    res.type(file.mimeType || "application/octet-stream");
+    res.sendFile(file.filePath);
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      error: error.message,
+    });
   }
 };
 
@@ -74,6 +87,7 @@ module.exports = {
   createCourse,
   getCourses,
   getCourseById,
+  getCourseContentFile,
   getMyCourses,
   updateCourse,
   uploadCourseContent,

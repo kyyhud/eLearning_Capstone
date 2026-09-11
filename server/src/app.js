@@ -9,7 +9,6 @@ const enrollmentRoutes = require("./routes/enrollmentRoutes");
 const courseReviewRoutes = require("./routes/courseReviewRoutes");
 const chatMessageRoutes = require("./routes/chatMessageRoutes");
 const app = express();
-const path = require("path");
 
 connectDB();
 
@@ -38,5 +37,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));

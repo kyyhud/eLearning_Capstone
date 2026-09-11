@@ -4,14 +4,9 @@ import { getCourses } from "../../services/courseApi.js";
 import { getMyEnrollments, requestEnrollment } from "../../services/enrollmentApi.js";
 
 const getInitialCourseData = async () => {
-  const [courseResponse, enrollmentsResponse] = await Promise.all([
-    getCourses(),
-    getMyEnrollments(),
-  ]);
+  const [courseResponse, enrollmentsResponse] = await Promise.all([getCourses(), getMyEnrollments()]);
   return {
-    courses: courseResponse.data.filter(
-      (course) => course.status === "published",
-    ),
+    courses: courseResponse.data,
     enrollments: enrollmentsResponse.data,
   };
 };
@@ -23,44 +18,44 @@ function BrowseCourses() {
   const [searchTerm, setSearchTerm] = useState("");
   const [message, setMessage] = useState("");
 
-const reloadInitialData = async () => {
-  try {
-    const initialData = await getInitialCourseData();
-    setCourses(initialData.courses);
-    setEnrollments(initialData.enrollments);
-    setMessage("");
-  } catch (error) {
-    setCourses([]);
-    setEnrollments([]);
-    setMessage(error.message);
-  }
-};
-
-useEffect(() => {
-  let cancelled = false;
-  const loadInitialData = async () => {
+  const reloadInitialData = async () => {
     try {
       const initialData = await getInitialCourseData();
-      if (!cancelled) {
-        setCourses(initialData.courses);
-        setEnrollments(initialData.enrollments);
-        setMessage("");
-      }
+      setCourses(initialData.courses);
+      setEnrollments(initialData.enrollments);
+      setMessage("");
     } catch (error) {
-      if (!cancelled) {
-        setCourses([]);
-        setEnrollments([]);
-        setMessage(error.message);
-      }
+      setCourses([]);
+      setEnrollments([]);
+      setMessage(error.message);
     }
   };
-  loadInitialData();
-  return () => {
-    cancelled = true;
-  };
-}, []);
 
-  // Search courses while still hiding draft/archived courses
+  useEffect(() => {
+    let cancelled = false;
+    const loadInitialData = async () => {
+      try {
+        const initialData = await getInitialCourseData();
+        if (!cancelled) {
+          setCourses(initialData.courses);
+          setEnrollments(initialData.enrollments);
+          setMessage("");
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setCourses([]);
+          setEnrollments([]);
+          setMessage(error.message);
+        }
+      }
+    };
+    loadInitialData();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Search the courses returned by the authorized API
   const searchCourses = async () => {
     if (!searchTerm.trim()) {
       reloadInitialData();
@@ -68,9 +63,8 @@ useEffect(() => {
     }
     try {
       const response = await getCourses({ search: searchTerm });
-      const publishedCourses = response.data.filter((course) => course.status === "published");
-      setCourses(publishedCourses);
-      setMessage(publishedCourses.length === 0 ? "No courses found." : "");
+      setCourses(response.data);
+      setMessage(response.data.length === 0 ? "No courses found." : "");
     } catch (error) {
       console.error(error);
       setCourses([]);

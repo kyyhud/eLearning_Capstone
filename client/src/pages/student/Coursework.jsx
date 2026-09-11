@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getStudentCoursework, markContentComplete } from "../../services/enrollmentApi.js";
 import { getCourseReviews, submitCourseReview } from "../../services/reviewApi.js";
-
-const SERVER_URL = "http://localhost:3000";
+import { getCourseContentFile } from "../../services/courseApi.js";
 
 function Coursework() {
   const { id } = useParams();
@@ -114,6 +113,28 @@ function Coursework() {
     }
   };
 
+  // Handle opening course content file in a new tab
+  const handleOpenCourseFile = async (contentItem) => {
+    const newTab = window.open("about:blank", "_blank");
+    if (newTab) {
+      newTab.opener = null;
+    }
+    try {
+      setMessage("");
+      const fileBlob = await getCourseContentFile(id, contentItem._id);
+      const fileUrl = URL.createObjectURL(fileBlob);
+      if (newTab) {
+        newTab.location.href = fileUrl;
+      }
+      window.setTimeout(() => {
+        URL.revokeObjectURL(fileUrl);
+      }, 60000);
+    } catch (error) {
+      newTab?.close();
+      setMessage(error.message);
+    }
+  };
+
   // Helper functions to get resource URL and label based on content type
   const getResourceUrl = (contentItem) => {
     if (!contentItem.resourceUrl) {
@@ -123,7 +144,7 @@ function Coursework() {
       const url = contentItem.resourceUrl.trim();
       return /^https?:\/\//i.test(url) ? url : `http://${url}`;
     }
-    return `${SERVER_URL}${contentItem.resourceUrl}`;
+    return "";
   };
   const getResourceLabel = (type) => {
     switch (type) {
@@ -205,12 +226,14 @@ function Coursework() {
                         <td>{content.type}</td>
                         <td>{content.isRequired ? "Required" : "Optional"}</td>
                         <td>
-                          {content.resourceUrl ? (
+                          {content.type === "link" ? (
                             <a href={getResourceUrl(content)} target="_blank" rel="noreferrer">
                               {getResourceLabel(content.type)}
                             </a>
                           ) : (
-                            "N/A"
+                            <button type="button" onClick={() => handleOpenCourseFile(content)}>
+                              {getResourceLabel(content.type)}
+                            </button>
                           )}
                         </td>
                         <td>

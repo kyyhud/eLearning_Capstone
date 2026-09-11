@@ -1,5 +1,6 @@
 const courseRepository = require("../repositories/courseRepository");
 const courseReviewRepository = require("../repositories/courseReviewRepository");
+const enrollmentRepository = require("../repositories/enrollmentRepository");
 const { getNextCourseId } = require("./idService");
 const fs = require("fs/promises");
 const path = require("path");
@@ -44,14 +45,18 @@ const addRatingSummaries = async (courses) => {
   }));
 };
 
-const getCourses = async (filters) => {
-  const courses = await courseRepository.findCourses(filters);
+const getCourses = async (filters, user) => {
+  const authorizedFilters = { ...filters };
+  if (user.typeOfUser === "student") {
+    authorizedFilters.status = "published";
+  }
+  const courses = await courseRepository.findCourses(authorizedFilters);
   return await addRatingSummaries(courses);
 };
 
 const getCourseById = async (id, user) => {
   const course = await courseRepository.findCourseById(id);
-  if (!course) {
+  if (!course || (user.typeOfUser === "student" && course.status !== "published")) {
     throw new Error("Course not found");
   }
   if (user.typeOfUser === "student") {
@@ -60,6 +65,63 @@ const getCourseById = async (id, user) => {
     return courseData;
   }
   return course;
+};
+
+const getCourseContentFile = async (courseId, contentId, user) => {
+  const course = await courseRepository.findCourseById(courseId);
+  if (!course) {
+    const error = new Error("Course not found");
+    error.statusCode = 404;
+    throw error;
+  }
+  const contentItem = course.sections.flatMap((section) => section.content || []).find((content) => content._id.toString() === contentId);
+  if (!contentItem) {
+    const error = new Error("Course content not found");
+    error.statusCode = 404;
+    throw error;
+  }
+  const isAdmin = user.typeOfUser === "admin";
+  const isFaculty = user.typeOfUser === "faculty";
+  const isStudent = user.typeOfUser === "student";
+  if (isFaculty) {
+    const assignedFacultyId = course.faculty?._id?.toString() || course.faculty?.toString();
+    if (assignedFacultyId !== user.userId) {
+      const error = new Error("You are not assigned to this course");
+      error.statusCode = 403;
+      throw error;
+    }
+  }
+  if (isStudent) {
+    const enrollment = await enrollmentRepository.findEnrollmentByStudentAndCourse(user.userId, courseId);
+    if (!enrollment || enrollment.status !== "approved") {
+      const error = new Error("Approved enrollment is required to access this course content");
+      error.statusCode = 403;
+      throw error;
+    }
+  }
+  if (!isAdmin && !isFaculty && !isStudent) {
+    const error = new Error("Access denied");
+    error.statusCode = 403;
+    throw error;
+  }
+  if (!contentItem.resourceUrl?.startsWith("/uploads/course-content/")) {
+    const error = new Error("This content is not an uploaded course file");
+    error.statusCode = 400;
+    throw error;
+  }
+  const storedFileName = path.basename(contentItem.resourceUrl);
+  const filePath = path.join(__dirname, "../../uploads/course-content", storedFileName);
+  try {
+    await fs.access(filePath);
+  } catch {
+    const error = new Error("Course file not found");
+    error.statusCode = 404;
+    throw error;
+  }
+  return {
+    filePath,
+    mimeType: contentItem.mimeType,
+  };
 };
 
 const getCoursesByFacultyId = async (userId) => {
@@ -153,6 +215,7 @@ module.exports = {
   createCourse,
   getCourses,
   getCourseById,
+  getCourseContentFile,
   getCoursesByFacultyId,
   updateCourse,
 };

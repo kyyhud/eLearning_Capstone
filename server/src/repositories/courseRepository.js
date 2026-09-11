@@ -12,10 +12,13 @@ const findCourseByCourseId = async (courseId) => {
   return await Course.findOne({ courseId });
 };
 
-const findCourses = async ({ search, category }) => {
+const findCourses = async ({ search, category, status }) => {
   const filter = {};
   if (category) {
     filter.category = category;
+  }
+  if (status) {
+    filter.status = status;
   }
   if (search) {
     const numericSearch = Number(search);
