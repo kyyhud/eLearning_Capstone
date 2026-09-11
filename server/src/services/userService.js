@@ -13,6 +13,16 @@ const verifySelfOrAdmin = (targetUserId, expectedRole, currentUser) => {
   }
 };
 
+const getAllowedUpdates = (updatedData, allowedFields) => {
+  const allowedUpdates = {};
+  allowedFields.forEach((field) => {
+    if (updatedData[field] !== undefined) {
+      allowedUpdates[field] = updatedData[field];
+    }
+  });
+  return allowedUpdates;
+};
+
 const studentSignUp = async (firstName, lastName, email, password, typeOfUser) => {
   passwordUtils.validatePassword(password);
   const existingUser = await userRepository.findUserByEmail(email);
@@ -113,10 +123,8 @@ const updateFaculty = async (id, updatedData, currentUser) => {
     facultyUser.preferences.chatAutoRefresh = updatedData.preferences.chatAutoRefresh;
   }
   if (updatedData.facultyProfile) {
-    facultyUser.facultyProfile = {
-      ...facultyUser.facultyProfile,
-      ...updatedData.facultyProfile,
-    };
+    const allowedFacultyProfileUpdates = getAllowedUpdates(updatedData.facultyProfile, ["department", "title", "specialization", "bio"]);
+    Object.assign(facultyUser.facultyProfile, allowedFacultyProfileUpdates);
   }
   await userRepository.saveUser(facultyUser);
   return facultyUser;
@@ -201,10 +209,15 @@ const updateStudent = async (id, updatedData, currentUser) => {
     student.preferences.chatAutoRefresh = updatedData.preferences.chatAutoRefresh;
   }
   if (updatedData.studentProfile) {
-    student.studentProfile = {
-      ...student.studentProfile,
-      ...updatedData.studentProfile,
-    };
+    const allowedStudentProfileUpdates = getAllowedUpdates(updatedData.studentProfile, [
+      "bio",
+      "fieldOfStudy",
+      "careerGoal",
+      "skills",
+      "certifications",
+      "emergencyContact",
+    ]);
+    Object.assign(student.studentProfile, allowedStudentProfileUpdates);
   }
   await userRepository.saveUser(student);
   return student;
