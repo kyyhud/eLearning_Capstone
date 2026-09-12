@@ -37,7 +37,7 @@ import "./App.css";
 function App() {
   return (
     <>
-      <h2>LearnEase Pro - Capstone Project</h2>
+      <h2 className="app-header">LearnEase Pro - Capstone Project</h2>
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />

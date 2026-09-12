@@ -55,7 +55,7 @@ function AuthenticatedLayout({ allowedRoles }) {
   return (
     <>
       <Navbar />
-      <main>
+      <main className="page-container">
         <Outlet />
       </main>
     </>
