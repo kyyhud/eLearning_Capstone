@@ -22,8 +22,8 @@ function CourseList() {
   return (
     <div>
       <h3>Course List</h3>
-      {message && <p>{message}</p>}
-      <table border="1">
+      {message && <p className="error-message">{message}</p>}
+      <table className="data-table" border="1">
         <thead>
           <tr>
             <th>Course ID</th>
@@ -57,7 +57,9 @@ function CourseList() {
                       )} ${course.rating.average.toFixed(1)} (${course.rating.count})`
                     : "No ratings yet"}
                 </td>
-                <td>{course.status}</td>
+                <td>
+                  <span className={`status-badge status-${course.status}`}>{course.status}</span>
+                </td>
                 <td>
                   <button onClick={() => navigate(`/courses/${course._id}`)}>View/Edit</button>
                 </td>

@@ -25,9 +25,9 @@ function FacultyCourseList() {
   return (
     <>
       <h3>Course Management, {user?.email}</h3>
-      {message && <p style={{ color: "red" }}>{message}</p>}
+      {message && <p className="error-message">{message}</p>}
       <br />
-      <table border="1">
+      <table className="data-table" border="1">
         <thead>
           <tr>
             <th>Course ID</th>
@@ -61,7 +61,9 @@ function FacultyCourseList() {
                       )} ${course.rating.average.toFixed(1)} (${course.rating.count})`
                     : "No ratings yet"}
                 </td>
-                <td>{course.status}</td>
+                <td>
+                  <span className={`status-badge status-${course.status}`}>{course.status}</span>
+                </td>
                 <td>
                   <button onClick={() => navigate(`/courses/${course._id}`)}>View/Edit</button>
                 </td>

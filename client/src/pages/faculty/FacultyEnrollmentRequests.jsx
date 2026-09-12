@@ -42,10 +42,10 @@ function FacultyEnrollmentRequests() {
   return (
     <>
       <h3>Enrollment Requests for {user?.email}</h3>
-      {message && <p style={{ color: "green" }}>{message}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {message && <p className="success-message">{message}</p>}
+      {error && <p className="error-message">{error}</p>}
 
-      <table border="1">
+      <table className="data-table" border="1">
         <thead>
           <tr>
             <th>Course ID</th>
@@ -62,7 +62,9 @@ function FacultyEnrollmentRequests() {
         <tbody>
           {enrollments.length === 0 ? (
             <tr>
-              <td colSpan="8">No enrollment requests found.</td>
+              <td className="empty-state" colSpan="8">
+                No enrollment requests found.
+              </td>
             </tr>
           ) : (
             [...enrollments]
@@ -82,18 +84,20 @@ function FacultyEnrollmentRequests() {
                   <td>{enrollment.student ? `${enrollment.student.firstName} ${enrollment.student.lastName}` : "Unknown student"}</td>
                   <td>{enrollment.student?.email}</td>
                   <td>{enrollment.requestedAt ? new Date(enrollment.requestedAt).toLocaleDateString() : ""}</td>
-                  <td>{enrollment.status}</td>
+                  <td>
+                    <span className={`status-badge status-${enrollment.status}`}>{enrollment.status}</span>
+                  </td>
                   <td>
                     {enrollment.status === "pending" ? (
-                      <>
+                      <div className="table-actions">
                         <button type="button" onClick={() => handleReview(enrollment._id, "approved")}>
                           Approve
                         </button>
 
-                        <button type="button" onClick={() => handleReview(enrollment._id, "rejected")}>
+                        <button className="button-danger" type="button" onClick={() => handleReview(enrollment._id, "rejected")}>
                           Reject
                         </button>
-                      </>
+                      </div>
                     ) : (
                       "-"
                     )}

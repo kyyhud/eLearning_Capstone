@@ -1,3 +1,5 @@
+/* Application shell and authenticated navigation */
+
 #root {
   min-height: 100vh;
 }
@@ -43,6 +45,8 @@
   background: var(--color-error-background);
   color: var(--color-error);
 }
+
+/* Page layout and shared content sections */
 
 .page-container,
 #root > form,
@@ -105,6 +109,8 @@ section {
   border-radius: var(--border-radius);
   background: var(--color-surface-muted);
 }
+
+/* Forms, profiles, and account settings */
 
 form {
   display: grid;
@@ -203,6 +209,110 @@ form section > div {
   background: var(--color-surface-muted);
 }
 
+/* Dashboards, searches, statuses, and empty states */
+
+.page-subtitle {
+  margin-top: -0.5rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.dashboard-grid > section {
+  margin-top: 0;
+}
+
+.dashboard-grid > section > a {
+  display: inline-block;
+  margin: 0.2rem 0.8rem 0.2rem 0;
+}
+
+.dashboard-grid br {
+  display: none;
+}
+
+.dashboard-grid table {
+  margin: 0.75rem 0;
+}
+
+.search-controls {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1fr) auto auto;
+  gap: 0.6rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.table-actions,
+.dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.dialog-actions {
+  margin-top: 1rem;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.status-active,
+.status-approved,
+.status-published {
+  border-color: #9dceb1;
+  background: var(--color-success-background);
+  color: var(--color-success);
+}
+
+.status-pending,
+.status-draft {
+  border-color: #dfc27a;
+  background: var(--color-warning-background);
+  color: var(--color-warning);
+}
+
+.status-inactive,
+.status-archived {
+  border-color: #b8c1cc;
+  background: #edf1f5;
+  color: #52606f;
+}
+
+.status-rejected {
+  border-color: #e2aaaa;
+  background: var(--color-error-background);
+  color: var(--color-error);
+}
+
+.empty-state {
+  padding: 0.85rem;
+  border: 1px dashed #b9c5d3;
+  border-radius: var(--border-radius);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+/* Form controls */
+
 label {
   color: var(--color-heading);
   font-size: 0.92rem;
@@ -258,6 +368,8 @@ textarea:disabled {
   opacity: 1;
 }
 
+/* Buttons and action variants */
+
 button {
   width: fit-content;
   min-height: 2.5rem;
@@ -310,6 +422,8 @@ button:disabled {
   cursor: not-allowed;
 }
 
+/* Tables and tabular actions */
+
 table {
   width: 100%;
   margin: 1rem 0;
@@ -318,6 +432,10 @@ table {
   background: var(--color-surface);
   font-size: 0.92rem;
   text-align: left;
+}
+
+.data-table {
+  min-width: 46rem;
 }
 
 th,
@@ -348,6 +466,8 @@ td button {
   padding: 0.35rem 0.65rem;
   font-size: 0.86rem;
 }
+
+/* Feedback messages and confirmation dialogs */
 
 .success-message,
 .error-message,
@@ -389,6 +509,8 @@ td button {
   color: var(--color-error);
 }
 
+/* Responsive adjustments */
+
 @media (max-width: 700px) {
   .app-header {
     text-align: center;
@@ -428,5 +550,13 @@ td button {
 
   button {
     max-width: 100%;
+  }
+
+  .search-controls {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .search-controls input {
+    grid-column: 1 / -1;
   }
 }

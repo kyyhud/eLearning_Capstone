@@ -45,13 +45,13 @@ function FacultyDashboard() {
   return (
     <>
       <h3>Faculty Dashboard</h3>
-      <h4>Welcome, {user?.email}</h4>
+      <h4 className="page-subtitle">Welcome, {user?.email}</h4>
 
       {loading && <p>Loading dashboard...</p>}
       {error && <p className="error-message">{error}</p>}
 
       {!loading && !error && (
-        <div>
+        <div className="dashboard-grid">
           <section>
             <h4>Course Summary</h4>
             <table align="center" border="1">
@@ -99,7 +99,9 @@ function FacultyDashboard() {
                       <td>
                         <Link to={`/courses/${course._id}`}>{course.title}</Link>
                       </td>
-                      <td>{course.status === "published" ? "Published" : "Draft"}</td>
+                      <td>
+                        <span className={`status-badge status-${course.status}`}>{course.status === "published" ? "Published" : "Draft"}</span>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

@@ -32,12 +32,12 @@ function StudentCourses() {
   return (
     <>
       <h3>Courses for {user?.email}</h3>
-      {message && <p>{message}</p>}
+      {message && <p className="error-message">{message}</p>}
 
       {enrollments.length === 0 ? (
-        <p>You are not currently enrolled in any courses.</p>
+        <p className="empty-state">You are not currently enrolled in any courses.</p>
       ) : (
-        <table border="1">
+        <table className="data-table" border="1">
           <thead>
             <tr>
               <th>Course ID</th>

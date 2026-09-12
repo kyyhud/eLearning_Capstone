@@ -41,13 +41,13 @@ function StudentDashboard() {
   return (
     <>
       <h3>Student Dashboard</h3>
-      <h4>Welcome, {user?.email}</h4>
+      <h4 className="page-subtitle">Welcome, {user?.email}</h4>
 
       {loading && <p>Loading dashboard...</p>}
       {error && <p className="error-message">{error}</p>}
 
       {!loading && !error && (
-        <div>
+        <div className="dashboard-grid">
           <section>
             <h4>Course Summary</h4>
             <table align="center" border="1">
@@ -78,7 +78,7 @@ function StudentDashboard() {
           <section>
             <h4>Courses In Progress</h4>
             {inProgressCourses.length === 0 ? (
-              <p>You do not have any courses in progress.</p>
+              <p className="empty-state">You do not have any courses in progress.</p>
             ) : (
               <table align="center" border="1">
                 <thead>
@@ -106,7 +106,7 @@ function StudentDashboard() {
           <section>
             <h4>Completed Courses</h4>
             {completedCourses.length === 0 ? (
-              <p>You have not completed any courses yet.</p>
+              <p className="empty-state">You have not completed any courses yet.</p>
             ) : (
               <table align="center" border="1">
                 <thead>

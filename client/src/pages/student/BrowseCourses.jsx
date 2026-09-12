@@ -129,18 +129,20 @@ function BrowseCourses() {
   return (
     <>
       <h3>Browse Courses</h3>
-      <input type="text" placeholder="Search by Course ID or title" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-      <button type="button" onClick={searchCourses}>
-        Search
-      </button>
-      <button type="button" onClick={clearSearch}>
-        Clear
-      </button>
+      <div className="search-controls">
+        <input type="text" placeholder="Search by Course ID or title" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+        <button type="button" onClick={searchCourses}>
+          Search
+        </button>
+        <button className="button-secondary" type="button" onClick={clearSearch}>
+          Clear
+        </button>
+      </div>
       <br />
       {message && <p className="status-message">{message}</p>}
       {error && <p className="error-message">{error}</p>}
       <br />
-      <table border="1">
+      <table className="data-table" border="1">
         <thead>
           <tr>
             <th>Course ID</th>
@@ -183,15 +185,15 @@ function BrowseCourses() {
                       Request Enrollment
                     </button>
                   )}
-                  {enrollment?.status === "pending" && <span>Pending Approval</span>}
-                  {enrollment?.status === "approved" && <span>Enrolled</span>}
+                  {enrollment?.status === "pending" && <span className="status-badge status-pending">Pending Approval</span>}
+                  {enrollment?.status === "approved" && <span className="status-badge status-approved">Enrolled</span>}
                   {enrollment?.status === "rejected" && (
-                    <>
-                      <span>Rejected </span>
+                    <div className="table-actions">
+                      <span className="status-badge status-rejected">Rejected</span>
                       <button type="button" onClick={() => handleEnrollmentRequest(course._id)}>
                         Request Again
                       </button>
-                    </>
+                    </div>
                   )}
                 </td>
               </tr>

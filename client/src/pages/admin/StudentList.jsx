@@ -35,23 +35,25 @@ function StudentList() {
   return (
     <div>
       <h3>Student Management</h3>
-      {message && <p style={{ color: "red" }}>{message}</p>}
+      {message && <p className="error-message">{message}</p>}
       {studentToDelete && (
         <div className="confirmation-dialog" role="dialog" aria-labelledby="delete-student-heading">
           <h4 id="delete-student-heading">Delete student?</h4>
           <p>
             Are you sure you want to delete {studentToDelete.firstName} {studentToDelete.lastName}? This action cannot be undone.
           </p>
-          <button type="button" onClick={handleDelete}>
-            Delete
-          </button>
-          <button type="button" onClick={() => setStudentToDelete(null)}>
-            Cancel
-          </button>
+          <div className="dialog-actions">
+            <button className="button-danger" type="button" onClick={handleDelete}>
+              Delete
+            </button>
+            <button className="button-secondary" type="button" onClick={() => setStudentToDelete(null)}>
+              Cancel
+            </button>
+          </div>
         </div>
       )}
       <h4>Student List</h4>
-      <table border="1">
+      <table className="data-table" border="1">
         <thead>
           <tr>
             <th>Student ID</th>
@@ -69,7 +71,9 @@ function StudentList() {
             .map((user) => (
               <tr key={user._id}>
                 <td>{user.studentProfile?.studentId || "-"}</td>
-                <td>{user.isActive ? "Yes" : "No"}</td>
+                <td>
+                  <span className={`status-badge ${user.isActive ? "status-active" : "status-inactive"}`}>{user.isActive ? "Yes" : "No"}</span>
+                </td>
                 <td>
                   {user.firstName} {user.lastName}
                 </td>
@@ -77,7 +81,12 @@ function StudentList() {
                 <td>{user.phone}</td>
                 <td>{user.studentProfile?.fieldOfStudy || "-"}</td>
                 <td>
-                  <button onClick={() => navigate(`/student/${user._id}`)}>View/Edit</button>|<button onClick={() => setStudentToDelete(user)}>Delete</button>
+                  <div className="table-actions">
+                    <button onClick={() => navigate(`/student/${user._id}`)}>View/Edit</button>
+                    <button className="button-danger" onClick={() => setStudentToDelete(user)}>
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
