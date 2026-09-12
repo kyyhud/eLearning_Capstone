@@ -92,7 +92,8 @@ function StudentUserSettings() {
         },
       };
       sessionStorage.setItem("user", JSON.stringify(updatedUser));
-      setMessage(response.message);
+      setMessage(response.message || "Settings updated successfully.");
+      setIsEditing(false);
     } catch (error) {
       setError(error.message);
     }
@@ -100,10 +101,10 @@ function StudentUserSettings() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prevData) => ({
+      ...prevData,
       [name]: type === "checkbox" ? checked : value,
-    });
+    }));
   };
 
   const handleCancelEdit = async () => {
@@ -153,6 +154,8 @@ function StudentUserSettings() {
         <p>Student ID: {formData.studentId}</p>
         <p>Status: {formData.isActive ? "Active" : "Inactive"}</p>
       </div>
+      {message && <p className="success-message">{message}</p>}
+      {error && <p className="error-message">{error}</p>}
 
       <section>
         <hr />
@@ -197,15 +200,16 @@ function StudentUserSettings() {
                 disabled={!isEditing}
               />
             </div>
-
-            <h4>Discussion Settings</h4>
-            <div>
-              <label className="checkbox-label">
-                <input type="checkbox" name="chatAutoRefresh" checked={formData.chatAutoRefresh} onChange={handleChange} disabled={!isEditing} />
-                Automatically refresh course discussions
-              </label>
-            </div>
           </div>
+
+          <div>
+            <h4>Chat Settings</h4>
+            <label className="checkbox-label">
+              <input type="checkbox" name="chatAutoRefresh" checked={formData.chatAutoRefresh} onChange={handleChange} disabled={!isEditing} />
+              Automatically refresh course chat messages
+            </label>
+          </div>
+
           {!isEditing && (
             <button type="button" onClick={() => setIsEditing(true)}>
               Edit
@@ -220,7 +224,9 @@ function StudentUserSettings() {
             </div>
           )}
         </form>
+      </section>
 
+      <section>
         <hr />
         <h3>Update Password</h3>
         <form className="settings-form" onSubmit={handleChangePassword}>
@@ -236,12 +242,12 @@ function StudentUserSettings() {
             <label htmlFor="confirmPassword">Confirm New Password</label>
             <input type="password" id="confirmPassword" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
           </div>
-          <small className="form-help">Password must be 12 to 64 characters and include an uppercase letter, lowercase letter, number, and special character.</small>
+          <small className="form-help">
+            Password must be 12 to 64 characters and include an uppercase letter, lowercase letter, number, and special character.
+          </small>
           <br />
           <button type="submit">Change Password</button>
         </form>
-        {message && <p className="success-message">{message}</p>}
-        {error && <p className="error-message">{error}</p>}
       </section>
     </div>
   );

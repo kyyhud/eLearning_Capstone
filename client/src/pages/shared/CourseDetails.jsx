@@ -136,7 +136,7 @@ function CourseDetails() {
         </p>
         {isAssignedFaculty && (
           <button type="button" onClick={() => navigate(`/courses/${id}/messages`)}>
-            Course Discussion
+            Course Chat
           </button>
         )}
 

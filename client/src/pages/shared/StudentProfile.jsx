@@ -158,7 +158,7 @@ function StudentProfile() {
             },
           };
       await updateStudent(id, studentData);
-      setMessage("Student updated successfully.");
+      setMessage("Updated successfully.");
       setIsEditing(false);
     } catch (error) {
       setError(error.message);

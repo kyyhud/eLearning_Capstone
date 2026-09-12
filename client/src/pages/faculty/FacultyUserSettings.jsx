@@ -78,7 +78,7 @@ function FacultyUserSettings() {
       <h3>User Settings for {user?.email}</h3>
 
       <section>
-        <h2>Discussion Settings</h2>
+        <h2>Chat Settings</h2>
         <form className="settings-form" onSubmit={handleSettingsSubmit}>
           <div>
             <label className="checkbox-label">
@@ -92,7 +92,7 @@ function FacultyUserSettings() {
                   })
                 }
               />
-              Automatically refresh course discussions
+              Automatically refresh course chat messages
             </label>
           </div>
 

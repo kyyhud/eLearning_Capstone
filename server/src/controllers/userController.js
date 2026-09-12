@@ -135,7 +135,7 @@ const updateStudent = async (req, res) => {
     const { id } = req.params;
     const updatedData = req.body;
     const updatedStudent = await userService.updateStudent(id, updatedData, req.user);
-    res.status(200).json({ success: true, data: updatedStudent, message: "Student updated successfully" });
+    res.status(200).json({ success: true, data: updatedStudent, message: "Updated successfully" });
   } catch (error) {
     res.status(error.statusCode || 500).json({ success: false, error: error.message });
   }
