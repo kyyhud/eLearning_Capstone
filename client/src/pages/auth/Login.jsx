@@ -37,8 +37,8 @@ function Login() {
   return (
     <>
       <h3>Login Page</h3>
-      <span style={{ color: "red" }}>{msg}</span>
-      <form onSubmit={signIn}>
+      {msg && <p className="error-message">{msg}</p>}
+      <form className="auth-form" onSubmit={signIn}>
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <br />
         <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
@@ -46,7 +46,7 @@ function Login() {
         <button type="submit">Login</button>
       </form>
       <hr />
-      <p>
+      <p className="auth-switch">
         Don't have an account? <Link to="/signup">Sign Up</Link>
       </p>
     </>

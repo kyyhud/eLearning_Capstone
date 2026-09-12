@@ -55,10 +55,10 @@ function AddFaculty() {
   return (
     <>
       <h3>Faculty Management</h3>
-      {message && <p style={{ color: "green" }}>{message}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {message && <p className="success-message">{message}</p>}
+      {error && <p className="error-message">{error}</p>}
       <h4>Add Faculty Member</h4>
-      <form onSubmit={handleSubmit}>
+      <form className="management-form" onSubmit={handleSubmit}>
         <label htmlFor="firstName">First Name:</label>
         <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} required />
         <br />
@@ -71,7 +71,7 @@ function AddFaculty() {
         <label htmlFor="password">Password:</label>
         <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required />
         <br />
-        <small>Password must be 12 to 64 characters and include an uppercase letter, lowercase letter, number, and special character.</small>
+        <small className="form-help">Password must be 12 to 64 characters and include an uppercase letter, lowercase letter, number, and special character.</small>
         <br />
         <label htmlFor="phone">Phone:</label>
         <input type="text" id="phone" name="phone" maxLength={13} value={formData.phone} onChange={handleChange} />

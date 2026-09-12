@@ -40,7 +40,7 @@ function StudentSignUp() {
       <h3>Student Sign Up Page</h3>
       {message && <p className="success-message">{message}</p>}
       {error && <p className="error-message">{error}</p>}
-      <form onSubmit={signUp}>
+      <form className="auth-form" onSubmit={signUp}>
         <input type="text" placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
         <br />
         <input type="text" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
@@ -51,12 +51,12 @@ function StudentSignUp() {
         <br />
         <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
         <br />
-        <small>Password must be 12 to 64 characters and include an uppercase letter, lowercase letter, number, and special character.</small>
+        <small className="form-help">Password must be 12 to 64 characters and include an uppercase letter, lowercase letter, number, and special character.</small>
         <br />
         <button type="submit">Sign Up</button>
       </form>
       <hr />
-      <p>
+      <p className="auth-switch">
         Already have an account? <Link to="/login">Login</Link>
       </p>
     </>

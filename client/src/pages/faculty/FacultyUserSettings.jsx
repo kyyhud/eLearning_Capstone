@@ -74,14 +74,14 @@ function FacultyUserSettings() {
   };
 
   return (
-    <div>
+    <div className="settings-page">
       <h3>User Settings for {user?.email}</h3>
 
       <section>
         <h2>Discussion Settings</h2>
-        <form onSubmit={handleSettingsSubmit}>
+        <form className="settings-form" onSubmit={handleSettingsSubmit}>
           <div>
-            <label>
+            <label className="checkbox-label">
               <input
                 type="checkbox"
                 checked={preferences.chatAutoRefresh}
@@ -102,7 +102,7 @@ function FacultyUserSettings() {
 
       <section>
         <h2>Update Password</h2>
-        <form onSubmit={handleChangePassword}>
+        <form className="settings-form" onSubmit={handleChangePassword}>
           <div>
             <label htmlFor="currentPassword">Current Password</label>
             <input type="password" id="currentPassword" name="currentPassword" value={formData.currentPassword} onChange={handlePasswordChange} required />
@@ -115,13 +115,13 @@ function FacultyUserSettings() {
             <label htmlFor="confirmPassword">Confirm New Password</label>
             <input type="password" id="confirmPassword" name="confirmPassword" value={formData.confirmPassword} onChange={handlePasswordChange} required />
           </div>
-          <small>Password must be 12 to 64 characters and include an uppercase letter, lowercase letter, number, and special character.</small>
+          <small className="form-help">Password must be 12 to 64 characters and include an uppercase letter, lowercase letter, number, and special character.</small>
           <br />
           <button type="submit">Change Password</button>
         </form>
 
-        {message && <p style={{ color: "green" }}>{message}</p>}
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {message && <p className="success-message">{message}</p>}
+        {error && <p className="error-message">{error}</p>}
       </section>
     </div>
   );

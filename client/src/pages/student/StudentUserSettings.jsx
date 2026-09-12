@@ -147,20 +147,22 @@ function StudentUserSettings() {
   };
 
   return (
-    <div>
+    <div className="settings-page">
       <h3>User Settings for {formData.email}</h3>
-      <p>Student ID: {formData.studentId}</p>
-      <p>Status: {formData.isActive ? "Active" : "Inactive"}</p>
+      <div className="account-summary">
+        <p>Student ID: {formData.studentId}</p>
+        <p>Status: {formData.isActive ? "Active" : "Inactive"}</p>
+      </div>
 
       <section>
         <hr />
         <h3>User Information</h3>
-        <form onSubmit={handleInfoSubmit}>
+        <form className="settings-form" onSubmit={handleInfoSubmit}>
           <div>
             <label htmlFor="phone">Phone</label>
             <input type="text" id="phone" name="phone" value={formData.phone} onChange={handleChange} disabled={!isEditing} />
           </div>
-          <div>
+          <div className="form-section">
             <p>Emergency Contact:</p>
             <div>
               <label htmlFor="emergencyContactName">Name</label>
@@ -198,7 +200,7 @@ function StudentUserSettings() {
 
             <h4>Discussion Settings</h4>
             <div>
-              <label>
+              <label className="checkbox-label">
                 <input type="checkbox" name="chatAutoRefresh" checked={formData.chatAutoRefresh} onChange={handleChange} disabled={!isEditing} />
                 Automatically refresh course discussions
               </label>
@@ -210,19 +212,18 @@ function StudentUserSettings() {
             </button>
           )}
           {isEditing && (
-            <>
+            <div className="form-actions">
               <button type="submit">Save Updates</button>
-              {" | "}
-              <button type="button" onClick={handleCancelEdit}>
+              <button className="button-secondary" type="button" onClick={handleCancelEdit}>
                 Cancel
               </button>
-            </>
+            </div>
           )}
         </form>
 
         <hr />
         <h3>Update Password</h3>
-        <form onSubmit={handleChangePassword}>
+        <form className="settings-form" onSubmit={handleChangePassword}>
           <div>
             <label htmlFor="currentPassword">Current Password</label>
             <input type="password" id="currentPassword" name="currentPassword" value={formData.currentPassword} onChange={handleChange} required />
@@ -235,12 +236,12 @@ function StudentUserSettings() {
             <label htmlFor="confirmPassword">Confirm New Password</label>
             <input type="password" id="confirmPassword" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
           </div>
-          <small>Password must be 12 to 64 characters and include an uppercase letter, lowercase letter, number, and special character.</small>
+          <small className="form-help">Password must be 12 to 64 characters and include an uppercase letter, lowercase letter, number, and special character.</small>
           <br />
           <button type="submit">Change Password</button>
         </form>
-        {message && <p style={{ color: "green" }}>{message}</p>}
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {message && <p className="success-message">{message}</p>}
+        {error && <p className="error-message">{error}</p>}
       </section>
     </div>
   );

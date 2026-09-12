@@ -53,7 +53,7 @@ function AddCourse() {
   return (
     <div>
       <h3>Add Course</h3>
-      <form onSubmit={handleSubmit}>
+      <form className="management-form" onSubmit={handleSubmit}>
         <div>
           <label htmlFor="courseLevel">Course Level:</label>
           <select id="courseLevel" name="courseLevel" value={formData.courseLevel} onChange={handleChange} required>
@@ -94,8 +94,8 @@ function AddCourse() {
           <label htmlFor="durationWeeks">Duration (weeks):</label>
           <input type="number" id="durationWeeks" name="durationWeeks" value={formData.durationWeeks} onChange={handleChange} required />
         </div>
-        {error && <p>{error}</p>}
-        {message && <p style={{ color: "green" }}>{message}</p>}
+        {error && <p className="error-message">{error}</p>}
+        {message && <p className="success-message">{message}</p>}
         <button type="submit">Add Course</button>
       </form>
     </div>

@@ -121,10 +121,10 @@ function FacultyProfile() {
   return (
     <>
       <h3>{isAdmin ? "Faculty Management" : "Faculty Profile"}</h3>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {message && <p style={{ color: "green" }}>{message}</p>}
+      {error && <p className="error-message">{error}</p>}
+      {message && <p className="success-message">{message}</p>}
       <h4>{isEditing ? "Edit Profile" : "Profile Details"}</h4>
-      <form onSubmit={handleSubmit}>
+      <form className="profile-form" onSubmit={handleSubmit}>
         <label htmlFor="facultyId">Faculty ID:</label>
         <input type="text" id="facultyId" name="facultyId" value={formData.facultyId} onChange={handleChange} disabled />
         <br />
@@ -161,7 +161,7 @@ function FacultyProfile() {
         <br />
         {isAdmin && (
           <>
-            <label>
+            <label className="checkbox-label">
               Status: {formData.isActive ? "Active" : "Inactive"}
               <input
                 type="checkbox"
@@ -179,28 +179,24 @@ function FacultyProfile() {
           </>
         )}
         {!isEditing && (
-          <>
-          <button type="button" onClick={() => setIsEditing(true)}>
-            Edit
-          </button>
-          {(isAdmin && !isEditing) && (
-            <>
-            {" | "}
-            <button type="button" onClick={() => navigate(-1)}>
-              Back
+          <div className="form-actions">
+            <button type="button" onClick={() => setIsEditing(true)}>
+              Edit
             </button>
-            </>
-          )}
-          </>
+            {isAdmin && !isEditing && (
+              <button className="button-secondary" type="button" onClick={() => navigate(-1)}>
+                Back
+              </button>
+            )}
+          </div>
         )}
         {isEditing && (
-          <>
+          <div className="form-actions">
             <button type="submit">Save Updates</button>
-            {" | "}
-            <button type="button" onClick={handleCancelEdit}>
+            <button className="button-secondary" type="button" onClick={handleCancelEdit}>
               Cancel
             </button>
-          </>
+          </div>
         )}
       </form>
     </>

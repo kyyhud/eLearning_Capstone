@@ -168,11 +168,11 @@ function StudentProfile() {
   return (
     <>
       <h3>{isAdmin ? "Student Management" : "Student Profile"}</h3>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {message && <p style={{ color: "green" }}>{message}</p>}
+      {error && <p className="error-message">{error}</p>}
+      {message && <p className="success-message">{message}</p>}
       <h4>{isEditing ? "Edit Profile" : "Profile Details"}</h4>
 
-      <form onSubmit={handleSubmit}>
+      <form className="profile-form" onSubmit={handleSubmit}>
         <label htmlFor="firstName">First Name:</label>
         <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
         <br />
@@ -197,7 +197,7 @@ function StudentProfile() {
         <div>
           <label>Certifications: {formData.certifications.length === 0 && <span> None</span>} </label>
           {formData.certifications.map((certification, index) => (
-            <div key={certification._id || index}>
+            <div className="certification-entry" key={certification._id || index}>
               <input
                 type="text"
                 value={certification.name}
@@ -222,14 +222,14 @@ function StudentProfile() {
                 required
               />
               {isEditing && (
-                <button type="button" onClick={() => removeCertification(index)}>
+                <button className="button-danger" type="button" onClick={() => removeCertification(index)}>
                   Remove
                 </button>
               )}
             </div>
           ))}
           {isEditing && (
-            <button type="button" onClick={addCertification}>
+            <button className="button-secondary" type="button" onClick={addCertification}>
               Add Certification
             </button>
           )}
@@ -239,7 +239,7 @@ function StudentProfile() {
         <br />
         {isAdmin && (
           <>
-            <label>
+            <label className="checkbox-label">
               Status: {formData.isActive ? "Active" : "Inactive"}
               <input
                 type="checkbox"
@@ -257,24 +257,22 @@ function StudentProfile() {
           </>
         )}
         {!isEditing && (
-          <>
+          <div className="form-actions">
             <button type="button" onClick={() => setIsEditing(true)}>
               Edit
             </button>
-            {" | "}
-            <button type="button" onClick={() => navigate(-1)}>
+            <button className="button-secondary" type="button" onClick={() => navigate(-1)}>
               Back
             </button>
-          </>
+          </div>
         )}
         {isEditing && (
-          <>
+          <div className="form-actions">
             <button type="submit">Save Updates</button>
-            {" | "}
-            <button type="button" onClick={handleCancelEdit}>
+            <button className="button-secondary" type="button" onClick={handleCancelEdit}>
               Cancel
             </button>
-          </>
+          </div>
         )}
       </form>
     </>

@@ -121,6 +121,88 @@ form section > div {
   gap: 0.35rem;
 }
 
+.auth-form,
+.management-form,
+.profile-form,
+.settings-form {
+  width: 100%;
+}
+
+.management-form,
+.profile-form {
+  max-width: 48rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.form-help {
+  color: var(--color-text-muted);
+  line-height: 1.45;
+}
+
+.form-section {
+  margin-top: 0.25rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background: var(--color-surface-muted);
+}
+
+.form-section > p {
+  margin-top: 0;
+  color: var(--color-heading);
+  font-weight: 700;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.35rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: fit-content;
+}
+
+.auth-switch {
+  color: var(--color-text-muted);
+}
+
+.settings-page h2 {
+  font-size: 1.2rem;
+}
+
+.settings-page > h3 {
+  overflow-wrap: anywhere;
+}
+
+.account-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 1rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background: var(--color-surface-muted);
+}
+
+.account-summary p {
+  margin: 0;
+}
+
+.certification-entry {
+  margin-bottom: 0.65rem;
+  padding: 0.8rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background: var(--color-surface-muted);
+}
+
 label {
   color: var(--color-heading);
   font-size: 0.92rem;
@@ -191,6 +273,30 @@ button {
 button:hover:not(:disabled) {
   border-color: var(--color-primary-dark);
   background: var(--color-primary-dark);
+}
+
+.button-secondary {
+  border-color: var(--color-primary);
+  background: var(--color-surface);
+  color: var(--color-primary-dark);
+}
+
+.button-secondary:hover:not(:disabled) {
+  border-color: var(--color-primary-dark);
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+
+.button-danger {
+  border-color: var(--color-error);
+  background: var(--color-surface);
+  color: var(--color-error);
+}
+
+.button-danger:hover:not(:disabled) {
+  border-color: var(--color-error);
+  background: var(--color-error-background);
+  color: var(--color-error);
 }
 
 button:active:not(:disabled) {
