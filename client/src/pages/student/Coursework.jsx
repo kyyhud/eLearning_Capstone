@@ -164,8 +164,8 @@ function Coursework() {
   };
 
   return (
-    <>
-      <button type="button" onClick={() => navigate("/student/courses/my")}>
+    <div className="coursework-page">
+      <button className="button-secondary" type="button" onClick={() => navigate("/student/courses/my")}>
         Back to My Courses
       </button>
       <h2>{course.title}</h2>
@@ -180,27 +180,27 @@ function Coursework() {
       <hr />
 
       <h3>Course Progress</h3>
-      <p>
+      <p className="progress-summary">
         <strong>Progress:</strong> {progressPercent}% Complete
       </p>
-      {enrollment.progress?.completedAt && <p>Course Complete</p>}
+      {enrollment.progress?.completedAt && <p className="status-badge status-approved">Course Complete</p>}
       <hr />
 
       <h3>Coursework</h3>
-      {actionError && <p>{actionError}</p>}
+      {actionError && <p className="error-message">{actionError}</p>}
       {orderedSections.length === 0 ? (
-        <p>No coursework has been added yet.</p>
+        <p className="empty-state">No coursework has been added yet.</p>
       ) : (
         orderedSections.map((section) => (
-          <section key={section._id}>
+          <section className="coursework-section" key={section._id}>
             <h4>
               Section {section.order}: {section.title}
             </h4>
             {section.description && <p>{section.description}</p>}
             {section.content.length === 0 ? (
-              <p>No content has been added to this section.</p>
+              <p className="empty-state">No content has been added to this section.</p>
             ) : (
-              <table border="1" align="center">
+              <table className="data-table" border="1" align="center">
                 <thead>
                   <tr>
                     <th>Content</th>
@@ -225,7 +225,11 @@ function Coursework() {
                           )}
                         </td>
                         <td>{content.type}</td>
-                        <td>{content.isRequired ? "Required" : "Optional"}</td>
+                        <td>
+                          <span className={`status-badge ${content.isRequired ? "status-required" : "status-optional"}`}>
+                            {content.isRequired ? "Required" : "Optional"}
+                          </span>
+                        </td>
                         <td>
                           {content.type === "link" ? (
                             <a href={getResourceUrl(content)} target="_blank" rel="noreferrer">
@@ -239,7 +243,7 @@ function Coursework() {
                         </td>
                         <td>
                           {completed ? (
-                            "Completed"
+                            <span className="status-badge status-approved">Completed</span>
                           ) : (
                             <button type="button" onClick={() => handleMarkComplete(content._id)}>
                               Mark Complete
@@ -257,10 +261,10 @@ function Coursework() {
       )}
 
       <hr />
-      <section>
+      <section className="course-review-panel">
         <h3>Course Review</h3>
         {progressPercent < 100 ? (
-          <p>Complete the course to leave a review.</p>
+          <p className="status-message">Complete the course to leave a review.</p>
         ) : review ? (
           <div>
             <p>
@@ -275,7 +279,7 @@ function Coursework() {
             <p>Your review has been submitted and cannot be changed.</p>
           </div>
         ) : (
-          <form onSubmit={handleSubmitReview}>
+          <form className="review-form" onSubmit={handleSubmitReview}>
             <div>
               <label htmlFor="rating">Rating:</label>
               <select id="rating" value={rating} onChange={(event) => setRating(event.target.value)} required>
@@ -301,7 +305,7 @@ function Coursework() {
         {reviewMessage && <p className="success-message">{reviewMessage}</p>}
         {reviewError && <p className="error-message">{reviewError}</p>}
       </section>
-    </>
+    </div>
   );
 }
 

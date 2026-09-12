@@ -300,10 +300,10 @@ function CourseEditor() {
   };
 
   return (
-    <main>
+    <main className="course-editor">
       <h3>Edit Course</h3>
-      <form onSubmit={handleSubmit}>
-        <section>
+      <form className="course-editor-form" onSubmit={handleSubmit}>
+        <section className="course-editor-summary">
           <div>
             <label htmlFor="courseId">Course ID</label>
             <input type="text" id="courseId" value={courseId} disabled />
@@ -349,23 +349,24 @@ function CourseEditor() {
         </section>
         {/* Course sections management */}
         <br />
-        <section>
+        <section className="course-editor-sections">
           <h3>Course Sections</h3>
-          {formData.sections.length === 0 && <p>No course sections have been added yet.</p>}
+          {formData.sections.length === 0 && <p className="empty-state">No course sections have been added yet.</p>}
 
           {formData.sections.map((section, index) => (
-            <div key={section._id || `section-${index}`}>
-              <hr />
+            <div className="editor-section-card" key={section._id || `section-${index}`}>
               <h4>Section {index + 1}</h4>
-              <button type="button" onClick={() => handleMoveSection(index, -1)} disabled={index === 0}>
-                ↑
-              </button>
-              <button type="button" onClick={() => handleMoveSection(index, 1)} disabled={index === formData.sections.length - 1}>
-                ↓
-              </button>
-              <button type="button" onClick={() => handleRemoveSection(index)}>
-                Remove Section
-              </button>
+              <div className="editor-item-actions">
+                <button className="button-secondary button-icon" type="button" onClick={() => handleMoveSection(index, -1)} disabled={index === 0}>
+                  ↑
+                </button>
+                <button className="button-secondary button-icon" type="button" onClick={() => handleMoveSection(index, 1)} disabled={index === formData.sections.length - 1}>
+                  ↓
+                </button>
+                <button className="button-danger" type="button" onClick={() => handleRemoveSection(index)}>
+                  Remove Section
+                </button>
+              </div>
               <div>
                 <label htmlFor={`section-title-${index}`}>Title</label>
                 <input type="text" id={`section-title-${index}`} name="title" value={section.title} onChange={(e) => handleSectionChange(index, e)} required />
@@ -375,25 +376,28 @@ function CourseEditor() {
                 <textarea id={`section-description-${index}`} name="description" value={section.description} onChange={(e) => handleSectionChange(index, e)} />
               </div>
               {/* Content management for each section */}
-              <div>
+              <div className="editor-content-list">
                 <h5>Section Content</h5>
-                {(section.content || []).length === 0 && <p>No content has been added to this section.</p>}
+                {(section.content || []).length === 0 && <p className="empty-state">No content has been added to this section.</p>}
 
                 {(section.content || []).map((contentItem, contentIndex) => (
-                  <div key={contentItem._id || `content-${index}-${contentIndex}`}>
+                  <div className="editor-content-card" key={contentItem._id || `content-${index}-${contentIndex}`}>
                     <h6>Content {contentIndex + 1}</h6>
-                    <button type="button" onClick={() => handleMoveContent(index, contentIndex, -1)} disabled={contentIndex === 0}>
-                      ↑
-                    </button>{" "}
-                    <button
-                      type="button"
-                      onClick={() => handleMoveContent(index, contentIndex, 1)}
-                      disabled={contentIndex === (section.content || []).length - 1}>
-                      ↓
-                    </button>{" "}
-                    <button type="button" onClick={() => handleRemoveContent(index, contentIndex)}>
-                      Remove Content
-                    </button>
+                    <div className="editor-item-actions">
+                      <button className="button-secondary button-icon" type="button" onClick={() => handleMoveContent(index, contentIndex, -1)} disabled={contentIndex === 0}>
+                        ↑
+                      </button>
+                      <button
+                        className="button-secondary button-icon"
+                        type="button"
+                        onClick={() => handleMoveContent(index, contentIndex, 1)}
+                        disabled={contentIndex === (section.content || []).length - 1}>
+                        ↓
+                      </button>
+                      <button className="button-danger" type="button" onClick={() => handleRemoveContent(index, contentIndex)}>
+                        Remove Content
+                      </button>
+                    </div>
                     <div>
                       <label htmlFor={`content-title-${index}-${contentIndex}`}>Title</label>
                       <input
@@ -465,7 +469,7 @@ function CourseEditor() {
                       </p>
                     )}
                     <div>
-                      <label>
+                      <label className="checkbox-label">
                         <input
                           type="checkbox"
                           name="isRequired"
@@ -477,29 +481,30 @@ function CourseEditor() {
                     </div>
                   </div>
                 ))}
-                <button type="button" onClick={() => handleAddContent(index)}>
+                <button className="button-secondary" type="button" onClick={() => handleAddContent(index)}>
                   + Add Content
                 </button>
               </div>
             </div>
           ))}
           <hr />
-          <button type="button" onClick={handleAddSection}>
+          <button className="button-secondary" type="button" onClick={handleAddSection}>
             + Add Section
           </button>
         </section>
-        <div>
+        <div className="editor-submit-area">
           <br />
-          {message && <p style={{ color: "green" }}>{message}</p>}
-          {error && <p>{error}</p>}
-          {isArchivedForFaculty && <p style={{ color: "red" }}>This course is archived and cannot be edited.</p>}
-          <button type="submit" disabled={isArchivedForFaculty}>
-            Save Updates
-          </button>
-          {" | "}
-          <button type="button" onClick={() => navigate(-1)}>
-            Back
-          </button>
+          {message && <p className="success-message">{message}</p>}
+          {error && <p className="error-message">{error}</p>}
+          {isArchivedForFaculty && <p className="status-message">This course is archived and cannot be edited.</p>}
+          <div className="form-actions">
+            <button type="submit" disabled={isArchivedForFaculty}>
+              Save Updates
+            </button>
+            <button className="button-secondary" type="button" onClick={() => navigate(-1)}>
+              Back
+            </button>
+          </div>
         </div>
       </form>
     </main>

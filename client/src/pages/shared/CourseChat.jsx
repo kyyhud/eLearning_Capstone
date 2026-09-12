@@ -117,36 +117,35 @@ function CourseChat() {
   const isArchived = course.status === "archived";
 
   return (
-    <div>
+    <div className="chat-page">
       <h2>{course.title}</h2>
 
-      <button type="button" onClick={() => navigate(-1)}>
+      <button className="button-secondary" type="button" onClick={() => navigate(-1)}>
         Back
       </button>
 
       <h3>Course Discussion</h3>
-      {isArchived && <p>This course is archived. The discussion is read-only.</p>}
+      {isArchived && <p className="status-message">This course is archived. The discussion is read-only.</p>}
 
-      <p>Auto-refresh: {chatAutoRefresh ? "On" : "Off"}</p>
-      <button type="button" onClick={handleRefresh} disabled={refreshing}>
+      <p className="chat-refresh-status">Auto-refresh: {chatAutoRefresh ? "On" : "Off"}</p>
+      <button className="button-secondary" type="button" onClick={handleRefresh} disabled={refreshing}>
         {refreshing ? "Refreshing..." : "Refresh"}
       </button>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
 
-      <div>
+      <div className="chat-messages">
         {messages.length === 0 ? (
-          <p>No messages yet. Start the discussion.</p>
+          <p className="empty-state">No messages yet. Start the discussion.</p>
         ) : (
           messages.map((chatMessage) => (
-            <div key={chatMessage._id}>
-              <p>
+            <div className="chat-message" key={chatMessage._id}>
+              <p className="chat-message-sender">
                 <strong>{chatMessage.sender ? `${chatMessage.sender.firstName} ${chatMessage.sender.lastName}` : "Unknown User"}</strong>
                 {chatMessage.sender?.typeOfUser && ` (${chatMessage.sender.typeOfUser})`}
               </p>
-              <p>{new Date(chatMessage.createdAt).toLocaleString()}</p>
-              <p>{chatMessage.message}</p>
-              <hr />
+              <p className="chat-message-time">{new Date(chatMessage.createdAt).toLocaleString()}</p>
+              <p className="chat-message-body">{chatMessage.message}</p>
             </div>
           ))
         )}
@@ -155,7 +154,7 @@ function CourseChat() {
       </div>
 
       {!isArchived && (
-        <form onSubmit={handleSubmit}>
+        <form className="chat-form" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="message">Message</label>
             <textarea
@@ -167,7 +166,7 @@ function CourseChat() {
               placeholder="Write a message..."
             />
           </div>
-          <p>{messageInput.length}/500</p>
+          <p className="character-count">{messageInput.length}/500</p>
           <button type="submit" disabled={!messageInput.trim() || sending}>
             {sending ? "Sending..." : "Send"}
           </button>

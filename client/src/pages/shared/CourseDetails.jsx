@@ -123,16 +123,16 @@ function CourseDetails() {
   };
 
   return (
-    <main>
-      {error && <p>{error}</p>}
+    <main className="course-details">
+      {error && <p className="error-message">{error}</p>}
 
-      <section>
+      <section className="course-summary">
         <h3>{course.title}</h3>
         <p>
           <strong>Course ID:</strong> {course.courseId}
         </p>
         <p>
-          <strong>Status:</strong> {course.status}
+          <strong>Status:</strong> <span className={`status-badge status-${course.status}`}>{course.status}</span>
         </p>
         {isAssignedFaculty && (
           <button type="button" onClick={() => navigate(`/courses/${id}/messages`)}>
@@ -168,7 +168,7 @@ function CourseDetails() {
 
       {/* Enrollment for students */}
       {isStudent && (
-        <section>
+        <section className="course-panel">
           <hr />
           <h3>Enrollment</h3>
           {!enrollment && (
@@ -176,10 +176,10 @@ function CourseDetails() {
               Request Enrollment
             </button>
           )}
-          {enrollment?.status === "pending" && <p>Pending Approval</p>}
+          {enrollment?.status === "pending" && <p className="status-badge status-pending">Pending Approval</p>}
           {enrollment?.status === "approved" && (
             <>
-              <p>Enrolled</p>
+              <p className="status-badge status-approved">Enrolled</p>
               <button type="button" onClick={() => navigate(`/student/courses/${id}`)}>
                 Go to Coursework
               </button>
@@ -187,7 +187,7 @@ function CourseDetails() {
           )}
           {enrollment?.status === "rejected" && (
             <>
-              <p>Enrollment Request Rejected</p>
+              <p className="status-badge status-rejected">Enrollment Request Rejected</p>
               <button type="button" onClick={handleEnrollmentRequest}>
                 Request Again
               </button>
@@ -202,13 +202,12 @@ function CourseDetails() {
       <br />
       {!isStudent && (
         <>
-          <section>
+          <section className="course-sections">
             <br />
             <h3>Course Sections</h3>
-            {orderedSections.length === 0 && <p>No course sections have been added yet.</p>}
+            {orderedSections.length === 0 && <p className="empty-state">No course sections have been added yet.</p>}
             {orderedSections.map((section, index) => (
-              <div key={section._id || `section-${index}`}>
-                <hr />
+              <div className="course-section-card" key={section._id || `section-${index}`}>
                 <h4>Section {index + 1}</h4>
                 <p>
                   <strong>Title:</strong> {section.title}
@@ -221,10 +220,10 @@ function CourseDetails() {
                     {(section.content || []).length === 0 ? (
                       <p>No content has been added to this section.</p>
                     ) : (
-                      <div>
+                      <div className="course-content-list">
                         <h5>Content</h5>
                         {section.content.map((contentItem, contentIndex) => (
-                          <div key={contentItem._id}>
+                          <div className="course-content-item" key={contentItem._id}>
                             <h6>
                               {contentIndex + 1}. {contentItem.title}
                             </h6>
@@ -267,15 +266,15 @@ function CourseDetails() {
       )}
 
       {/* Course Reviews section */}
-      <section>
+      <section className="course-reviews">
         <h3>Course Reviews</h3>
         {reviews.length === 0 ? (
-          <p>No reviews have been submitted yet.</p>
+          <p className="empty-state">No reviews have been submitted yet.</p>
         ) : (
           reviews.map((review) => {
             const studentName = review.student ? `${review.student.firstName} ${review.student.lastName.charAt(0)}.` : "Student";
             return (
-              <div key={review._id}>
+              <div className="review-card" key={review._id}>
                 <p>
                   <strong>{studentName}</strong>
                 </p>
@@ -292,7 +291,7 @@ function CourseDetails() {
         )}
       </section>
 
-      <div>
+      <div className="form-actions">
         <br />
         {canEdit && (
           <>
@@ -303,7 +302,7 @@ function CourseDetails() {
           </>
         )}
         <br />
-        <button type="button" onClick={() => navigate(-1)}>
+        <button className="button-secondary" type="button" onClick={() => navigate(-1)}>
           Back
         </button>
       </div>
