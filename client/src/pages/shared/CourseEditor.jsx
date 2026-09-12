@@ -348,7 +348,6 @@ function CourseEditor() {
           </div>
         </section>
         {/* Course sections management */}
-        <br />
         <section className="course-editor-sections">
           <h3>Course Sections</h3>
           {formData.sections.length === 0 && <p className="empty-state">No course sections have been added yet.</p>}
@@ -493,7 +492,6 @@ function CourseEditor() {
           </button>
         </section>
         <div className="editor-submit-area">
-          <br />
           {message && <p className="success-message">{message}</p>}
           {error && <p className="error-message">{error}</p>}
           {isArchivedForFaculty && <p className="status-message">This course is archived and cannot be edited.</p>}

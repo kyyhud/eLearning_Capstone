@@ -127,25 +127,18 @@ function FacultyProfile() {
       <form className="profile-form" onSubmit={handleSubmit}>
         <label htmlFor="facultyId">Faculty ID:</label>
         <input type="text" id="facultyId" name="facultyId" value={formData.facultyId} onChange={handleChange} disabled />
-        <br />
         <label htmlFor="firstName">First Name:</label>
         <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
-        <br />
         <label htmlFor="lastName">Last Name:</label>
         <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
-        <br />
         <label htmlFor="email">Email:</label>
         <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
-        <br />
         <label htmlFor="phone">Phone:</label>
         <input type="text" id="phone" name="phone" maxLength={13} value={formData.phone} onChange={handleChange} disabled={!isEditing} />
-        <br />
         <label htmlFor="department">Department:</label>
         <input type="text" id="department" name="department" value={formData.department} onChange={handleChange} disabled={!isEditing || !isAdmin} />
-        <br />
         <label htmlFor="title">Title:</label>
         <input type="text" id="title" name="title" value={formData.title} onChange={handleChange} disabled={!isEditing || !isAdmin} />
-        <br />
         <label htmlFor="specialization">Specialization:</label>
         <input
           type="text"
@@ -155,10 +148,8 @@ function FacultyProfile() {
           onChange={handleChange}
           disabled={!isEditing || !isAdmin}
         />
-        <br />
         <label htmlFor="bio">Bio:</label>
         <textarea id="bio" name="bio" maxLength={500} value={formData.bio} onChange={handleChange} disabled={!isEditing} />
-        <br />
         {isAdmin && (
           <>
             <label className="checkbox-label">
@@ -175,7 +166,6 @@ function FacultyProfile() {
                 disabled={!isEditing}
               />
             </label>
-            <br />
           </>
         )}
         {!isEditing && (

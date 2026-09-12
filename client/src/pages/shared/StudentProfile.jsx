@@ -175,25 +175,18 @@ function StudentProfile() {
       <form className="profile-form" onSubmit={handleSubmit}>
         <label htmlFor="firstName">First Name:</label>
         <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
-        <br />
         <label htmlFor="lastName">Last Name:</label>
         <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
-        <br />
         <label htmlFor="email">Email:</label>
         <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} disabled={!isEditing || !isAdmin} required />
-        <br />
         <label htmlFor="phone">Phone:</label>
         <input type="text" id="phone" name="phone" maxLength={13} value={formData.phone} onChange={handleChange} disabled={!isEditing} />
-        <br />
         <label htmlFor="fieldOfStudy">Field of Study:</label>
         <input type="text" id="fieldOfStudy" name="fieldOfStudy" value={formData.fieldOfStudy} onChange={handleChange} disabled={!isEditing} />
-        <br />
         <label htmlFor="careerGoal">Career Goal:</label>
         <input type="text" id="careerGoal" name="careerGoal" value={formData.careerGoal} onChange={handleChange} disabled={!isEditing} />
-        <br />
         <label htmlFor="skills">Skills (comma separated):</label>
         <input type="text" id="skills" name="skills" value={formData.skills} onChange={handleChange} disabled={!isEditing} />
-        <br />
         <div>
           <label>Certifications: {formData.certifications.length === 0 && <span> None</span>} </label>
           {formData.certifications.map((certification, index) => (
@@ -236,7 +229,6 @@ function StudentProfile() {
         </div>
         <label htmlFor="bio">Bio:</label>
         <textarea id="bio" name="bio" maxLength={500} value={formData.bio} onChange={handleChange} disabled={!isEditing} />
-        <br />
         {isAdmin && (
           <>
             <label className="checkbox-label">
@@ -253,7 +245,6 @@ function StudentProfile() {
                 disabled={!isEditing}
               />
             </label>
-            <br />
           </>
         )}
         {!isEditing && (

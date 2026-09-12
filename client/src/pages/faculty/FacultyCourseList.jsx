@@ -25,7 +25,6 @@ function FacultyCourseList() {
     <>
       <h3>Course Management</h3>
       {message && <p className="error-message">{message}</p>}
-      <br />
       <table className="data-table" border="1">
         <thead>
           <tr>

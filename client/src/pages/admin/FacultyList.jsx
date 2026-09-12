@@ -94,7 +94,6 @@ function FacultyList() {
             ))}
         </tbody>
       </table>
-      <br />
     </>
   );
 }

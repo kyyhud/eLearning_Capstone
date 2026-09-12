@@ -40,9 +40,7 @@ function Login() {
       {msg && <p className="error-message">{msg}</p>}
       <form className="auth-form" onSubmit={signIn}>
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <br />
         <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <br />
         <button type="submit">Login</button>
       </form>
       <hr />

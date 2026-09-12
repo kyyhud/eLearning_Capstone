@@ -116,7 +116,6 @@ function FacultyUserSettings() {
             <input type="password" id="confirmPassword" name="confirmPassword" value={formData.confirmPassword} onChange={handlePasswordChange} required />
           </div>
           <small className="form-help">Password must be 12 to 64 characters and include an uppercase letter, lowercase letter, number, and special character.</small>
-          <br />
           <button type="submit">Change Password</button>
         </form>
 

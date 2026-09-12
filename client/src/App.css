@@ -129,10 +129,6 @@ form {
   gap: 0.8rem;
 }
 
-form br {
-  display: none;
-}
-
 form > div,
 form section > div {
   display: grid;
@@ -246,10 +242,6 @@ form section > div {
   margin: 0.2rem 0.8rem 0.2rem 0;
 }
 
-.dashboard-grid br {
-  display: none;
-}
-
 .dashboard-grid table {
   margin: 0.75rem 0;
 }
@@ -332,9 +324,7 @@ form section > div {
   gap: 1.25rem;
 }
 
-.course-details > br,
-.course-details > hr,
-.course-summary br {
+.course-details > hr {
   display: none;
 }
 

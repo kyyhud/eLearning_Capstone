@@ -140,8 +140,6 @@ function CourseDetails() {
           </button>
         )}
 
-        <br />
-        <br />
         <p>
           <strong>Category:</strong> {course.category}
         </p>
@@ -199,11 +197,9 @@ function CourseDetails() {
       )}
 
       {/* Course sections and content */}
-      <br />
       {!isStudent && (
         <>
           <section className="course-sections">
-            <br />
             <h3>Course Sections</h3>
             {orderedSections.length === 0 && <p className="empty-state">No course sections have been added yet.</p>}
             {orderedSections.map((section, index) => (
@@ -292,7 +288,6 @@ function CourseDetails() {
       </section>
 
       <div className="form-actions">
-        <br />
         {canEdit && (
           <>
             {" "}
@@ -301,7 +296,6 @@ function CourseDetails() {
             </button>
           </>
         )}
-        <br />
         <button className="button-secondary" type="button" onClick={() => navigate(-1)}>
           Back
         </button>

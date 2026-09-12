@@ -42,17 +42,11 @@ function StudentSignUp() {
       {error && <p className="error-message">{error}</p>}
       <form className="auth-form" onSubmit={signUp}>
         <input type="text" placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
-        <br />
         <input type="text" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
-        <br />
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <br />
         <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <br />
         <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
-        <br />
         <small className="form-help">Password must be 12 to 64 characters and include an uppercase letter, lowercase letter, number, and special character.</small>
-        <br />
         <button type="submit">Sign Up</button>
       </form>
       <hr />

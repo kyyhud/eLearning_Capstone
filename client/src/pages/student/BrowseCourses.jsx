@@ -138,10 +138,8 @@ function BrowseCourses() {
           Clear
         </button>
       </div>
-      <br />
       {message && <p className="status-message">{message}</p>}
       {error && <p className="error-message">{error}</p>}
-      <br />
       <table className="data-table" border="1">
         <thead>
           <tr>

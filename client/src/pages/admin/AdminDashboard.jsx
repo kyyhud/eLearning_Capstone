@@ -88,7 +88,6 @@ function AdminDashboard() {
               </tbody>
             </table>
             <Link to="/admin/faculty">View Faculty Members</Link>
-            <br />
             <Link to="/admin/faculty/add">Add Faculty Member</Link>
           </section>
 
@@ -140,7 +139,6 @@ function AdminDashboard() {
               </tbody>
             </table>
             <Link to="/admin/courses">View Courses</Link>
-            <br />
             <Link to="/admin/courses/add">Add Course</Link>
           </section>
         </div>

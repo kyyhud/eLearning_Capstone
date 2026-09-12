@@ -291,13 +291,10 @@ function Coursework() {
                 <option value="1">★☆☆☆☆ - Poor</option>
               </select>
             </div>
-            <br />
             <div>
               <label htmlFor="feedback">Feedback:</label>
-              <br />
               <textarea id="feedback" value={feedback} onChange={(event) => setFeedback(event.target.value)} rows="4" />
             </div>
-            <br />
             <button type="submit">Submit Review</button>
           </form>
         )}
