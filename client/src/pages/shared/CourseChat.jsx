@@ -128,7 +128,7 @@ function CourseChat() {
       {isArchived && <p className="status-message">This course is archived. The discussion is read-only.</p>}
 
       <p className="chat-refresh-status">Auto-refresh: {chatAutoRefresh ? "On" : "Off"}</p>
-      <button className="button-secondary" type="button" onClick={handleRefresh} disabled={refreshing}>
+      <button className="button" type="button" onClick={handleRefresh} disabled={refreshing}>
         {refreshing ? "Refreshing..." : "Refresh"}
       </button>
 

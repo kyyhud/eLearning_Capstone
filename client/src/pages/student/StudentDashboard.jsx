@@ -128,7 +128,7 @@ function StudentDashboard() {
               </table>
             )}
           </section>
-          <p>
+          <p className="dashboard-footer">
             <Link to="/student/courses">Browse Available Courses</Link>
           </p>
         </div>

@@ -179,7 +179,7 @@ function BrowseCourses() {
                 </td>
                 <td>
                   {!enrollment && (
-                    <button type="button" onClick={() => handleEnrollmentRequest(course._id)}>
+                    <button className="button-action" type="button" onClick={() => handleEnrollmentRequest(course._id)}>
                       Request Enrollment
                     </button>
                   )}
@@ -188,7 +188,7 @@ function BrowseCourses() {
                   {enrollment?.status === "rejected" && (
                     <div className="table-actions">
                       <span className="status-badge status-rejected">Rejected</span>
-                      <button type="button" onClick={() => handleEnrollmentRequest(course._id)}>
+                      <button className="button-action" type="button" onClick={() => handleEnrollmentRequest(course._id)}>
                         Request Again
                       </button>
                     </div>

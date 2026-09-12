@@ -170,7 +170,7 @@ function CourseDetails() {
           <hr />
           <h3>Enrollment</h3>
           {!enrollment && (
-            <button type="button" onClick={handleEnrollmentRequest}>
+            <button className="button-action" type="button" onClick={handleEnrollmentRequest}>
               Request Enrollment
             </button>
           )}

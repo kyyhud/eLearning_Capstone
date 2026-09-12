@@ -191,6 +191,7 @@ function StudentProfile() {
           <label>Certifications: {formData.certifications.length === 0 && <span> None</span>} </label>
           {formData.certifications.map((certification, index) => (
             <div className="certification-entry" key={certification._id || index}>
+              <label>Certification Name:</label>
               <input
                 type="text"
                 value={certification.name}
@@ -199,6 +200,7 @@ function StudentProfile() {
                 disabled={!isEditing}
                 required
               />
+              <label>Issuer:</label>
               <input
                 type="text"
                 value={certification.issuer}
@@ -207,6 +209,7 @@ function StudentProfile() {
                 disabled={!isEditing}
                 required
               />
+              <label>Date Earned:</label>
               <input
                 type="date"
                 value={certification.dateEarned}

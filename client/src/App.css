@@ -210,6 +210,8 @@ form section > div {
 }
 
 .certification-entry {
+  display: grid;
+  gap: 0.35rem;
   margin-bottom: 0.65rem;
   padding: 0.8rem;
   border: 1px solid var(--color-border);
@@ -218,13 +220,6 @@ form section > div {
 }
 
 /* Dashboards, searches, statuses, and empty states */
-
-.page-subtitle {
-  margin-top: -0.5rem;
-  color: var(--color-text-muted);
-  font-weight: 600;
-  overflow-wrap: anywhere;
-}
 
 .dashboard-grid {
   display: grid;
@@ -244,6 +239,11 @@ form section > div {
 
 .dashboard-grid table {
   margin: 0.75rem 0;
+}
+
+.dashboard-footer {
+  grid-column: 1 / -1;
+  margin: 0;
 }
 
 .search-controls {
@@ -588,6 +588,16 @@ button:hover:not(:disabled) {
   border-color: var(--color-primary-dark);
   background: var(--color-primary-light);
   color: var(--color-primary-dark);
+}
+
+.button-action {
+  border-color: #2f6f62;
+  background: #2f6f62;
+}
+
+.button-action:hover:not(:disabled) {
+  border-color: #24574d;
+  background: #24574d;
 }
 
 .button-danger {
