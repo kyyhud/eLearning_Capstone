@@ -1,223 +1,365 @@
-# E-Learning Application
+# LearnEase Pro
 
-A full-stack MERN capstone project designed to support role-based learning workflows for administrators, faculty members, and students.
+LearnEase Pro is a full-stack learning management application built as a MERN certification capstone project. It supports connected workflows for administrators, faculty members, and students, including user administration, course creation, enrollment approval, coursework progress, course group chats, and student reviews.
 
-The application uses a layered backend architecture, JWT authentication, MongoDB persistence, and role-specific React interfaces.
+The project demonstrates how a React client, REST API, and MongoDB database can work together while enforcing authentication, role-based authorization, ownership rules, and resource-level access on the server.
 
-## Current Features
+## Project Goals
 
-### Authentication & Authorization
+LearnEase Pro was designed to demonstrate the ability to:
 
-- User login with JWT authentication
-- Password hashing with bcrypt
-- Protected backend routes using authentication middleware
-- Role-based authorization for Admin, Faculty, and Student users
-- Role-based frontend routing
-- Student self-registration
-- Faculty account creation restricted to administrators
-- Password change functionality for authenticated users
-- Authentication tokens stored for the active browser session
+- Build a complete client-server application with the MERN stack.
+- Model related application data with MongoDB and Mongoose.
+- Design and consume a RESTful JSON API.
+- Implement authenticated, role-specific user experiences.
+- Enforce authorization in the API rather than relying on hidden React controls.
+- Organize backend code into maintainable architectural layers.
+- Validate data and return understandable feedback when an operation fails.
 
-### Admin
+## Core Features
 
-- Admin dashboard
-- View faculty members
-- Add faculty members
-- View and edit faculty profiles
-- View students
-- View and edit student profiles
-- Delete users
-- Create courses
-- Assign an existing faculty member to a course
-- Select course level during course creation
-- Automatic course ID generation based on course level
-- Set course status as Draft, Published, or Archived
+### Authentication and authorization
 
-### Faculty
+- Student self-registration and administrator-managed faculty registration.
+- Password hashing with bcrypt.
+- Server-side password requirements for registration and password changes.
+- JWT authentication with a 12-hour token lifetime.
+- Browser-session token storage using `sessionStorage`.
+- Authenticated React layouts that validate the current session with the API before rendering protected pages.
+- Role-based middleware for administrator, faculty, and student endpoints.
+- Resource-level authorization for profiles, assigned courses, enrollments, discussions, and course files.
+- Current database records are checked during authenticated requests, so deleted or deactivated accounts do not retain access through an older token.
+- API user responses omit password hashes and other authentication-only data.
 
-- Faculty dashboard
-- Faculty profile
-- Faculty account settings
-- Personal information management
-- Password management
-- Course and coursework management functionality in development
+### Administrator workflows
 
-### Students
+- View dashboard totals for active and inactive users and for draft, published, and archived courses.
+- Create faculty accounts and maintain faculty profiles.
+- View, update, activate, deactivate, and delete faculty and student accounts.
+- Create courses and assign a valid faculty account.
+- Select a course level and automatically generate the next course ID in that level.
+- Edit course metadata, faculty assignments, categories, content, and lifecycle status.
+- View course ratings and archived course records.
 
-- Student dashboard
-- Student profile
-- Student account settings
-- Personal information management
-- Emergency contact information
-- Skills and certification profile data
-- Password management
-- Browse available courses
-- Search courses by partial title
-- View matching course information
-- Enrollment and coursework functionality in development
+### Faculty workflows
 
-## Course Management
+- View a dashboard summary of assigned courses and pending enrollment requests.
+- View and update the faculty member's own profile and customizable group-chat auto-refresh option.
+- View assigned draft, published, and archived courses.
+- Edit permitted fields only on assigned courses.
+- Add, reorder, update, and remove course sections and content.
+- Publish draft courses while leaving course reassignment and archival under administrator control.
+- Upload supported course documents, presentations, videos, and recordings.
+- Review and approve or reject enrollment requests for assigned courses.
+- Participate in course-specific group chats for assigned courses.
 
-Courses use structured course IDs that also represent their course level.
+### Student workflows
 
-```text
-100 Level → Introductory
-200 Level → Intermediate
-300 Level → Advanced
-400 Level → Expert / Specialized
-```
+- Create a student account and manage profile, education, skills, certification, emergency-contact, and group-chat auto-refresh preference data.
+- Browse and search published courses.
+- Request enrollment and view pending, approved, or rejected status.
+- Access coursework only after enrollment approval.
+- Open authorized course resources and mark required content complete.
+- View progress calculated from the course's current required content.
+- Participate in course-specific group chats for enrolled courses.
+- Submit one immutable rating and optional review after completing all required content.
+- View dashboard summaries for pending requests, in-progress courses, and completed courses.
 
-Administrators select the appropriate course level rather than manually entering a course number.
+## Course Lifecycle
 
-The backend automatically generates the next available course ID within that level.
+Courses progress through three application states:
 
-```text
-101
-102
-103
+| Status      | Meaning                                                                                                                           |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `draft`     | The course is being prepared and is not visible to students.                                                                      |
+| `published` | Students can discover the course and request enrollment.                                                                          |
+| `archived`  | The course remains available for historical reference but is restricted from further faculty editing and new discussion messages. |
 
-201
-202
-203
+Course visibility and permissions are enforced by the API. React conditionally displays the controls appropriate for each role, but the server remains the authoritative security boundary.
 
-301
-302
-303
-```
+## Course and User Identification
 
-Course records reference an assigned faculty member using the faculty user's MongoDB ObjectId.
+MongoDB ObjectIds are used internally for document relationships, API routes, ownership checks, and authorization decisions.
 
-Course statuses include:
+Faculty members, students, and courses also receive human-readable numeric identifiers for display purposes. MongoDB-backed counters generate these values automatically and prevent users from changing them through profile or course updates.
 
-```text
-draft
-published
-archived
-```
+Course IDs are grouped by the level selected during course creation:
 
-## User Identification
-
-Faculty and student accounts receive application-specific numeric IDs in addition to their MongoDB ObjectIds.
-
-These IDs are generated automatically using MongoDB-backed counters rather than being manually entered.
-
-MongoDB ObjectIds remain responsible for database relationships and internal document references.
+| Level | Description           | Example IDs   |
+| ----- | --------------------- | ------------- |
+| 100   | Introductory          | 101, 102, 103 |
+| 200   | Intermediate          | 201, 202, 203 |
+| 300   | Advanced              | 301, 302, 303 |
+| 400   | Expert or specialized | 401, 402, 403 |
 
 ## Technology Stack
 
-### Frontend
+### Client
 
-- React
-- Vite
-- JavaScript
+- React 19
 - React Router
 - Axios
+- Vite
+- JavaScript and CSS
 
-### Backend
+### Server
 
 - Node.js
-- Express.js
+- Express 5
 - MongoDB
 - Mongoose
-- JSON Web Tokens (JWT)
+- JSON Web Token (`jsonwebtoken`)
 - bcrypt
+- Multer
 
-## Architecture
+## Application Architecture
 
-The Express backend uses a layered architecture:
+The Express application uses a layered backend structure:
 
 ```text
-Route
-  ↓
+HTTP request
+    |
+    v
+Route and middleware
+    |
+    v
 Controller
-  ↓
+    |
+    v
 Service
-  ↓
+    |
+    v
 Repository
-  ↓
-Mongoose Model
-  ↓
+    |
+    v
+Mongoose model
+    |
+    v
 MongoDB
 ```
 
-Each layer has a separate responsibility:
+- **Routes** define API endpoints and attach authentication, role, and upload middleware.
+- **Controllers** translate HTTP requests into service calls and construct HTTP responses.
+- **Services** contain business rules, validation, ownership checks, and authorization decisions tied to specific resources.
+- **Repositories** isolate database queries and persistence operations.
+- **Models** define document structure, relationships, indexes, defaults, and schema validation.
 
-- **Routes** define API endpoints and apply middleware.
-- **Controllers** handle HTTP requests and responses.
-- **Services** contain application and business logic.
-- **Repositories** handle database queries and persistence.
-- **Models** define Mongoose schemas and database structure.
+On the client, page components manage role-specific workflows while service modules centralize Axios requests, bearer-token attachment, API configuration, and error normalization.
 
-Authentication and authorization middleware protect routes before requests reach the controller layer.
+## Authentication Flow
+
+1. The user submits an email address and password to the login endpoint.
+2. The server verifies the credentials and account status.
+3. The server signs a JWT containing the user's MongoDB ID.
+4. The client stores the token and safe user data in `sessionStorage`.
+5. Protected requests send the token in the HTTP authorization header:
+
+   ```text
+   Authorization: Bearer <token>
+   ```
+
+6. Authentication middleware verifies the token and reloads the current account from MongoDB.
+7. Role middleware and service-layer checks determine whether the current user can perform the requested operation.
+8. The authenticated React layout calls the current-user endpoint before rendering protected content.
+
+This distinction is important: **authentication** establishes who the user is, while **authorization** determines what that authenticated user is permitted to access or change.
+
+## Protected Course Resources
+
+Uploaded course files are not exposed through a public static directory. The client requests each file through a protected API endpoint, and the server verifies the user's relationship to the course before sending it.
+
+- Administrators may retrieve course files.
+- Faculty may retrieve files only for assigned courses.
+- Students may retrieve files only with an approved enrollment.
+
+The client receives authorized file responses as binary `Blob` data and creates a temporary browser URL for viewing the resource.
+
+Supported upload types include:
+
+- Documents: PDF, DOC, DOCX, and TXT
+- Presentations: PPT, PPTX, and PDF
+- Video and recording content: MP4, WebM, and MOV
+- External HTTP or HTTPS links
+
+Uploads are limited to 50 MB and receive unique stored filenames to avoid collisions.
+
+## API Conventions
+
+The REST API is grouped around five resources:
+
+| API group          | Responsibility                                                                   |
+| ------------------ | -------------------------------------------------------------------------------- |
+| `/api/users`       | Registration, login, current session, password changes, and user administration  |
+| `/api/courses`     | Course discovery, creation, editing, assignment, and protected content retrieval |
+| `/api/enrollments` | Enrollment requests, faculty decisions, coursework access, and progress          |
+| `/api/reviews`     | Course review submission and rating summaries                                    |
+| `/api/chat`        | Authorized course discussions                                                    |
+
+Successful JSON responses generally use this shape:
+
+```json
+{
+  "success": true,
+  "data": {},
+  "message": "Optional success message"
+}
+```
+
+Errors use an appropriate HTTP status and a client-readable message:
+
+```json
+{
+  "success": false,
+  "error": "Description of the problem"
+}
+```
 
 ## Project Structure
 
 ```text
 Capstone_Project/
-│
-├── client/
-│   ├── public/
-│   └── src/
-│       ├── assets/
-│       ├── components/
-│       │   ├── AuthenticatedLayout.jsx
-│       │   └── Navbar.jsx
-│       ├── pages/
-│       │   ├── admin/
-│       │   ├── auth/
-│       │   ├── faculty/
-│       │   ├── shared/
-│       │   └── student/
-│       ├── services/
-│       │   ├── chatApi.js
-│       │   ├── courseApi.js
-│       │   ├── enrollmentApi.js
-│       │   ├── reviewApi.js
-│       │   └── userApi.js
-│       ├── App.jsx
-│       └── main.jsx
-│
-└── server/
-    └── src/
-        ├── config/
-        ├── controllers/
-        ├── middleware/
-        │   ├── authMiddleware.js
-        │   └── uploadMiddleware.js
-        ├── models/
-        ├── repositories/
-        ├── routes/
-        ├── scripts/
-        ├── services/
-        ├── utils/
-        │   └── passwordUtils.js
-        └── app.js
+|-- client/
+|   |-- public/
+|   |-- src/
+|   |   |-- components/       Shared layout and navigation
+|   |   |-- pages/
+|   |   |   |-- admin/        Administrator dashboards and management pages
+|   |   |   |-- auth/         Login and student registration
+|   |   |   |-- faculty/      Faculty dashboards, courses, and settings
+|   |   |   |-- shared/       Profiles, course details, editor, and discussion
+|   |   |   `-- student/      Course discovery, coursework, and settings
+|   |   |-- services/         Axios API modules
+|   |   |-- App.jsx           Route definitions
+|   |   `-- main.jsx          React entry point
+|   |-- package.json
+|   `-- vite.config.js
+|-- server/
+|   |-- src/
+|   |   |-- config/           Database connection
+|   |   |-- controllers/      HTTP request and response handling
+|   |   |-- middleware/       Authentication, authorization, and uploads
+|   |   |-- models/           Mongoose schemas
+|   |   |-- repositories/     Database access
+|   |   |-- routes/           REST endpoint definitions
+|   |   |-- scripts/          Administrator seeding
+|   |   |-- services/         Business and authorization rules
+|   |   |-- utils/            Password and safe-response utilities
+|   |   `-- app.js            Express entry point
+|   |-- .env.example
+|   `-- package.json
+`-- README.md
 ```
 
-Additional files and services are added as their corresponding application features are implemented.
+## Local Setup
 
-## Authentication Flow
+### Prerequisites
 
-After a successful login, the server creates a JWT containing the user's database ID. Protected requests use that ID to load the current user and role from the database.
+- A current Node.js LTS release and npm
+- MongoDB running locally or an accessible MongoDB connection string
 
-Protected API requests send the token through the authorization header:
+### 1. Install server dependencies
 
-```text
-Authorization: Bearer <token>
+From the project root:
+
+```bash
+cd server
+npm install
 ```
 
-Backend authentication middleware:
+### 2. Configure the server
 
-1. Verifies the JWT.
-2. Attaches the authenticated user information to the request.
-3. Allows role-based authorization middleware to determine whether the user can access the requested resource.
+Copy `server/.env.example` to `server/.env` and replace the placeholder values:
 
-This provides authentication and role-based authorization for protected application functionality.
+```env
+PORT=3000
+CLIENT_URL=http://localhost:5173
+MONGO_URI=mongodb://localhost:27017/Capstone_project
+JWT_SECRET=replace_with_a_private_random_value
+SEED_ADMIN_EMAIL=admin@example.com
+SEED_ADMIN_PASSWORD=replace_with_a_valid_admin_password
+```
 
-## Project Status
+Passwords must contain 12 to 64 characters and include at least one uppercase letter, lowercase letter, number, and special character.
 
-**Active development**
+Do not commit `.env`; it contains application secrets and local credentials.
 
-The application currently includes its primary MERN architecture, MongoDB persistence, JWT authentication, role-based authorization, user management, faculty and student profile management, student self-registration, faculty administration, and initial course management functionality.
+### 3. Create the initial administrator
 
-Current development is focused on expanding course workflows, enrollment, coursework, progress tracking, and other role-specific functionality.
+```bash
+npm run seed
+```
+
+The seed script creates the configured administrator only when that email does not already exist.
+
+### 4. Start the API
+
+```bash
+npm start
+```
+
+The API runs at `http://localhost:3000` with the example configuration.
+
+### 5. Install and start the client
+
+In a second terminal, return to the project root:
+
+```bash
+cd client
+npm install
+npm run dev
+```
+
+Open `http://localhost:5173` in a browser.
+
+The client uses `http://localhost:3000/api` by default. To use a different API location, create `client/.env.local` and define:
+
+```env
+VITE_API_BASE_URL=http://localhost:3000/api
+```
+
+## Available Commands
+
+### Client
+
+```bash
+npm run dev      # Start the Vite development server
+npm run lint     # Run ESLint
+npm run build    # Create a production build
+npm run preview  # Preview the production build locally
+```
+
+### Server
+
+```bash
+npm start        # Start the Express server with Node.js
+npm run dev      # Start with nodemon when nodemon is available
+npm run seed     # Create the configured administrator account
+```
+
+## Verification
+
+The completed application has been evaluated through:
+
+- Postman testing of API endpoints and authorization responses.
+- Manual end-to-end browser testing across all three user roles.
+- Client lint and production-build verification.
+- A final disposable automated verification covering authentication, role restrictions, course creation and publication, enrollment approval, coursework completion, group chats, reviews, profile ownership, and account deactivation.
+
+The disposable verification data was removed after the test run; an automated test suite is not included in the repository.
+
+## Engineering Decisions
+
+- **Server-authoritative permissions:** UI visibility improves usability, while backend middleware and services enforce actual access control.
+- **Database-backed session validation:** A validly signed token is not sufficient by itself; the current account must still exist and remain active.
+- **ObjectId relationships:** MongoDB ObjectIds support reliable references and authorization checks, while numeric IDs remain presentation-oriented.
+- **Layered server responsibilities:** Business logic stays out of route definitions and database queries stay in repositories.
+- **Protected file delivery:** File authorization occurs before Express transfers an uploaded resource.
+- **Derived progress:** Completion percentages are calculated from required content rather than trusted as client-submitted values.
+- **Normalized client errors:** Axios service modules convert API failures into consistent JavaScript errors that page components can display.
+- **Null-safe related data:** Interfaces remain usable when referenced users or courses have been removed.
+
+## Project Scope
+
+LearnEase Pro is a completed certification capstone and portfolio demonstration. It is intended to show full-stack application design and coherent learning-management workflows rather than represent a commercially deployed learning platform.
+
+Potential production-oriented extensions could include a repeatable automated test suite, HTTP-only cookie sessions with a deliberate CSRF strategy, authentication rate limiting, managed object storage for uploads, centralized application logging, unread-message tracking, and cloud deployment infrastructure.
