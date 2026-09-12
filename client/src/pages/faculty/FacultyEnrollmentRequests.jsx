@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { getFacultyEnrollments, updateEnrollmentStatus } from "../../services/enrollmentApi.js";
 
 function FacultyEnrollmentRequests() {
-  const user = JSON.parse(sessionStorage.getItem("user"));
   const [enrollments, setEnrollments] = useState([]);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -41,7 +40,7 @@ function FacultyEnrollmentRequests() {
 
   return (
     <>
-      <h3>Enrollment Requests for {user?.email}</h3>
+      <h3>Enrollment Requests</h3>
       {message && <p className="success-message">{message}</p>}
       {error && <p className="error-message">{error}</p>}
 

@@ -4,7 +4,6 @@ import { getCourses } from "../../services/courseApi.js";
 import { getAllStudents, viewAllFaculty } from "../../services/userApi.js";
 
 function AdminDashboard() {
-  const user = JSON.parse(sessionStorage.getItem("user"));
   const [summary, setSummary] = useState({
     facultyTotal: 0,
     facultyActive: 0,
@@ -62,7 +61,6 @@ function AdminDashboard() {
   return (
     <>
       <h3>Admin Dashboard</h3>
-      <h4 className="page-subtitle">Welcome, {user?.email}</h4>
 
       {loading && <p>Loading dashboard...</p>}
       {error && <p className="error-message">{error}</p>}

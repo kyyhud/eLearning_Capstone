@@ -4,7 +4,6 @@ import { getFacultyCourses } from "../../services/courseApi.js";
 import { getFacultyEnrollments } from "../../services/enrollmentApi.js";
 
 function FacultyDashboard() {
-  const user = JSON.parse(sessionStorage.getItem("user"));
   const [courses, setCourses] = useState([]);
   const [enrollments, setEnrollments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,7 +44,6 @@ function FacultyDashboard() {
   return (
     <>
       <h3>Faculty Dashboard</h3>
-      <h4 className="page-subtitle">Welcome, {user?.email}</h4>
 
       {loading && <p>Loading dashboard...</p>}
       {error && <p className="error-message">{error}</p>}

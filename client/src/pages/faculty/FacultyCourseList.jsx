@@ -6,7 +6,6 @@ function FacultyCourseList() {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [message, setMessage] = useState("");
-  const user = JSON.parse(sessionStorage.getItem("user"));
 
   useEffect(() => {
     const loadCourses = async () => {
@@ -24,7 +23,7 @@ function FacultyCourseList() {
 
   return (
     <>
-      <h3>Course Management, {user?.email}</h3>
+      <h3>Course Management</h3>
       {message && <p className="error-message">{message}</p>}
       <br />
       <table className="data-table" border="1">

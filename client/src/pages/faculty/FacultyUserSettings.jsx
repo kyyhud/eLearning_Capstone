@@ -75,7 +75,7 @@ function FacultyUserSettings() {
 
   return (
     <div className="settings-page">
-      <h3>User Settings for {user?.email}</h3>
+      <h3>User Settings</h3>
 
       <section>
         <h2>Chat Settings</h2>

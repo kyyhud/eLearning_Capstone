@@ -1,10 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 
-function Navbar() {
-  const user = JSON.parse(sessionStorage.getItem("user"));
+function Navbar({ user }) {
   const navigate = useNavigate();
 
-  if (!user) return null;
   const typeOfUser = user.typeOfUser;
 
   const handleLogout = () => {
@@ -43,6 +41,10 @@ function Navbar() {
           <Link to="/student/settings">Settings</Link>
         </>
       )}
+      <span className="nav-user">
+        {user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.email}
+        <span className="nav-user-role"> · {user.typeOfUser}</span>
+      </span>
       <Link to="/" onClick={handleLogout}>
         Logout
       </Link>

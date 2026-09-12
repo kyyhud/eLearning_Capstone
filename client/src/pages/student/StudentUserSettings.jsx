@@ -149,7 +149,7 @@ function StudentUserSettings() {
 
   return (
     <div className="settings-page">
-      <h3>User Settings for {formData.email}</h3>
+      <h3>User Settings</h3>
       <div className="account-summary">
         <p>Student ID: {formData.studentId}</p>
         <p>Status: {formData.isActive ? "Active" : "Inactive"}</p>

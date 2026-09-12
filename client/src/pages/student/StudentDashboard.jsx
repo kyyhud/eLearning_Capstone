@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { getMyEnrollments } from "../../services/enrollmentApi.js";
 
 function StudentDashboard() {
-  const user = JSON.parse(sessionStorage.getItem("user"));
   const [enrollments, setEnrollments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -41,7 +40,6 @@ function StudentDashboard() {
   return (
     <>
       <h3>Student Dashboard</h3>
-      <h4 className="page-subtitle">Welcome, {user?.email}</h4>
 
       {loading && <p>Loading dashboard...</p>}
       {error && <p className="error-message">{error}</p>}
