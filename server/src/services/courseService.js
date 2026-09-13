@@ -71,10 +71,18 @@ const getCourses = async (filters, user) => {
 
 const getCourseById = async (id, user) => {
   const course = await courseRepository.findCourseById(id);
-  if (!course || (user.typeOfUser === "student" && course.status !== "published")) {
+  if (!course) {
     throw new Error("Course not found");
   }
   if (user.typeOfUser === "student") {
+    if (course.status === "archived") {
+      const enrollment = await enrollmentRepository.findEnrollmentByStudentAndCourse(user.userId, id);
+      if (!enrollment || enrollment.status !== "approved") {
+        throw new Error("Course not found");
+      }
+    } else if (course.status !== "published") {
+      throw new Error("Course not found");
+    }
     const courseData = course.toObject();
     delete courseData.sections;
     return courseData;
