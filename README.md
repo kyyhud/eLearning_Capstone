@@ -15,6 +15,7 @@ LearnEase Pro was designed to demonstrate the ability to:
 - Enforce authorization in the API rather than relying on hidden React controls.
 - Organize backend code into maintainable architectural layers.
 - Validate data and return understandable feedback when an operation fails.
+- Present each role's workflows through a consistent, responsive interface built with maintainable CSS.
 
 ## Core Features
 
@@ -111,6 +112,18 @@ Course IDs are grouped by the level selected during course creation:
 - JSON Web Token (`jsonwebtoken`)
 - bcrypt
 - Multer
+
+## Interface and Styling
+
+The client uses straightforward CSS without a component library or utility framework. The interface is intentionally restrained so that course and account workflows remain the focus of the project.
+
+- `index.css` defines the global foundation, including the color palette, typography, sizing defaults, focus indicators, and shared CSS variables.
+- `App.css` organizes reusable application styles for navigation, page containers, forms, buttons, tables, status badges, feedback messages, dashboards, course content, and group chat.
+- Administrator, faculty, and student pages share the same visual language while retaining their role-specific navigation and workflows.
+- Forms use consistent labels, controls, disabled states, action placement, and success or error feedback.
+- Tables preserve their semantic structure and allow horizontal scrolling on narrow screens rather than converting tabular information into unrelated layouts.
+- Responsive adjustments keep navigation, forms, buttons, course content, and dashboards usable on common desktop and mobile widths.
+- Visible keyboard focus states, readable contrast, clear disabled controls, and text-based status indicators support basic accessibility and usability.
 
 ## Application Architecture
 
@@ -229,7 +242,9 @@ Capstone_Project/
 |   |   |   |-- shared/       Profiles, course details, editor, and discussion
 |   |   |   `-- student/      Course discovery, coursework, and settings
 |   |   |-- services/         Axios API modules
+|   |   |-- App.css           Shared application and responsive styles
 |   |   |-- App.jsx           Route definitions
+|   |   |-- index.css         Global styles and CSS variables
 |   |   `-- main.jsx          React entry point
 |   |-- package.json
 |   `-- vite.config.js
@@ -273,7 +288,7 @@ Copy `server/.env.example` to `server/.env` and replace the placeholder values:
 ```env
 PORT=3000
 CLIENT_URL=http://localhost:5173
-MONGO_URI=mongodb://localhost:27017/Capstone_project
+MONGO_URI=mongodb://localhost:27017/Capstone_Project
 JWT_SECRET=replace_with_a_private_random_value
 SEED_ADMIN_EMAIL=admin@example.com
 SEED_ADMIN_PASSWORD=replace_with_a_valid_admin_password
@@ -325,8 +340,10 @@ VITE_API_BASE_URL=http://localhost:3000/api
 npm run dev      # Start the Vite development server
 npm run lint     # Run ESLint
 npm run build    # Create a production build
-npm run preview  # Preview the production build locally
+npm run preview  # Preview the production build on port 5173
 ```
+
+Run `npm run build` before `npm run preview`. Stop the development client first because both client commands use port `5173`.
 
 ### Server
 
@@ -357,6 +374,7 @@ The disposable verification data was removed after the test run; an automated te
 - **Derived progress:** Completion percentages are calculated from required content rather than trusted as client-submitted values.
 - **Normalized client errors:** Axios service modules convert API failures into consistent JavaScript errors that page components can display.
 - **Null-safe related data:** Interfaces remain usable when referenced users or courses have been removed.
+- **Shared CSS without a UI framework:** Global variables and reusable selectors provide a cohesive, responsive interface while keeping the styling approachable and easy to trace from the existing JSX.
 
 ## Project Scope
 
