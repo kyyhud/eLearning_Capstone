@@ -155,7 +155,9 @@ function BrowseCourses() {
           </tr>
         </thead>
         <tbody>
-          {courses.map((course) => {
+          {[...courses]
+          .sort((a, b) => a.courseId - b.courseId)
+          .map((course) => {
             const enrollment = getEnrollmentForCourse(course._id);
             return (
               <tr key={course._id}>
